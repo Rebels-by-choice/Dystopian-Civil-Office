@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CivilServiceViewer/CivilServiceViewer.csproj" />
+  <Project Path="SwaggerUI/SwaggerUI.csproj" />
+</Solution>
