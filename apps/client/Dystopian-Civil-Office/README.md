@@ -1,6 +1,6 @@
-# Dystopian-Civil-Office
+# DystopianCivilService
 
-Dystopian Civil Office provides our idea for anarchic world, but with simular functionalities to real civil office in Poland.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.11.
 
 ## Development server
 
