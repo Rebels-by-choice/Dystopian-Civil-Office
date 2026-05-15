@@ -1,6 +1,6 @@
-@Dystopian_Civil_Service_HostAddress = http://localhost:5221
+@Dystopian_Civil_Office_HostAddress = http://localhost:5159
 
-GET {{Dystopian_Civil_Service_HostAddress}}/weatherforecast/
+GET {{Dystopian_Civil_Office_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

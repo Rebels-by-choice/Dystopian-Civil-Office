@@ -4,8 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Dystopian_Civil_Service</RootNamespace>
-    <UserSecretsId>afa79186-ec3d-45bd-9707-35012be842ba</UserSecretsId>
+    <RootNamespace>Dystopian_Civil_Office</RootNamespace>
+    <UserSecretsId>2e9cd70a-509b-4052-9d6f-3802f68a7b46</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 

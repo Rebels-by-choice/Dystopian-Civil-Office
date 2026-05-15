@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dystopian_Civil_Service.Controllers
+namespace Dystopian_Civil_Office.Controllers
 {
     [ApiController]
     [Route("[controller]")]

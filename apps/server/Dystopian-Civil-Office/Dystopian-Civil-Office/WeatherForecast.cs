@@ -1,4 +1,4 @@
-namespace Dystopian_Civil_Service
+namespace Dystopian_Civil_Office
 {
     public class WeatherForecast
     {
