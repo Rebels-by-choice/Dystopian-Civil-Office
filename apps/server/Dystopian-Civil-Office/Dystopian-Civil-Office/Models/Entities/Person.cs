@@ -32,8 +32,10 @@ public class Person
     public string BirthPlace { get; set; } = string.Empty;
 
     public int AddressId { get; set; }
-
     public Address Address { get; set; } = null!;
+
+    public int? DocumentId { get; set; }
+    public Document? Document { get; set; }
 
     public BirthRecord? BirthRecord { get; set; }
     public DeathRecord? DeathRecord { get; set; }

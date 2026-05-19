@@ -7,11 +7,26 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dystopian_Civil_Office.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreate2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "documents",
+                columns: table => new
+                {
+                    document_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    category = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    import_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_documents", x => x.document_id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "addresses",
                 columns: table => new
@@ -23,11 +38,18 @@ namespace Dystopian_Civil_Office.Migrations
                     house_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     apartment_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     postal_code = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    country = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false)
+                    country = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    document_id = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_addresses", x => x.address_id);
+                    table.ForeignKey(
+                        name: "FK_addresses_documents_document_id",
+                        column: x => x.document_id,
+                        principalTable: "documents",
+                        principalColumn: "document_id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,7 +65,8 @@ namespace Dystopian_Civil_Office.Migrations
                     gender = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     birth_date = table.Column<DateOnly>(type: "date", nullable: false),
                     birth_place = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    address_id = table.Column<int>(type: "integer", nullable: false)
+                    address_id = table.Column<int>(type: "integer", nullable: false),
+                    document_id = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,6 +78,12 @@ namespace Dystopian_Civil_Office.Migrations
                         principalTable: "addresses",
                         principalColumn: "address_id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_persons_documents_document_id",
+                        column: x => x.document_id,
+                        principalTable: "documents",
+                        principalColumn: "document_id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,11 +96,18 @@ namespace Dystopian_Civil_Office.Migrations
                     person_id = table.Column<int>(type: "integer", nullable: false),
                     mother_id = table.Column<int>(type: "integer", nullable: true),
                     father_id = table.Column<int>(type: "integer", nullable: true),
-                    registry_date = table.Column<DateOnly>(type: "date", nullable: false)
+                    registry_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    document_id = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_birth_records", x => x.birth_record_id);
+                    table.ForeignKey(
+                        name: "FK_birth_records_documents_document_id",
+                        column: x => x.document_id,
+                        principalTable: "documents",
+                        principalColumn: "document_id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_birth_records_persons_father_id",
                         column: x => x.father_id,
@@ -103,11 +139,18 @@ namespace Dystopian_Civil_Office.Migrations
                     death_date = table.Column<DateOnly>(type: "date", nullable: false),
                     death_place = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     registry_date = table.Column<DateOnly>(type: "date", nullable: false),
-                    cause_of_death = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
+                    cause_of_death = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    document_id = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_death_records", x => x.death_record_id);
+                    table.ForeignKey(
+                        name: "FK_death_records_documents_document_id",
+                        column: x => x.document_id,
+                        principalTable: "documents",
+                        principalColumn: "document_id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_death_records_persons_person_id",
                         column: x => x.person_id,
@@ -127,12 +170,19 @@ namespace Dystopian_Civil_Office.Migrations
                     spouse2_id = table.Column<int>(type: "integer", nullable: false),
                     marriage_date = table.Column<DateOnly>(type: "date", nullable: false),
                     marriage_place = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    registry_date = table.Column<DateOnly>(type: "date", nullable: false)
+                    registry_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    document_id = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_marriage_records", x => x.marriage_record_id);
                     table.CheckConstraint("ck_marriage_records_spouses_different", "\"spouse1_id\" <> \"spouse2_id\"");
+                    table.ForeignKey(
+                        name: "FK_marriage_records_documents_document_id",
+                        column: x => x.document_id,
+                        principalTable: "documents",
+                        principalColumn: "document_id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_marriage_records_persons_spouse1_id",
                         column: x => x.spouse1_id,
@@ -146,6 +196,18 @@ namespace Dystopian_Civil_Office.Migrations
                         principalColumn: "person_id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_addresses_document_id",
+                table: "addresses",
+                column: "document_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_birth_records_document_id",
+                table: "birth_records",
+                column: "document_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_birth_records_father_id",
@@ -170,6 +232,12 @@ namespace Dystopian_Civil_Office.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_death_records_document_id",
+                table: "death_records",
+                column: "document_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_death_records_person_id",
                 table: "death_records",
                 column: "person_id",
@@ -179,6 +247,12 @@ namespace Dystopian_Civil_Office.Migrations
                 name: "IX_death_records_registry_number",
                 table: "death_records",
                 column: "registry_number",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_marriage_records_document_id",
+                table: "marriage_records",
+                column: "document_id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -201,6 +275,12 @@ namespace Dystopian_Civil_Office.Migrations
                 name: "IX_persons_address_id",
                 table: "persons",
                 column: "address_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_persons_document_id",
+                table: "persons",
+                column: "document_id",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_persons_pesel",
@@ -226,6 +306,9 @@ namespace Dystopian_Civil_Office.Migrations
 
             migrationBuilder.DropTable(
                 name: "addresses");
+
+            migrationBuilder.DropTable(
+                name: "documents");
         }
     }
 }

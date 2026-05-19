@@ -15,10 +15,36 @@ public class ApplicationDbContext : DbContext
     public DbSet<BirthRecord> BirthRecords { get; set; }
     public DbSet<MarriageRecord> MarriageRecords { get; set; }
     public DbSet<DeathRecord> DeathRecords { get; set; }
+    public DbSet<Document> Documents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Document>(entity =>
+        {
+            entity.ToTable("documents");
+
+            entity.HasKey(e => e.DocumentId);
+
+            entity.Property(e => e.DocumentId)
+                .HasColumnName("document_id")
+                .UseIdentityByDefaultColumn();
+
+            entity.Property(e => e.Name)
+                .HasColumnName("name")
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(e => e.Category)
+                .HasColumnName("category")
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(e => e.ImportDate)
+                .HasColumnName("import_date")
+                .IsRequired();
+        });
 
         modelBuilder.Entity<Address>(entity =>
         {
@@ -58,6 +84,17 @@ public class ApplicationDbContext : DbContext
                 .HasColumnName("country")
                 .HasMaxLength(60)
                 .IsRequired();
+
+            entity.Property(e => e.DocumentId)
+                .HasColumnName("document_id");
+
+            entity.HasIndex(e => e.DocumentId)
+                .IsUnique();
+
+            entity.HasOne(e => e.Document)
+                .WithOne(d => d.Address)
+                .HasForeignKey<Address>(e => e.DocumentId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<Person>(entity =>
@@ -111,10 +148,21 @@ public class ApplicationDbContext : DbContext
                 .HasColumnName("address_id")
                 .IsRequired();
 
+            entity.Property(e => e.DocumentId)
+                .HasColumnName("document_id");
+
+            entity.HasIndex(e => e.DocumentId)
+                .IsUnique();
+
             entity.HasOne(e => e.Address)
                 .WithMany(a => a.Persons)
                 .HasForeignKey(e => e.AddressId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Document)
+                .WithOne(d => d.Person)
+                .HasForeignKey<Person>(e => e.DocumentId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             entity.HasCheckConstraint("ck_persons_gender", "\"gender\" IN ('Male', 'Female', 'Other')");
         });
@@ -155,6 +203,12 @@ public class ApplicationDbContext : DbContext
                 .HasColumnType("date")
                 .IsRequired();
 
+            entity.Property(e => e.DocumentId)
+                .HasColumnName("document_id");
+
+            entity.HasIndex(e => e.DocumentId)
+                .IsUnique();
+
             entity.HasOne(e => e.Person)
                 .WithOne(p => p.BirthRecord)
                 .HasForeignKey<BirthRecord>(e => e.PersonId)
@@ -169,6 +223,11 @@ public class ApplicationDbContext : DbContext
                 .WithMany(p => p.BirthRecordsAsFather)
                 .HasForeignKey(e => e.FatherId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Document)
+                .WithOne(d => d.BirthRecord)
+                .HasForeignKey<BirthRecord>(e => e.DocumentId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<DeathRecord>(entity =>
@@ -216,10 +275,21 @@ public class ApplicationDbContext : DbContext
                 .HasMaxLength(200)
                 .IsRequired();
 
+            entity.Property(e => e.DocumentId)
+                .HasColumnName("document_id");
+
+            entity.HasIndex(e => e.DocumentId)
+                .IsUnique();
+
             entity.HasOne(e => e.Person)
                 .WithOne(p => p.DeathRecord)
                 .HasForeignKey<DeathRecord>(e => e.PersonId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Document)
+                .WithOne(d => d.DeathRecord)
+                .HasForeignKey<DeathRecord>(e => e.DocumentId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<MarriageRecord>(entity =>
@@ -263,6 +333,12 @@ public class ApplicationDbContext : DbContext
                 .HasColumnType("date")
                 .IsRequired();
 
+            entity.Property(e => e.DocumentId)
+                .HasColumnName("document_id");
+
+            entity.HasIndex(e => e.DocumentId)
+                .IsUnique();
+
             entity.HasOne(e => e.Spouse1)
                 .WithMany(p => p.MarriagesAsSpouse1)
                 .HasForeignKey(e => e.Spouse1Id)
@@ -272,6 +348,11 @@ public class ApplicationDbContext : DbContext
                 .WithMany(p => p.MarriagesAsSpouse2)
                 .HasForeignKey(e => e.Spouse2Id)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Document)
+                .WithOne(d => d.MarriageRecord)
+                .HasForeignKey<MarriageRecord>(e => e.DocumentId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             entity.HasCheckConstraint("ck_marriage_records_spouses_different", "\"spouse1_id\" <> \"spouse2_id\"");
         });

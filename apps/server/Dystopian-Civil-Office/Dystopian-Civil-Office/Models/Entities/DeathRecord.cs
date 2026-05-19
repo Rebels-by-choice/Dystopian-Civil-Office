@@ -24,5 +24,8 @@ public class DeathRecord
     [MaxLength(200)]
     public string CauseOfDeath { get; set; } = string.Empty;
 
+    public int? DocumentId { get; set; }
+    public Document? Document { get; set; }
+
     public Person Person { get; set; } = null!;
 }
