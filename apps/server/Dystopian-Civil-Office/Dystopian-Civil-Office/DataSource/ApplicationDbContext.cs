@@ -1,7 +1,7 @@
 ﻿using Dystopian_Civil_Office.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Dystopian_Civil_Office.Data;
+namespace Dystopian_Civil_Office.DataSource;
 
 public class ApplicationDbContext : DbContext
 {

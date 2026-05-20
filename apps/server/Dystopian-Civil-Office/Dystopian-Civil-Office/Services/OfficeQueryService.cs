@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Dystopian_Civil_Office.Data;
+using Dystopian_Civil_Office.DataSource;
 using Dystopian_Civil_Office.Dtos.Responses;
 
 namespace Dystopian_Civil_Office.Services;
