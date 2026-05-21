@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dystopian_Civil_Office.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260519190606_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20260521172216_InitialObjectsAndMocks_Create")]
+    partial class InitialObjectsAndMocks_Create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

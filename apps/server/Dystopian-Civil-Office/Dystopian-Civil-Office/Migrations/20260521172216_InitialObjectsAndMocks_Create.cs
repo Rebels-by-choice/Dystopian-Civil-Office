@@ -1,4 +1,5 @@
 ﻿using System;
+using Dystopian_Civil_Office.Data;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -7,11 +8,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dystopian_Civil_Office.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate2 : Migration
+    public partial class InitialObjectsAndMocks_Create : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Cleanup tables between engaging
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.dropCascadeTables.sql");
+            
             migrationBuilder.CreateTable(
                 name: "documents",
                 columns: table => new
@@ -287,6 +290,14 @@ namespace Dystopian_Civil_Office.Migrations
                 table: "persons",
                 column: "pesel",
                 unique: true);
+            /*
+             * SQL Section
+             * Mocks, Functions, Procedures and Triggers
+             */
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.clearMocks_and_subobjects.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.mocks.init.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.functions.init.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.procedures.init.sql");
         }
 
         /// <inheritdoc />
@@ -309,6 +320,21 @@ namespace Dystopian_Civil_Office.Migrations
 
             migrationBuilder.DropTable(
                 name: "documents");
+        }
+        
+        // Method for reading .sql file ad executing it
+        private static void ExecuteEmbeddedSql(MigrationBuilder migrationBuilder, string resourceName)
+        {
+            var assembly = typeof(ApplicationDbContext).Assembly;
+
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream is null)
+                throw new InvalidOperationException($"Embedded SQL resource not found: {resourceName}");
+
+            using var reader = new StreamReader(stream);
+            var sql = reader.ReadToEnd();
+
+            migrationBuilder.Sql(sql);
         }
     }
 }
