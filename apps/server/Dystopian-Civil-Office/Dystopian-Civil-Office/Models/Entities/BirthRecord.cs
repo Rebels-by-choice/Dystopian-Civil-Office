@@ -16,6 +16,9 @@ public class BirthRecord
 
     public DateOnly RegistryDate { get; set; }
 
+    public int? DocumentId { get; set; }
+    public Document? Document { get; set; }
+
     public Person Person { get; set; } = null!;
     public Person? Mother { get; set; }
     public Person? Father { get; set; }

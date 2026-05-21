@@ -48,6 +48,10 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnType("character varying(60)")
                         .HasColumnName("country");
 
+                    b.Property<int?>("DocumentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("document_id");
+
                     b.Property<string>("HouseNumber")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -68,6 +72,9 @@ namespace Dystopian_Civil_Office.Migrations
 
                     b.HasKey("AddressId");
 
+                    b.HasIndex("DocumentId")
+                        .IsUnique();
+
                     b.ToTable("addresses", (string)null);
                 });
 
@@ -79,6 +86,10 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnName("birth_record_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BirthRecordId"));
+
+                    b.Property<int?>("DocumentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("document_id");
 
                     b.Property<int?>("FatherId")
                         .HasColumnType("integer")
@@ -103,6 +114,9 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnName("registry_number");
 
                     b.HasKey("BirthRecordId");
+
+                    b.HasIndex("DocumentId")
+                        .IsUnique();
 
                     b.HasIndex("FatherId");
 
@@ -142,6 +156,10 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("death_place");
 
+                    b.Property<int?>("DocumentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("document_id");
+
                     b.Property<int>("PersonId")
                         .HasColumnType("integer")
                         .HasColumnName("person_id");
@@ -158,6 +176,9 @@ namespace Dystopian_Civil_Office.Migrations
 
                     b.HasKey("DeathRecordId");
 
+                    b.HasIndex("DocumentId")
+                        .IsUnique();
+
                     b.HasIndex("PersonId")
                         .IsUnique();
 
@@ -165,6 +186,36 @@ namespace Dystopian_Civil_Office.Migrations
                         .IsUnique();
 
                     b.ToTable("death_records", (string)null);
+                });
+
+            modelBuilder.Entity("Dystopian_Civil_Office.Models.Entities.Document", b =>
+                {
+                    b.Property<int>("DocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("document_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DocumentId"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("category");
+
+                    b.Property<DateTime>("ImportDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("import_date");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("DocumentId");
+
+                    b.ToTable("documents", (string)null);
                 });
 
             modelBuilder.Entity("Dystopian_Civil_Office.Models.Entities.MarriageRecord", b =>
@@ -175,6 +226,10 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnName("marriage_record_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MarriageRecordId"));
+
+                    b.Property<int?>("DocumentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("document_id");
 
                     b.Property<DateOnly>("MarriageDate")
                         .HasColumnType("date")
@@ -205,6 +260,9 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnName("spouse2_id");
 
                     b.HasKey("MarriageRecordId");
+
+                    b.HasIndex("DocumentId")
+                        .IsUnique();
 
                     b.HasIndex("RegistryNumber")
                         .IsUnique();
@@ -242,6 +300,10 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("birth_place");
 
+                    b.Property<int?>("DocumentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("document_id");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -275,6 +337,9 @@ namespace Dystopian_Civil_Office.Migrations
 
                     b.HasIndex("AddressId");
 
+                    b.HasIndex("DocumentId")
+                        .IsUnique();
+
                     b.HasIndex("Pesel")
                         .IsUnique();
 
@@ -284,8 +349,23 @@ namespace Dystopian_Civil_Office.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Dystopian_Civil_Office.Models.Entities.Address", b =>
+                {
+                    b.HasOne("Dystopian_Civil_Office.Models.Entities.Document", "Document")
+                        .WithOne("Address")
+                        .HasForeignKey("Dystopian_Civil_Office.Models.Entities.Address", "DocumentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Document");
+                });
+
             modelBuilder.Entity("Dystopian_Civil_Office.Models.Entities.BirthRecord", b =>
                 {
+                    b.HasOne("Dystopian_Civil_Office.Models.Entities.Document", "Document")
+                        .WithOne("BirthRecord")
+                        .HasForeignKey("Dystopian_Civil_Office.Models.Entities.BirthRecord", "DocumentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Dystopian_Civil_Office.Models.Entities.Person", "Father")
                         .WithMany("BirthRecordsAsFather")
                         .HasForeignKey("FatherId")
@@ -302,6 +382,8 @@ namespace Dystopian_Civil_Office.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Document");
+
                     b.Navigation("Father");
 
                     b.Navigation("Mother");
@@ -311,17 +393,29 @@ namespace Dystopian_Civil_Office.Migrations
 
             modelBuilder.Entity("Dystopian_Civil_Office.Models.Entities.DeathRecord", b =>
                 {
+                    b.HasOne("Dystopian_Civil_Office.Models.Entities.Document", "Document")
+                        .WithOne("DeathRecord")
+                        .HasForeignKey("Dystopian_Civil_Office.Models.Entities.DeathRecord", "DocumentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Dystopian_Civil_Office.Models.Entities.Person", "Person")
                         .WithOne("DeathRecord")
                         .HasForeignKey("Dystopian_Civil_Office.Models.Entities.DeathRecord", "PersonId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Document");
+
                     b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Dystopian_Civil_Office.Models.Entities.MarriageRecord", b =>
                 {
+                    b.HasOne("Dystopian_Civil_Office.Models.Entities.Document", "Document")
+                        .WithOne("MarriageRecord")
+                        .HasForeignKey("Dystopian_Civil_Office.Models.Entities.MarriageRecord", "DocumentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Dystopian_Civil_Office.Models.Entities.Person", "Spouse1")
                         .WithMany("MarriagesAsSpouse1")
                         .HasForeignKey("Spouse1Id")
@@ -333,6 +427,8 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasForeignKey("Spouse2Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Document");
 
                     b.Navigation("Spouse1");
 
@@ -347,12 +443,32 @@ namespace Dystopian_Civil_Office.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Dystopian_Civil_Office.Models.Entities.Document", "Document")
+                        .WithOne("Person")
+                        .HasForeignKey("Dystopian_Civil_Office.Models.Entities.Person", "DocumentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Address");
+
+                    b.Navigation("Document");
                 });
 
             modelBuilder.Entity("Dystopian_Civil_Office.Models.Entities.Address", b =>
                 {
                     b.Navigation("Persons");
+                });
+
+            modelBuilder.Entity("Dystopian_Civil_Office.Models.Entities.Document", b =>
+                {
+                    b.Navigation("Address");
+
+                    b.Navigation("BirthRecord");
+
+                    b.Navigation("DeathRecord");
+
+                    b.Navigation("MarriageRecord");
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Dystopian_Civil_Office.Models.Entities.Person", b =>

@@ -29,5 +29,8 @@ public class Address
     [MaxLength(60)]
     public string Country { get; set; } = string.Empty;
 
+    public int? DocumentId { get; set; }
+    public Document? Document { get; set; }
+
     public ICollection<Person> Persons { get; set; } = new List<Person>();
 }

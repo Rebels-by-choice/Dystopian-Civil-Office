@@ -21,6 +21,9 @@ public class MarriageRecord
 
     public DateOnly RegistryDate { get; set; }
 
+    public int? DocumentId { get; set; }
+    public Document? Document { get; set; }
+
     public Person Spouse1 { get; set; } = null!;
     public Person Spouse2 { get; set; } = null!;
 }
