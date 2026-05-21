@@ -4,8 +4,6 @@ using Dystopian_Civil_Office.Dtos.Responses;
 using Dystopian_Civil_Office.Services.Read.Interfaces;
 using Dystopian_Civil_Office.Services.Write.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Npgsql;
-using Npgsql.PostgresTypes;
 
 namespace Dystopian_Civil_Office.Controllers;
 
@@ -36,19 +34,8 @@ public class DocumentController : ControllerBase
         [FromBody] CreateDocumentRequestDto request,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            await _documentWriteService.CreateDocumentAsync(request, cancellationToken);
-            return StatusCode(StatusCodes.Status201Created);
-        }
-        catch (PostgresException ex) when (ex.SqlState == "23505")
-        {
-            return Conflict(new { message = ex.MessageText });
-        }
-        catch (PostgresException ex)
-        {
-            return BadRequest(new { message = ex.MessageText });
-        }
+        await _documentWriteService.CreateDocumentAsync(request, cancellationToken);
+        return StatusCode(StatusCodes.Status201Created);
     }
 
     [HttpPut("{documentId:int}")]
@@ -57,23 +44,8 @@ public class DocumentController : ControllerBase
         [FromBody] UpdateDocumentRequestDto request,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            await _documentWriteService.UpdateDocumentAsync(documentId, request, cancellationToken);
-            return NoContent();
-        }
-        catch (PostgresException ex) when (ex.MessageText.Contains("not found", StringComparison.OrdinalIgnoreCase))
-        {
-            return NotFound(new { message = ex.MessageText });
-        }
-        catch (PostgresException ex) when (ex.SqlState == "23505")
-        {
-            return Conflict(new { message = ex.MessageText });
-        }
-        catch (PostgresException ex)
-        {
-            return BadRequest(new { message = ex.MessageText });
-        }
+        await _documentWriteService.UpdateDocumentAsync(documentId, request, cancellationToken);
+        return NoContent();
     }
 
     [HttpDelete("{documentId:int}")]
@@ -81,22 +53,7 @@ public class DocumentController : ControllerBase
         int documentId,
         CancellationToken cancellationToken)
     {
-        try
-        {
-            await _documentWriteService.DeleteDocumentAsync(documentId, cancellationToken);
-            return NoContent();
-        }
-        catch (PostgresException ex) when (ex.MessageText.Contains("not found", StringComparison.OrdinalIgnoreCase))
-        {
-            return NotFound(new { message = ex.MessageText });
-        }
-        catch (PostgresException ex) when (ex.SqlState == "23503")
-        {
-            return Conflict(new { message = ex.MessageText });
-        }
-        catch (PostgresException ex)
-        {
-            return BadRequest(new { message = ex.MessageText });
-        }
+        await _documentWriteService.DeleteDocumentAsync(documentId, cancellationToken);
+        return NoContent();
     }
 }

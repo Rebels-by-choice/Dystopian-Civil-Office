@@ -1,4 +1,5 @@
 using Dystopian_Civil_Office.DataSource;
+using Dystopian_Civil_Office.Middleware;
 using Dystopian_Civil_Office.Services;
 using Dystopian_Civil_Office.Services.Read.Interfaces;
 using Dystopian_Civil_Office.Services.Read.Impls;
@@ -28,7 +29,12 @@ builder.Services.AddScoped<IBirthRecordService, BirthRecordReadService>();
 builder.Services.AddScoped<IPersonAddressReadService, PersonAddressReadService>();
 
 // Services for posting data
+builder.Services.AddScoped<IBirthRecordWriteService, BirthRecordWriteService>();
+builder.Services.AddScoped<IDeathRecordWriteService, DeathRecordWriteService>();
 builder.Services.AddScoped<IDocumentWriteService, DocumentWriteService>();
+builder.Services.AddScoped<IMarriageWriteService, MarriageWriteService>();
+builder.Services.AddScoped<IPersonAddressWriteService, PersonAddressWriteService>();
+builder.Services.AddScoped<IPersonWriteService, PersonWriteService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -49,6 +55,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<DatabaseExceptionHandlingMiddleware>();
 
 app.UseAuthorization();
 
