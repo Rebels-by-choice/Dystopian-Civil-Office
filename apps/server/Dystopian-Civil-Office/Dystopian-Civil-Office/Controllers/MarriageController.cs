@@ -8,9 +8,9 @@ namespace Dystopian_Civil_Office.Controllers;
 [Route("api/[controller]")]
 public class MarriageController : ControllerBase
 {
-    private readonly IMarriageService _marriageService;
+    private readonly IMarriageReadService _marriageService;
 
-    public MarriageController(IMarriageService marriageService)
+    public MarriageController(IMarriageReadService marriageService)
     {
         _marriageService = marriageService;
     }

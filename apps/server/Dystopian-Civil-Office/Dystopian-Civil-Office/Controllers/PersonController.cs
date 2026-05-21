@@ -8,9 +8,9 @@ namespace Dystopian_Civil_Office.Controllers;
 [Route("api/[controller]")]
 public class PersonController : ControllerBase
 {
-    private readonly IPersonService _personService;
+    private readonly IPersonReadService _personService;
 
-    public PersonController(IPersonService personService)
+    public PersonController(IPersonReadService personService)
     {
         _personService = personService;
     }

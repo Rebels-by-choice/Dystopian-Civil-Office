@@ -8,9 +8,9 @@ namespace Dystopian_Civil_Office.Controllers;
 [Route("api/[controller]")]
 public class DeathRecordController : ControllerBase
 {
-    private readonly IDeathRecordService _deathRecordService;
+    private readonly IDeathRecordReadService _deathRecordService;
 
-    public DeathRecordController(IDeathRecordService deathRecordService)
+    public DeathRecordController(IDeathRecordReadService deathRecordService)
     {
         _deathRecordService = deathRecordService;
     }

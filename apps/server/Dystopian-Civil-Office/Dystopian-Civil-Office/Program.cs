@@ -2,6 +2,8 @@ using Dystopian_Civil_Office.DataSource;
 using Dystopian_Civil_Office.Services;
 using Dystopian_Civil_Office.Services.Read.Interfaces;
 using Dystopian_Civil_Office.Services.Read.Impls;
+using Dystopian_Civil_Office.Services.Write.Interfaces;
+using Dystopian_Civil_Office.Services.Write.Impls;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,13 +20,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<OfficeQueryService>();
 
 // Services for viewing data
-builder.Services.AddScoped<IMarriageService, MarriageService>();
-builder.Services.AddScoped<IPersonService, PersonService>();
-builder.Services.AddScoped<IDocumentService, DocumentService>();
-builder.Services.AddScoped<IDeathRecordService, DeathRecordService>();
-builder.Services.AddScoped<IBirthRecordService, BirthRecordService>();
-builder.Services.AddScoped<IPersonAddressService, PersonAddressService>();
+builder.Services.AddScoped<IMarriageReadService, MarriageReadService>();
+builder.Services.AddScoped<IPersonReadService, PersonReadService>();
+builder.Services.AddScoped<IDocumentReadService, DocumentReadService>();
+builder.Services.AddScoped<IDeathRecordReadService, DeathRecordReadService>();
+builder.Services.AddScoped<IBirthRecordService, BirthRecordReadService>();
+builder.Services.AddScoped<IPersonAddressReadService, PersonAddressReadService>();
 
+// Services for posting data
+builder.Services.AddScoped<IDocumentWriteService, DocumentWriteService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -26,14 +26,20 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Services\Read\" />
-    <Folder Include="Services\Write\" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\.dockerignore">
       <Link>.dockerignore</Link>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="InitDb\Sql\dropCascadeTables.sql" />
+    <EmbeddedResource Include="InitDb\Sql\clearMocks_and_subobjects.sql" />
+    <EmbeddedResource Include="InitDb\Sql\mocks.init.sql" />
+    <EmbeddedResource Include="InitDb\Sql\functions.init.sql" />
+    <EmbeddedResource Include="InitDb\Sql\procedures.init.sql" />
   </ItemGroup>
 
 </Project>
