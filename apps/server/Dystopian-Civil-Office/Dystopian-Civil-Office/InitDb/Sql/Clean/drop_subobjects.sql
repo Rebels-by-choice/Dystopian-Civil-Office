@@ -1,12 +1,3 @@
-TRUNCATE TABLE
-    death_records,
-    marriage_records,
-    birth_records,
-    persons,
-    addresses,
-    documents
-RESTART IDENTITY CASCADE;
-
 DO $$
 DECLARE
     r RECORD;

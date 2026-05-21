@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using Dystopian_Civil_Office.DataSource;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -8,12 +8,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dystopian_Civil_Office.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialObjectsAndMocks_Create : Migration
+    public partial class InitialPipeline : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             // Cleanup tables between engaging
-            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.dropCascadeTables.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Clean.drop_cascade_tables.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Clean.drop_subobjects.sql");
             
             migrationBuilder.CreateTable(
                 name: "documents",
@@ -290,36 +291,160 @@ namespace Dystopian_Civil_Office.Migrations
                 table: "persons",
                 column: "pesel",
                 unique: true);
+            
+            migrationBuilder.CreateTable(
+                name: "address_archives",
+                columns: table => new
+                {
+                    AddressArchiveId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Street = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    HouseNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    ApartmentNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    PostalCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Country = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_address_archives", x => x.AddressArchiveId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "birth_record_archives",
+                columns: table => new
+                {
+                    BirthRecordArchiveId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RegistryNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    RegistryDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    BornPersonPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
+                    MotherPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: true),
+                    FatherPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: true),
+                    BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    BirthPlace = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_birth_record_archives", x => x.BirthRecordArchiveId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "death_record_archives",
+                columns: table => new
+                {
+                    DeathRecordArchiveId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RegistryNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    RegistryDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    PersonPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
+                    DeathDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    DeathPlace = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    CauseOfDeath = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_death_record_archives", x => x.DeathRecordArchiveId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "document_archives",
+                columns: table => new
+                {
+                    DocumentArchiveId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Category = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    ImportDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_document_archives", x => x.DocumentArchiveId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "marriage_record_archives",
+                columns: table => new
+                {
+                    MarriageRecordArchiveId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RegistryNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    RegistryDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Spouse1Pesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
+                    Spouse2Pesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
+                    MarriageDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    MarriagePlace = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_marriage_record_archives", x => x.MarriageRecordArchiveId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "person_archives",
+                columns: table => new
+                {
+                    PersonArchiveId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PersonPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
+                    FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    MiddleName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Gender = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    BirthPlace = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_person_archives", x => x.PersonArchiveId);
+                });
+            
             /*
              * SQL Section
-             * Mocks, Functions, Procedures and Triggers
+             * Clean, Seed, Functions, Procedures, Triggers
              */
-            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.clearMocks_and_subobjects.sql");
-            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.mocks.init.sql");
-            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.functions.init.sql");
-            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.procedures.init.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Seed.seed_mocks.init.sql");
+
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Functions.validate_data.defs.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Functions.archive_data.defs.sql");
+
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Procedures.addresses.procedures.init.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Procedures.birth_records.procedures.init.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Procedures.death_records.procedures.init.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Procedures.documents.procedures.init.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Procedures.marriage_records.procedures.init.sql");
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Procedures.persons.procedures.init.sql");
+
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Triggers.archive_data.triggers.sql");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "birth_records");
-
-            migrationBuilder.DropTable(
-                name: "death_records");
-
-            migrationBuilder.DropTable(
-                name: "marriage_records");
-
-            migrationBuilder.DropTable(
-                name: "persons");
-
-            migrationBuilder.DropTable(
-                name: "addresses");
-
-            migrationBuilder.DropTable(
-                name: "documents");
+            migrationBuilder.DropTable(name: "birth_records");
+            migrationBuilder.DropTable(name: "death_records");
+            migrationBuilder.DropTable(name: "marriage_records");
+            migrationBuilder.DropTable(name: "persons");
+            migrationBuilder.DropTable(name: "addresses");
+            migrationBuilder.DropTable(name: "documents");
+            
+            migrationBuilder.DropTable(name: "document_archives");
+            migrationBuilder.DropTable(name: "person_archives");
+            migrationBuilder.DropTable(name: "birth_record_archives");
+            migrationBuilder.DropTable(name: "death_record_archives");
+            migrationBuilder.DropTable(name: "marriage_record_archives");
+            migrationBuilder.DropTable(name: "address_archives");
         }
         
         // Method for reading .sql file ad executing it

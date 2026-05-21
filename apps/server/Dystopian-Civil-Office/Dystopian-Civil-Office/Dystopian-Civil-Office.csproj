@@ -35,11 +35,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="InitDb\Sql\dropCascadeTables.sql" />
-    <EmbeddedResource Include="InitDb\Sql\clearMocks_and_subobjects.sql" />
-    <EmbeddedResource Include="InitDb\Sql\mocks.init.sql" />
-    <EmbeddedResource Include="InitDb\Sql\functions.init.sql" />
-    <EmbeddedResource Include="InitDb\Sql\procedures.init.sql" />
+    <EmbeddedResource Include="InitDb\Sql\Clean\drop_cascade_tables.sql" />
+    <EmbeddedResource Include="InitDb\Sql\Clean\drop_subobjects.sql" />
+
+    <EmbeddedResource Include="InitDb\Sql\Seed\seed_mocks.init.sql" />
+
+    <EmbeddedResource Include="InitDb\Sql\Functions\validate_data.defs.sql" />
+    <EmbeddedResource Include="InitDb\Sql\Functions\archive_data.defs.sql" />
+
+    <EmbeddedResource Include="InitDb\Sql\Procedures\addresses.procedures.init.sql" />
+    <EmbeddedResource Include="InitDb\Sql\Procedures\birth_records.procedures.init.sql" />
+    <EmbeddedResource Include="InitDb\Sql\Procedures\death_records.procedures.init.sql" />
+    <EmbeddedResource Include="InitDb\Sql\Procedures\documents.procedures.init.sql" />
+    <EmbeddedResource Include="InitDb\Sql\Procedures\marriage_records.procedures.init.sql" />
+    <EmbeddedResource Include="InitDb\Sql\Procedures\persons.procedures.init.sql" />
+    
+    <EmbeddedResource Include="InitDb\Sql\Triggers\archive_data.triggers.sql" />
   </ItemGroup>
 
 </Project>

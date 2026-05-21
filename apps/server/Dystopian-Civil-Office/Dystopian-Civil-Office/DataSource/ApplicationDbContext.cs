@@ -1,4 +1,5 @@
-﻿using Dystopian_Civil_Office.Models.Entities;
+﻿using Dystopian_Civil_Office.Models.Archives;
+using Dystopian_Civil_Office.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dystopian_Civil_Office.DataSource;
@@ -10,6 +11,7 @@ public class ApplicationDbContext : DbContext
     {
     }
 
+    // ORM to main data tables
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Person> Persons { get; set; }
     public DbSet<BirthRecord> BirthRecords { get; set; }
@@ -17,6 +19,14 @@ public class ApplicationDbContext : DbContext
     public DbSet<DeathRecord> DeathRecords { get; set; }
     public DbSet<Document> Documents { get; set; }
 
+    // ORM to archive tables
+    public DbSet<DocumentArchive> DocumentArchives { get; set; }
+    public DbSet<PersonArchive> PersonArchives { get; set; }
+    public DbSet<BirthRecordArchive> BirthRecordArchives { get; set; }
+    public DbSet<DeathRecordArchive> DeathRecordArchives { get; set; }
+    public DbSet<MarriageRecordArchive> MarriageRecordArchives { get; set; }
+    public DbSet<AddressArchive> AddressArchives { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -355,6 +365,81 @@ public class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull);
 
             entity.HasCheckConstraint("ck_marriage_records_spouses_different", "\"spouse1_id\" <> \"spouse2_id\"");
+        });
+        
+        modelBuilder.Entity<DocumentArchive>(entity =>
+        {
+            entity.ToTable("document_archives");
+            entity.HasKey(e => e.DocumentArchiveId);
+            entity.Property(e => e.Name).HasMaxLength(255).IsRequired();
+            entity.Property(e => e.Category).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.ImportDate).IsRequired();
+            entity.Property(e => e.DeletedAt).IsRequired();
+        });
+
+        modelBuilder.Entity<PersonArchive>(entity =>
+        {
+            entity.ToTable("person_archives");
+            entity.HasKey(e => e.PersonArchiveId);
+            entity.Property(e => e.PersonPesel).HasMaxLength(11).IsRequired();
+            entity.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.MiddleName).HasMaxLength(100);
+            entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Gender).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.BirthPlace).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.DocumentName).HasMaxLength(255);
+            entity.Property(e => e.DeletedAt).IsRequired();
+        });
+
+        modelBuilder.Entity<BirthRecordArchive>(entity =>
+        {
+            entity.ToTable("birth_record_archives");
+            entity.HasKey(e => e.BirthRecordArchiveId);
+            entity.Property(e => e.RegistryNumber).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.BornPersonPesel).HasMaxLength(11).IsRequired();
+            entity.Property(e => e.MotherPesel).HasMaxLength(11);
+            entity.Property(e => e.FatherPesel).HasMaxLength(11);
+            entity.Property(e => e.BirthPlace).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.DocumentName).HasMaxLength(255);
+            entity.Property(e => e.DeletedAt).IsRequired();
+        });
+
+        modelBuilder.Entity<DeathRecordArchive>(entity =>
+        {
+            entity.ToTable("death_record_archives");
+            entity.HasKey(e => e.DeathRecordArchiveId);
+            entity.Property(e => e.RegistryNumber).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.PersonPesel).HasMaxLength(11).IsRequired();
+            entity.Property(e => e.DeathPlace).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.CauseOfDeath).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.DocumentName).HasMaxLength(255);
+            entity.Property(e => e.DeletedAt).IsRequired();
+        });
+
+        modelBuilder.Entity<MarriageRecordArchive>(entity =>
+        {
+            entity.ToTable("marriage_record_archives");
+            entity.HasKey(e => e.MarriageRecordArchiveId);
+            entity.Property(e => e.RegistryNumber).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Spouse1Pesel).HasMaxLength(11).IsRequired();
+            entity.Property(e => e.Spouse2Pesel).HasMaxLength(11).IsRequired();
+            entity.Property(e => e.MarriagePlace).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.DocumentName).HasMaxLength(255);
+            entity.Property(e => e.DeletedAt).IsRequired();
+        });
+
+        modelBuilder.Entity<AddressArchive>(entity =>
+        {
+            entity.ToTable("address_archives");
+            entity.HasKey(e => e.AddressArchiveId);
+            entity.Property(e => e.City).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.Street).HasMaxLength(150).IsRequired();
+            entity.Property(e => e.HouseNumber).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.ApartmentNumber).HasMaxLength(20);
+            entity.Property(e => e.PostalCode).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.Country).HasMaxLength(100).IsRequired();
+            entity.Property(e => e.DocumentName).HasMaxLength(255);
+            entity.Property(e => e.DeletedAt).IsRequired();
         });
     }
 }

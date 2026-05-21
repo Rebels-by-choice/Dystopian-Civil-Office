@@ -1,6 +1,3 @@
-/*
-    Section for addresses
-*/
 DROP FUNCTION IF EXISTS public.validate_address_data(
     varchar, varchar, varchar, varchar, varchar, varchar, integer
 );
@@ -98,9 +95,6 @@ BEGIN
 END;
 $$;
 
-/*
-    Section for birth records
-*/
 DROP FUNCTION IF EXISTS public.validate_birth_record_data(
     varchar, integer, integer, integer, date, integer
 );
@@ -203,9 +197,6 @@ BEGIN
 END;
 $$;
 
-/*
-    Section for death records
-*/
 DROP FUNCTION IF EXISTS public.validate_death_record_data(
     varchar, integer, date, varchar, date, varchar, integer
 );
@@ -301,9 +292,6 @@ BEGIN
 END;
 $$;
 
-/*
-    Section for documents
-*/
 DROP FUNCTION IF EXISTS public.validate_document_data(
     varchar, varchar, timestamptz
 );
@@ -349,9 +337,6 @@ BEGIN
 END;
 $$;
 
-/*
-    Section for marriage records
-*/
 DROP FUNCTION IF EXISTS public.validate_record_marriage_data(
     varchar, varchar, varchar, varchar
 );
@@ -410,9 +395,6 @@ BEGIN
 END;
 $$;
 
-/*
-    Section for persons
-*/
 DROP FUNCTION IF EXISTS public.validate_person_data(
     varchar, varchar, varchar, varchar, varchar, date, varchar, integer, integer
 );
