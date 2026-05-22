@@ -296,16 +296,16 @@ namespace Dystopian_Civil_Office.Migrations
                 name: "address_archives",
                 columns: table => new
                 {
-                    AddressArchiveId = table.Column<int>(type: "integer", nullable: false)
+                    AddressArchiveId = table.Column<int>(name: "address_archive_id", type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Street = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    HouseNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    ApartmentNumber = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    PostalCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    Country = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    City = table.Column<string>(name: "city", type: "character varying(100)", maxLength: 100, nullable: false),
+                    Street = table.Column<string>(name: "street", type: "character varying(150)", maxLength: 150, nullable: false),
+                    HouseNumber = table.Column<string>(name: "house_number", type: "character varying(20)", maxLength: 20, nullable: false),
+                    ApartmentNumber = table.Column<string>(name: "apartment_number", type: "character varying(20)", maxLength: 20, nullable: true),
+                    PostalCode = table.Column<string>(name: "postal_code", type: "character varying(20)", maxLength: 20, nullable: false),
+                    Country = table.Column<string>(name: "country", type: "character varying(100)", maxLength: 100, nullable: false),
+                    DocumentName = table.Column<string>(name: "document_name", type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(name: "deleted_at", type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -316,17 +316,17 @@ namespace Dystopian_Civil_Office.Migrations
                 name: "birth_record_archives",
                 columns: table => new
                 {
-                    BirthRecordArchiveId = table.Column<int>(type: "integer", nullable: false)
+                    BirthRecordArchiveId = table.Column<int>(name: "birth_record_archive_id", type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RegistryNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    RegistryDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    BornPersonPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
-                    MotherPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: true),
-                    FatherPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: true),
-                    BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    BirthPlace = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    RegistryNumber = table.Column<string>(name: "registry_number", type: "character varying(50)", maxLength: 50, nullable: false),
+                    RegistryDate = table.Column<DateOnly>(name: "registry_date", type: "date", nullable: false),
+                    BornPersonPesel = table.Column<string>(name: "born_person_pesel", type: "character varying(11)", maxLength: 11, nullable: false),
+                    MotherPesel = table.Column<string>(name: "mother_pesel", type: "character varying(11)", maxLength: 11, nullable: true),
+                    FatherPesel = table.Column<string>(name: "father_pesel", type: "character varying(11)", maxLength: 11, nullable: true),
+                    BirthDate = table.Column<DateOnly>(name: "birth_date", type: "date", nullable: false),
+                    BirthPlace = table.Column<string>(name: "birth_place", type: "character varying(200)", maxLength: 200, nullable: false),
+                    DocumentName = table.Column<string>(name: "document_name", type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(name: "deleted_at", type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -337,16 +337,16 @@ namespace Dystopian_Civil_Office.Migrations
                 name: "death_record_archives",
                 columns: table => new
                 {
-                    DeathRecordArchiveId = table.Column<int>(type: "integer", nullable: false)
+                    DeathRecordArchiveId = table.Column<int>(name: "death_record_archive_id", type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RegistryNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    RegistryDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    PersonPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
-                    DeathDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    DeathPlace = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CauseOfDeath = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    RegistryNumber = table.Column<string>(name: "registry_number", type: "character varying(50)", maxLength: 50, nullable: false),
+                    RegistryDate = table.Column<DateOnly>(name: "registry_date", type: "date", nullable: false),
+                    PersonPesel = table.Column<string>(name: "person_pesel", type: "character varying(11)", maxLength: 11, nullable: false),
+                    DeathDate = table.Column<DateOnly>(name: "death_date", type: "date", nullable: false),
+                    DeathPlace = table.Column<string>(name: "death_place", type: "character varying(200)", maxLength: 200, nullable: false),
+                    CauseOfDeath = table.Column<string>(name: "cause_of_death", type: "character varying(200)", maxLength: 200, nullable: false),
+                    DocumentName = table.Column<string>(name: "document_name", type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(name: "deleted_at", type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -357,12 +357,12 @@ namespace Dystopian_Civil_Office.Migrations
                 name: "document_archives",
                 columns: table => new
                 {
-                    DocumentArchiveId = table.Column<int>(type: "integer", nullable: false)
+                    DocumentArchiveId = table.Column<int>(name: "document_archive_id", type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Category = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    ImportDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    Name = table.Column<string>(name: "name", type: "character varying(255)", maxLength: 255, nullable: false),
+                    Category = table.Column<string>(name: "category", type: "character varying(100)", maxLength: 100, nullable: false),
+                    ImportDate = table.Column<DateTime>(name: "import_date", type: "timestamp with time zone", nullable: false),
+                    DeletedAt = table.Column<DateTime>(name: "deleted_at", type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -373,16 +373,16 @@ namespace Dystopian_Civil_Office.Migrations
                 name: "marriage_record_archives",
                 columns: table => new
                 {
-                    MarriageRecordArchiveId = table.Column<int>(type: "integer", nullable: false)
+                    MarriageRecordArchiveId = table.Column<int>(name: "marriage_record_archive_id", type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RegistryNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    RegistryDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    Spouse1Pesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
-                    Spouse2Pesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
-                    MarriageDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    MarriagePlace = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    RegistryNumber = table.Column<string>(name: "registry_number", type: "character varying(50)", maxLength: 50, nullable: false),
+                    RegistryDate = table.Column<DateOnly>(name: "registry_date", type: "date", nullable: false),
+                    Spouse1Pesel = table.Column<string>(name: "spouse1_pesel", type: "character varying(11)", maxLength: 11, nullable: false),
+                    Spouse2Pesel = table.Column<string>(name: "spouse2_pesel", type: "character varying(11)", maxLength: 11, nullable: false),
+                    MarriageDate = table.Column<DateOnly>(name: "marriage_date", type: "date", nullable: false),
+                    MarriagePlace = table.Column<string>(name: "marriage_place", type: "character varying(200)", maxLength: 200, nullable: false),
+                    DocumentName = table.Column<string>(name: "document_name", type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(name: "deleted_at", type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -393,17 +393,17 @@ namespace Dystopian_Civil_Office.Migrations
                 name: "person_archives",
                 columns: table => new
                 {
-                    PersonArchiveId = table.Column<int>(type: "integer", nullable: false)
+                    PersonArchiveId = table.Column<int>(name: "person_archive_id", type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PersonPesel = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
-                    FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    MiddleName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Gender = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    BirthPlace = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    DocumentName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    PersonPesel = table.Column<string>(name: "person_pesel", type: "character varying(11)", maxLength: 11, nullable: false),
+                    FirstName = table.Column<string>(name: "first_name", type: "character varying(100)", maxLength: 100, nullable: false),
+                    MiddleName = table.Column<string>(name: "middle_name", type: "character varying(100)", maxLength: 100, nullable: true),
+                    LastName = table.Column<string>(name: "last_name", type: "character varying(100)", maxLength: 100, nullable: false),
+                    Gender = table.Column<string>(name: "gender", type: "character varying(20)", maxLength: 20, nullable: false),
+                    BirthDate = table.Column<DateOnly>(name: "birth_date", type: "date", nullable: false),
+                    BirthPlace = table.Column<string>(name: "birth_place", type: "character varying(200)", maxLength: 200, nullable: false),
+                    DocumentName = table.Column<string>(name: "document_name", type: "character varying(255)", maxLength: 255, nullable: true),
+                    DeletedAt = table.Column<DateTime>(name: "deleted_at", type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
