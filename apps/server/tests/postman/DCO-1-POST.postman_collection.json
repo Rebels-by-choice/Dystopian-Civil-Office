@@ -1,0 +1,364 @@
+{
+  "info": {
+    "_postman_id": "7d288728-fe09-45ec-aadb-a4f8fab79f41",
+    "name": "DCO-1-POST",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44390588"
+  },
+  "item": [
+    {
+      "name": "DocumentAddDocumentAddress",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201, function\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is below 200\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"AddressDocumentPostman\",\r\n  \"category\": \"AddressPostman (random mark)\",\r\n  \"importDate\": \"{{$isoTimestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5159/api/Document",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5159",
+          "path": [
+            "api",
+            "Document"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DocumentAddDocumentPerson",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is below 200\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"PersonDocumentPostman\",\r\n  \"category\": \"PersonPostman\",\r\n  \"importDate\": \"{{$isoTimestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5159/api/Document",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5159",
+          "path": [
+            "api",
+            "Document"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DocumentAddDocumentBirth",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is below 200\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n   \"name\": \"BirthDocumentPostman\",\r\n   \"category\": \"BirthPostman\",\r\n   \"importDate\": \"{{$isoTimestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5159/api/Document",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5159",
+          "path": [
+            "api",
+            "Document"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DocumentAddDocumentMarriage",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is below 200\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"MarriageDocumentPostman\",\r\n  \"category\": \"MarriagePostman\",\r\n  \"importDate\": \"{{$isoTimestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5159/api/Document",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5159",
+          "path": [
+            "api",
+            "Document"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DocumentAddDocumentDeath",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is below 200\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"DeathDocumentPostman\",\r\n  \"category\": \"DeathPostman\",\r\n  \"importDate\": \"{{$isoTimestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5159/api/Document",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5159",
+          "path": [
+            "api",
+            "Document"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DocumentAddRecordToDelete",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is below 200\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"NameToDeletePostman\",\r\n  \"category\": \"CategoryToDeletePostman\",\r\n  \"importDate\": \"{{$isoTimestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5159/api/Document",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5159",
+          "path": [
+            "api",
+            "Document"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

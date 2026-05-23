@@ -16,14 +16,14 @@ BEGIN
 
     INSERT INTO public.address_archives
     (
-        "City",
-        "Street",
-        "HouseNumber",
-        "ApartmentNumber",
-        "PostalCode",
-        "Country",
-        "DocumentName",
-        "DeletedAt"
+        city,
+        street,
+        house_number,
+        apartment_number,
+        postal_code,
+        country,
+        document_name,
+        deleted_at
     )
     VALUES
     (
@@ -40,6 +40,7 @@ BEGIN
     RETURN OLD;
 END;
 $$;
+
 CREATE OR REPLACE FUNCTION public.archive_deleted_person()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -58,15 +59,15 @@ BEGIN
 
     INSERT INTO public.person_archives
     (
-        "PersonPesel",
-        "FirstName",
-        "MiddleName",
-        "LastName",
-        "Gender",
-        "BirthDate",
-        "BirthPlace",
-        "DocumentName",
-        "DeletedAt"
+        person_pesel,
+        first_name,
+        middle_name,
+        last_name,
+        gender,
+        birth_date,
+        birth_place,
+        document_name,
+        deleted_at
     )
     VALUES
     (
@@ -84,6 +85,7 @@ BEGIN
     RETURN OLD;
 END;
 $$;
+
 CREATE OR REPLACE FUNCTION public.archive_deleted_document()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -91,10 +93,10 @@ AS $$
 BEGIN
     INSERT INTO public.document_archives
     (
-        "Name",
-        "Category",
-        "ImportDate",
-        "DeletedAt"
+        name,
+        category,
+        import_date,
+        deleted_at
     )
     VALUES
     (
@@ -107,6 +109,7 @@ BEGIN
     RETURN OLD;
 END;
 $$;
+
 CREATE OR REPLACE FUNCTION public.archive_deleted_birth_record()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -159,15 +162,15 @@ BEGIN
 
     INSERT INTO public.birth_record_archives
     (
-        "RegistryNumber",
-        "RegistryDate",
-        "BornPersonPesel",
-        "MotherPesel",
-        "FatherPesel",
-        "BirthDate",
-        "BirthPlace",
-        "DocumentName",
-        "DeletedAt"
+        registry_number,
+        registry_date,
+        born_person_pesel,
+        mother_pesel,
+        father_pesel,
+        birth_date,
+        birth_place,
+        document_name,
+        deleted_at
     )
     VALUES
     (
@@ -185,6 +188,7 @@ BEGIN
     RETURN OLD;
 END;
 $$;
+
 CREATE OR REPLACE FUNCTION public.archive_deleted_death_record()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -209,14 +213,14 @@ BEGIN
 
     INSERT INTO public.death_record_archives
     (
-        "RegistryNumber",
-        "RegistryDate",
-        "PersonPesel",
-        "DeathDate",
-        "DeathPlace",
-        "CauseOfDeath",
-        "DocumentName",
-        "DeletedAt"
+        registry_number,
+        registry_date,
+        person_pesel,
+        death_date,
+        death_place,
+        cause_of_death,
+        document_name,
+        deleted_at
     )
     VALUES
     (
@@ -233,6 +237,7 @@ BEGIN
     RETURN OLD;
 END;
 $$;
+
 CREATE OR REPLACE FUNCTION public.archive_deleted_marriage_record()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -263,14 +268,14 @@ BEGIN
 
     INSERT INTO public.marriage_record_archives
     (
-        "RegistryNumber",
-        "RegistryDate",
-        "Spouse1Pesel",
-        "Spouse2Pesel",
-        "MarriageDate",
-        "MarriagePlace",
-        "DocumentName",
-        "DeletedAt"
+        registry_number,
+        registry_date,
+        spouse1_pesel,
+        spouse2_pesel,
+        marriage_date,
+        marriage_place,
+        document_name,
+        deleted_at
     )
     VALUES
     (

@@ -1,0 +1,106 @@
+{
+  "info": {
+    "_postman_id": "d7db1d60-133c-4de4-903f-51d1399e08aa",
+    "name": "DCO-4-DELETE-(+GET quick checks)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44390588"
+  },
+  "item": [
+    {
+      "name": "DocumentDelete",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 204\", function () {\r",
+              "    pm.response.to.have.status(204);\r",
+              "})\r",
+              "\r",
+              "pm.test(\"Response time is below 200\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5159/api/Document/106",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5159",
+          "path": [
+            "api",
+            "Document",
+            "106"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DocumentDeleteView",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is a non-empty array\", function () {\r",
+              "    const json = pm.response.json();\r",
+              "    pm.expect(json).to.be.an(\"array\");\r",
+              "    pm.expect(json.length).to.be.above(0);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Deleted document should not be returned\", function () {\r",
+              "    const json = pm.response.json();\r",
+              "\r",
+              "    const found = json.some(item =>\r",
+              "        item.name === \"NameToDeletePostman\" &&\r",
+              "        item.category === \"CategoryToDeletePostman\"\r",
+              "    );\r",
+              "\r",
+              "    pm.expect(found, 'Deleted document was still found in response').to.eql(false);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is below 200\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5159/api/Document",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5159",
+          "path": [
+            "api",
+            "Document"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

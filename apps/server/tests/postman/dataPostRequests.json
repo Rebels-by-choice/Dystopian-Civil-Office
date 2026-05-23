@@ -1,0 +1,26 @@
+[
+  {
+    "name": "AddressDocumentPostman",
+    "category": "AddressPostman (random mark)"
+  },
+  {
+    "name": "PersonDocumentPostman",
+    "category": "PersonPostman"
+  },
+  {
+    "name": "BirthDocumentPostman",
+    "category": "BirthPostman"
+  },
+  {
+    "name": "MarriageDocumentPostman",
+    "category": "MarriagePostman"
+  },
+  {
+    "name": "DeathDocumentPostman",
+    "category": "DeathPostman"
+  },
+  {
+    "name": "NameToDeletePostman",
+    "category": "CategoryToDeletePostman"
+  }
+]
