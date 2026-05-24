@@ -27,6 +27,7 @@ builder.Services.AddScoped<IDocumentReadService, DocumentReadService>();
 builder.Services.AddScoped<IDeathRecordReadService, DeathRecordReadService>();
 builder.Services.AddScoped<IBirthRecordService, BirthRecordReadService>();
 builder.Services.AddScoped<IPersonAddressReadService, PersonAddressReadService>();
+builder.Services.AddSingleton<IApiStatsService, ApiStatsService>();
 
 // Services for posting data
 builder.Services.AddScoped<IBirthRecordWriteService, BirthRecordWriteService>();
@@ -56,7 +57,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Middleware section
 app.UseMiddleware<DatabaseExceptionHandlingMiddleware>();
+app.UseMiddleware<DmlTrackerMiddleware>();
 
 app.UseAuthorization();
 

@@ -1,8 +1,6 @@
 /* Main */
-SELECT ad.address_id, ad.document_id, doc.document_id, doc."name"
-FROM addresses AS ad
-JOIN documents AS doc 
-ON ad.document_id = doc.document_id;
+SELECT * FROM document_archives
+
 
 --SELECT * FROM documents
 

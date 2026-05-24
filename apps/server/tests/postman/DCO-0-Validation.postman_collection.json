@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "f2455f00-2aae-49ba-93a9-e8192cbaee78",
+    "_postman_id": "91eb677e-cd9a-45f3-9bb7-8eeb10c04ff4",
     "name": "DCO-0-Validation",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "44390588"
@@ -69,14 +69,14 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Status code is 404\", function () {\r",
-              "    pm.response.to.have.status(404);\r",
+              "pm.test(\"Status code is 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
               "});\r",
               "\r",
               "pm.test(\"Correct JSON response schema\", function () {\r",
               "    pm.response.to.have.jsonBody({\r",
               "        \"title\": \"Invalid database request\",\r",
-              "        \"status\": 404,\r",
+              "        \"status\": 400,\r",
               "        \"detail\": \"The document name is required.\"\r",
               "    });\r",
               "});\r",
@@ -182,14 +182,14 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Status code is 404\", function () {\r",
-              "    pm.response.to.have.status(404);\r",
+              "pm.test(\"Status code is 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
               "});\r",
               "\r",
               "pm.test(\"Correct JSON response schema\", function () {\r",
               "    pm.response.to.have.jsonBody({\r",
               "        \"title\": \"Invalid database request\",\r",
-              "        \"status\": 404,\r",
+              "        \"status\": 400,\r",
               "        \"detail\": \"The document name cannot exceed 100 characters.\"\r",
               "    });\r",
               "});\r",
@@ -295,14 +295,14 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Status code is 404\", function () {\r",
-              "    pm.response.to.have.status(404);\r",
+              "pm.test(\"Status code is 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
               "});\r",
               "\r",
               "pm.test(\"Correct JSON response schema\", function () {\r",
               "    pm.response.to.have.jsonBody({\r",
               "        \"title\": \"Invalid database request\",\r",
-              "        \"status\": 404,\r",
+              "        \"status\": 400,\r",
               "        \"detail\": \"The document category is required.\"\r",
               "    });\r",
               "});\r",
@@ -408,14 +408,14 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Status code is 404\", function () {\r",
-              "    pm.response.to.have.status(404);\r",
+              "pm.test(\"Status code is 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
               "});\r",
               "\r",
               "pm.test(\"Correct JSON response schema\", function () {\r",
               "    pm.response.to.have.jsonBody({\r",
               "        \"title\": \"Invalid database request\",\r",
-              "        \"status\": 404,\r",
+              "        \"status\": 400,\r",
               "        \"detail\": \"The document category cannot exceed 100 characters.\"\r",
               "    });\r",
               "});\r",
@@ -515,63 +515,6 @@
       "response": []
     },
     {
-      "name": "DocumentImportDateRequired",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Status code is 404\", function () {\r",
-              "    pm.response.to.have.status(404);\r",
-              "});\r",
-              "\r",
-              "pm.test(\"Correct JSON response schema\", function () {\r",
-              "    pm.response.to.have.jsonBody({\r",
-              "        \"title\": \"Invalid database request\",\r",
-              "        \"status\": 404,\r",
-              "        \"detail\": \"The import date is required.\"\r",
-              "    });\r",
-              "});\r",
-              "\r",
-              "pm.test(\"Response time is below 200\", function () {\r",
-              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
-              "});"
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "method": "PUT",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "  {\r\n    \"name\": \"testName\",\r\n    \"category\": \"testCategory\"\r\n  }",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:5159/api/Document/101",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "5159",
-          "path": [
-            "api",
-            "Document",
-            "101"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
       "name": "DocumentDeleteIdNotFound",
       "event": [
         {
@@ -606,6 +549,63 @@
         "body": {
           "mode": "raw",
           "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5159/api/Document/300",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5159",
+          "path": [
+            "api",
+            "Document",
+            "300"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DocumentChangeIdNotFound",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Correct JSON response schema\", function () {\r",
+              "    pm.response.to.have.jsonBody({\r",
+              "        \"title\": \"Resource not found\",\r",
+              "        \"status\": 404,\r",
+              "        \"detail\": \"The document to delete was not found.\"\r",
+              "    });\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is below 200\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"string\",\r\n  \"category\": \"string\",\r\n  \"importDate\": \"2026-05-23T15:44:21.759Z\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
