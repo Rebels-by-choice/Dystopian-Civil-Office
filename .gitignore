@@ -489,3 +489,6 @@ baseline.json
 
 # pnpm store
 .pnpm-store
+
+# Custom
+docs_temp

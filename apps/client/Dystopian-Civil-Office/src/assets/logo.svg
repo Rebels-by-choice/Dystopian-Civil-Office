@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="67mm"
+   height="28mm"
+   viewBox="0 0 67 28"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <rect
+       x="8.7102966"
+       y="9.3437729"
+       width="359.97281"
+       height="172.78061"
+       id="rect2" />
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(1.639478,0.9108211)">
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-0.50282167,-6.4109763)"
+       id="text2"
+       style="font-size:113.333px;text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect2);fill:#000000"
+       x="245.50719"
+       y="0"><tspan
+         x="8.7109375"
+         y="113.87795"
+         id="tspan2"><tspan
+           style="font-family:'Showcard Gothic';-inkscape-font-specification:'Showcard Gothic, Normal';fill:#28170b"
+           id="tspan1">DCO</tspan></tspan></text>
+  </g>
+</svg>
