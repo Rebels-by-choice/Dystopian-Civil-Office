@@ -1,7 +1,11 @@
 <header class="sticky top-0 z-50 min-w-[1100px] border-b border-stone-400 bg-dco-bg-navbar">
   <div class="grid grid-cols-[auto_1fr_auto] items-center gap-4 px-5 py-4">
     <a [routerLink]="homePath" class="shrink-0">
-      <img [src]="logoPath" alt="Dystopian Civil Office logo" class="block h-10 w-auto" />
+      <img
+        [src]="logoPath"
+        alt="Dystopian Civil Office logo"
+        class="block h-10 w-auto transition hover:scale-110 hover:cursor-pointer object-contain"
+      />
     </a>
 
     <nav aria-label="Main navigation" class="justify-self-center whitespace-nowrap p-3">
