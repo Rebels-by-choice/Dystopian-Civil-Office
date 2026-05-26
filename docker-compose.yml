@@ -30,20 +30,14 @@ services:
       POSTGRES_APP_PASSWORD: clerk_access12!
     ports:
       - "5435:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/dco_data
   broker:
     image: docker.io/library/redis:8
     container_name: DCO-Paperless-ngx-broker
     restart: unless-stopped
-    volumes:
-      - redisdata:/data
   ngx-db:
     image: docker.io/library/postgres:18
     container_name: DCO-Paperless-ngx-postgresdb
     restart: unless-stopped
-    volumes:
-      - postgres-data:/var/lib/postgresql/dco_ngx-data
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
@@ -57,22 +51,7 @@ services:
       - broker
     ports:
       - "8000:8000"
-    volumes:
-      - ngx-data:/usr/src/paperless/data
-      - ngx-media:/usr/src/paperless/media
-      - ./export:/usr/src/paperless/export
-      - ./consume:/usr/src/paperless/consume
     env_file: docker-compose.env
     environment:
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBHOST: ngx-db
-    
-volumes:
-  postgres-data:
-    external: true
-  redisdata:
-    external: true
-  ngx-data:
-    external: true
-  ngx-media:
-    external: true
