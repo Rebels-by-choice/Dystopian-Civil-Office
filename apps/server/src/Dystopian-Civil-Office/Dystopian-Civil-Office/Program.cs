@@ -9,18 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 
-// Database connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Main service for data fetch and mapping to DTO
 builder.Services.AddScoped<OfficeQueryService>();
 
-// Services for viewing data
 builder.Services.AddScoped<IMarriageReadService, MarriageReadService>();
 builder.Services.AddScoped<IPersonReadService, PersonReadService>();
 builder.Services.AddScoped<IDocumentReadService, DocumentReadService>();
@@ -29,7 +24,6 @@ builder.Services.AddScoped<IBirthRecordService, BirthRecordReadService>();
 builder.Services.AddScoped<IPersonAddressReadService, PersonAddressReadService>();
 builder.Services.AddSingleton<IApiStatsService, ApiStatsService>();
 
-// Services for posting data
 builder.Services.AddScoped<IBirthRecordWriteService, BirthRecordWriteService>();
 builder.Services.AddScoped<IDeathRecordWriteService, DeathRecordWriteService>();
 builder.Services.AddScoped<IDocumentWriteService, DocumentWriteService>();
@@ -37,18 +31,21 @@ builder.Services.AddScoped<IMarriageWriteService, MarriageWriteService>();
 builder.Services.AddScoped<IPersonAddressWriteService, PersonAddressWriteService>();
 builder.Services.AddScoped<IPersonWriteService, PersonWriteService>();
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// builder.Services.AddOpenApi();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -57,9 +54,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Middleware section
 app.UseMiddleware<DatabaseExceptionHandlingMiddleware>();
 app.UseMiddleware<DmlTrackerMiddleware>();
+
+app.UseCors("FrontendPolicy");
 
 app.UseAuthorization();
 
