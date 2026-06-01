@@ -1,8 +1,10 @@
 using Dystopian_Civil_Office.DataSource;
+using Dystopian_Civil_Office.Exceptions;
 using Dystopian_Civil_Office.Middleware;
 using Dystopian_Civil_Office.Services;
 using Dystopian_Civil_Office.Services.Read.Interfaces;
 using Dystopian_Civil_Office.Services.Read.Impls;
+using Dystopian_Civil_Office.Services.Validation;
 using Dystopian_Civil_Office.Services.Write.Interfaces;
 using Dystopian_Civil_Office.Services.Write.Impls;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +12,13 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddExceptionHandler<ViewDataExceptionHandler>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<OfficeQueryService>();
+builder.Services.AddScoped<IQueryValidationService, QueryValidationService>();
 
 builder.Services.AddScoped<IMarriageReadService, MarriageReadService>();
 builder.Services.AddScoped<IPersonReadService, PersonReadService>();
