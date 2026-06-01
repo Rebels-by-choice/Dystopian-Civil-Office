@@ -56,6 +56,7 @@
               </th>
 
               <th class="w-12 bg-transparent px-2 py-3"></th>
+              <th class="w-12 bg-transparent px-2 py-3"></th>
             </tr>
           </thead>
 
@@ -75,10 +76,20 @@
                     <img src="assets/edit.png" alt="Edit" class="h-4 w-4" />
                   </button>
                 </td>
+                <td class="bg-transparent px-2 py-4 text-center">
+                  <button
+                    type="button"
+                    class="inline-flex h-8 w-8 items-center justify-center rounded-md text-stone-500 transition hover:bg-stone-200 hover:text-stone-900 hover:cursor-pointer"
+                    (click)="openDeleteDialog(document)"
+                    aria-label="Delete document"
+                  >
+                    <img src="assets/bin.png" alt="Delete" class="h-4 w-4" />
+                  </button>
+                </td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="4" class="px-4 py-6 text-center text-stone-500">
+                <td colspan="5" class="px-4 py-6 text-center text-stone-500">
                   No documents found.
                 </td>
               </tr>

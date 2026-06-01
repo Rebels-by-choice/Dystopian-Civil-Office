@@ -10,6 +10,7 @@ import { DocumentsService } from '../../services/documents.service';
 import { CreateDocumentDialogComponent } from '../../dialogues/create-document-dialog.component/create-document-dialog.component';
 import { DocumentViewModel } from '../../../shared/api-models/responses/document.viewmodel';
 import { UpdateDocumentDialogComponent } from '../../dialogues/update-document-dialog.component/update-document-dialog.component';
+import { DeleteDocumentDialogComponent } from '../../dialogues/delete-document-dialog.component/delete-document-dialog.component';
 
 type SortColumn = 'name' | 'category' | 'importDate';
 type SortDirection = 'asc' | 'desc';
@@ -88,6 +89,24 @@ export class DocumentsPageComponent {
 
     dialogRef.afterClosed().subscribe((updated: boolean) => {
       if (!updated) {
+        return;
+      }
+
+      setTimeout(() => {
+        this.refreshDocumentsTrigger$.next();
+      }, 0);
+    });
+  }
+
+  protected openDeleteDialog(document: DocumentViewModel): void {
+    const dialogRef = this.dialog.open(DeleteDocumentDialogComponent, {
+      disableClose: true,
+      panelClass: 'document-dialog-panel',
+      data: document,
+    });
+
+    dialogRef.afterClosed().subscribe((deleted: boolean) => {
+      if (!deleted) {
         return;
       }
 

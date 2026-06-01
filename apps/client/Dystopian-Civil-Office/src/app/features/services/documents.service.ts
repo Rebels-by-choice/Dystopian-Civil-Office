@@ -48,15 +48,8 @@ export class DocumentsService {
     );
   }
 
-  public deleteDocument(documentId: number, request: DeleteDocumentModel): Observable<void> {
-    return this.http
-      .delete<void>(`${this.url}/${documentId}`, {
-        body: request,
-      })
-      .pipe(
-        tap(() => this.clearCache()),
-        catchError((error) => throwError(() => error)),
-      );
+  public deleteDocument(documentId: number) {
+    return this.http.delete<void>(`${this.url}/${documentId}`);
   }
 
   public refreshDocuments(): Observable<DocumentViewModel[]> {
