@@ -54,19 +54,31 @@
                   </span>
                 </div>
               </th>
+
+              <th class="w-12 bg-transparent px-2 py-3"></th>
             </tr>
           </thead>
 
           <tbody class="bg-white text-sm text-stone-800">
-            @for (document of documents; track $index) {
+            @for (document of documents; track document.documentId) {
               <tr class="border-b border-stone-300 last:border-b-0 hover:bg-stone-50">
                 <td class="px-4 py-4">{{ document.name }}</td>
                 <td class="px-4 py-4">{{ document.category }}</td>
                 <td class="px-4 py-4">{{ document.importDate | date: 'yyyy-MM-dd HH:mm' }}</td>
+                <td class="bg-transparent px-2 py-4 text-center">
+                  <button
+                    type="button"
+                    class="inline-flex h-8 w-8 items-center justify-center rounded-md text-stone-500 transition hover:bg-stone-200 hover:text-stone-900 hover:cursor-pointer"
+                    (click)="openUpdateDialog(document)"
+                    aria-label="Edit document"
+                  >
+                    <img src="assets/edit.png" alt="Edit" class="h-4 w-4" />
+                  </button>
+                </td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="3" class="px-4 py-6 text-center text-stone-500">
+                <td colspan="4" class="px-4 py-6 text-center text-stone-500">
                   No documents found.
                 </td>
               </tr>

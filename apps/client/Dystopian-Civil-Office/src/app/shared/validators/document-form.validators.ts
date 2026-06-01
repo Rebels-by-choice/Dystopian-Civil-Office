@@ -1,4 +1,10 @@
-import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+  FormGroup,
+} from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export class DocumentFormValidators {
@@ -74,5 +80,16 @@ export class DocumentFormValidators {
     }
 
     return `Temporary issue with the server`;
+  }
+
+  public static hasDocumentChanges(
+    form: FormGroup,
+    originalName: string,
+    originalCategory: string,
+  ): boolean {
+    const currentName = form.get('name')?.value?.trim() ?? '';
+    const currentCategory = form.get('category')?.value?.trim() ?? '';
+
+    return currentName !== originalName.trim() || currentCategory !== originalCategory.trim();
   }
 }

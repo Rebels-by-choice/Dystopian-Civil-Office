@@ -4,7 +4,11 @@ import { Observable, catchError, map, shareReplay, tap, throwError } from 'rxjs'
 
 import { DocumentViewModel } from '../../shared/api-models/responses/document.viewmodel';
 import { apiConfig } from '../../core/config/api-main-url';
-import { DocumentModel } from '../../shared/api-models/requests/document.model';
+import {
+  DeleteDocumentModel,
+  DocumentModel,
+} from '../../shared/api-models/requests/document.model';
+import { UpdateDocumentModel } from '../../shared/api-models/requests/document.model';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +39,24 @@ export class DocumentsService {
       tap(() => this.clearCache()),
       catchError((error) => throwError(() => error)),
     );
+  }
+
+  public updateDocument(documentId: number, request: UpdateDocumentModel): Observable<void> {
+    return this.http.put<void>(`${this.url}/${documentId}`, request).pipe(
+      tap(() => this.clearCache()),
+      catchError((error) => throwError(() => error)),
+    );
+  }
+
+  public deleteDocument(documentId: number, request: DeleteDocumentModel): Observable<void> {
+    return this.http
+      .delete<void>(`${this.url}/${documentId}`, {
+        body: request,
+      })
+      .pipe(
+        tap(() => this.clearCache()),
+        catchError((error) => throwError(() => error)),
+      );
   }
 
   public refreshDocuments(): Observable<DocumentViewModel[]> {

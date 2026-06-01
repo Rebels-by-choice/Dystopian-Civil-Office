@@ -37,6 +37,7 @@ public class OfficeQueryService
             .AsNoTracking()
             .Select(d => new DocumentResponseDto
             {
+                DocumentId = d.DocumentId,
                 Name = d.Name,
                 Category = d.Category,
                 ImportDate = d.ImportDate

@@ -9,6 +9,7 @@ import { ButtonComponent } from '../../../shared/ui/button.component/button.comp
 import { DocumentsService } from '../../services/documents.service';
 import { CreateDocumentDialogComponent } from '../../dialogues/create-document-dialog.component/create-document-dialog.component';
 import { DocumentViewModel } from '../../../shared/api-models/responses/document.viewmodel';
+import { UpdateDocumentDialogComponent } from '../../dialogues/update-document-dialog.component/update-document-dialog.component';
 
 type SortColumn = 'name' | 'category' | 'importDate';
 type SortDirection = 'asc' | 'desc';
@@ -69,6 +70,24 @@ export class DocumentsPageComponent {
 
     dialogRef.afterClosed().subscribe((created: boolean) => {
       if (!created) {
+        return;
+      }
+
+      setTimeout(() => {
+        this.refreshDocumentsTrigger$.next();
+      }, 0);
+    });
+  }
+
+  protected openUpdateDialog(document: DocumentViewModel): void {
+    const dialogRef = this.dialog.open(UpdateDocumentDialogComponent, {
+      disableClose: true,
+      panelClass: 'document-dialog-panel',
+      data: document,
+    });
+
+    dialogRef.afterClosed().subscribe((updated: boolean) => {
+      if (!updated) {
         return;
       }
 
