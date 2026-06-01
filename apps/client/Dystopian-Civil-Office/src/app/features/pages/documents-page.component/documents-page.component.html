@@ -16,9 +16,44 @@
             class="bg-stone-950 text-left text-xs font-bold uppercase tracking-[0.08em] text-white"
           >
             <tr>
-              <th class="px-4 py-3">Name</th>
-              <th class="px-4 py-3">Category</th>
-              <th class="px-4 py-3">Import date</th>
+              <th class="px-4 py-3 hover:cursor-pointer select-none" (click)="sortBy('name')">
+                <div class="flex items-center gap-2">
+                  <span>Name</span>
+                  <span class="text-[10px]">
+                    @if (getSortDirection('name') === 'asc') {
+                      ▲
+                    } @else if (getSortDirection('name') === 'desc') {
+                      ▼
+                    }
+                  </span>
+                </div>
+              </th>
+
+              <th class="px-4 py-3 hover:cursor-pointer select-none" (click)="sortBy('category')">
+                <div class="flex items-center gap-2">
+                  <span>Category</span>
+                  <span class="text-[10px]">
+                    @if (getSortDirection('category') === 'asc') {
+                      ▲
+                    } @else if (getSortDirection('category') === 'desc') {
+                      ▼
+                    }
+                  </span>
+                </div>
+              </th>
+
+              <th class="px-4 py-3 hover:cursor-pointer select-none" (click)="sortBy('importDate')">
+                <div class="flex items-center gap-2">
+                  <span>Import date</span>
+                  <span class="text-[10px]">
+                    @if (getSortDirection('importDate') === 'asc') {
+                      ▲
+                    } @else if (getSortDirection('importDate') === 'desc') {
+                      ▼
+                    }
+                  </span>
+                </div>
+              </th>
             </tr>
           </thead>
 
