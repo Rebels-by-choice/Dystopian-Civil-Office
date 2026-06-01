@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, shareReplay, throwError } from 'rxjs';
+import { Observable, catchError, map, shareReplay, tap, throwError } from 'rxjs';
 
-import { DocumentViewModel } from '../../shared/viewmodels/document.viewmodel';
+import { DocumentViewModel } from '../../shared/api-models/responses/document.viewmodel';
 import { apiConfig } from '../../core/config/api-main-url';
+import { DocumentModel } from '../../shared/api-models/requests/document.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,13 @@ export class DocumentsService {
     }
 
     return this.documents$;
+  }
+
+  public createDocument(request: DocumentModel): Observable<void> {
+    return this.http.post<void>(this.url, request).pipe(
+      tap(() => this.clearCache()),
+      catchError((error) => throwError(() => error)),
+    );
   }
 
   public refreshDocuments(): Observable<DocumentViewModel[]> {

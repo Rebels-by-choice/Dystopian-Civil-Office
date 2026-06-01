@@ -1,37 +1,45 @@
 <div class="p-2 pb-17">
   <div class="mb-6 flex items-center gap-4">
     <span class="text-3xl">Documents View Model</span>
-    <app-button (clicked)="addDocument()">Add new document</app-button>
+    <app-button label="Add document" (buttonClick)="openCreateDialog()"></app-button>
   </div>
 
   @if (documents$ | async; as documents) {
-    <div class="overflow-hidden border border-stone-300 bg-white shadow-sm">
-      <table class="min-w-full border-collapse">
-        <thead
-          class="bg-stone-950 text-left text-xs font-bold uppercase tracking-[0.08em] text-white"
-        >
-          <tr>
-            <th class="px-4 py-3">Name</th>
-            <th class="px-4 py-3">Category</th>
-            <th class="px-4 py-3">Import date</th>
-          </tr>
-        </thead>
-
-        <tbody class="bg-white text-sm text-stone-800">
-          @for (document of documents; track document.name + document.importDate) {
-            <tr class="border-b border-stone-300 last:border-b-0 hover:bg-stone-50">
-              <td class="px-4 py-4">{{ document.name }}</td>
-              <td class="px-4 py-4">{{ document.category }}</td>
-              <td class="px-4 py-4">{{ document.importDate | date: 'yyyy-MM-dd HH:mm' }}</td>
-            </tr>
-          } @empty {
+    @if (documentsErrorMessage) {
+      <div class="rounded-xl border border-red-300 bg-red-50 px-4 py-4 text-red-700">
+        {{ documentsErrorMessage }}
+      </div>
+    } @else {
+      <div class="overflow-hidden border border-stone-300 bg-white shadow-sm">
+        <table class="min-w-full border-collapse">
+          <thead
+            class="bg-stone-950 text-left text-xs font-bold uppercase tracking-[0.08em] text-white"
+          >
             <tr>
-              <td colspan="3" class="px-4 py-6 text-center text-stone-500">No documents found.</td>
+              <th class="px-4 py-3">Name</th>
+              <th class="px-4 py-3">Category</th>
+              <th class="px-4 py-3">Import date</th>
             </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+          </thead>
+
+          <tbody class="bg-white text-sm text-stone-800">
+            @for (document of documents; track $index) {
+              <tr class="border-b border-stone-300 last:border-b-0 hover:bg-stone-50">
+                <td class="px-4 py-4">{{ document.name }}</td>
+                <td class="px-4 py-4">{{ document.category }}</td>
+                <td class="px-4 py-4">{{ document.importDate | date: 'yyyy-MM-dd HH:mm' }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="px-4 py-6 text-center text-stone-500">
+                  No documents found.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   } @else {
     <div class="p-4 text-stone-500">Loading documents...</div>
   }

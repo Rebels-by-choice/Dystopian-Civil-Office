@@ -40,3 +40,8 @@ body {
   font-family: 'Roboto Slab', serif !important;
   font-size: 80%;
 }
+
+.document-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
+  background: transparent;
+  box-shadow: none;
+}
