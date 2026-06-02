@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, map, shareReplay, tap, throwError } from 'rxjs';
 
 import { DocumentViewModel } from '../../shared/api-models/responses/document.viewmodel';
@@ -7,8 +7,8 @@ import { apiConfig } from '../../core/config/api-main-url';
 import {
   DeleteDocumentModel,
   DocumentModel,
+  UpdateDocumentModel,
 } from '../../shared/api-models/requests/document.model';
-import { UpdateDocumentModel } from '../../shared/api-models/requests/document.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +18,7 @@ export class DocumentsService {
   private readonly url = `${apiConfig.baseUrl}/document`;
 
   private documents$?: Observable<DocumentViewModel[]>;
+  private readonly documentsByCategoryCache = new Map<string, Observable<DocumentViewModel[]>>();
 
   public getDocuments(): Observable<DocumentViewModel[]> {
     if (!this.documents$) {
@@ -34,6 +35,32 @@ export class DocumentsService {
     return this.documents$;
   }
 
+  public getDocumentsByCategory(category: string): Observable<DocumentViewModel[]> {
+    const normalizedCategory = category.trim();
+
+    const cachedDocuments = this.documentsByCategoryCache.get(normalizedCategory);
+    if (cachedDocuments) {
+      return cachedDocuments;
+    }
+
+    const request$ = this.http
+      .get<DocumentViewModel[]>(`${this.url}/categories`, {
+        params: new HttpParams().set('category', normalizedCategory),
+      })
+      .pipe(
+        map((documents) => [...documents].reverse()),
+        shareReplay({ bufferSize: 1, refCount: true }),
+        catchError((error) => {
+          this.documentsByCategoryCache.delete(normalizedCategory);
+          return throwError(() => error);
+        }),
+      );
+
+    this.documentsByCategoryCache.set(normalizedCategory, request$);
+
+    return request$;
+  }
+
   public createDocument(request: DocumentModel): Observable<void> {
     return this.http.post<void>(this.url, request).pipe(
       tap(() => this.clearCache()),
@@ -48,8 +75,11 @@ export class DocumentsService {
     );
   }
 
-  public deleteDocument(documentId: number) {
-    return this.http.delete<void>(`${this.url}/${documentId}`);
+  public deleteDocument(documentId: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${documentId}`).pipe(
+      tap(() => this.clearCache()),
+      catchError((error) => throwError(() => error)),
+    );
   }
 
   public refreshDocuments(): Observable<DocumentViewModel[]> {
@@ -57,7 +87,13 @@ export class DocumentsService {
     return this.getDocuments();
   }
 
+  public refreshDocumentsByCategory(category: string): Observable<DocumentViewModel[]> {
+    this.documentsByCategoryCache.delete(category.trim());
+    return this.getDocumentsByCategory(category);
+  }
+
   public clearCache(): void {
     this.documents$ = undefined;
+    this.documentsByCategoryCache.clear();
   }
 }

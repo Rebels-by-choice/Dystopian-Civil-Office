@@ -11,6 +11,7 @@ export class ButtonComponent {
   @Input() label = '';
   @Input() variant: 'primary' | 'secondary' = 'primary';
   @Input() disabled = false;
+  @Input() customClass = '';
 
   @Output() buttonClick = new EventEmitter<void>();
 

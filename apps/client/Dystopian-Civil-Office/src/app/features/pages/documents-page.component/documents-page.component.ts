@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
@@ -23,7 +24,7 @@ interface SortState {
 @Component({
   selector: 'app-documents-page.component',
   standalone: true,
-  imports: [ButtonComponent, AsyncPipe, DatePipe],
+  imports: [ButtonComponent, AsyncPipe, DatePipe, FormsModule],
   templateUrl: './documents-page.component.html',
   styles: ``,
 })
@@ -31,24 +32,42 @@ export class DocumentsPageComponent {
   private readonly dialog = inject(MatDialog);
   private readonly documentsService = inject(DocumentsService);
 
-  private readonly refreshDocumentsTrigger$ = new BehaviorSubject<void>(undefined);
-
   private readonly sortState$ = new BehaviorSubject<SortState>({
     column: 'importDate',
     direction: 'desc',
   });
 
-  protected documentsErrorMessage = '';
+  private readonly activeCategoryFilter$ = new BehaviorSubject<string | null>(null);
 
-  private readonly rawDocuments$ = this.refreshDocumentsTrigger$.pipe(
-    switchMap(() => {
+  protected documentsErrorMessage = '';
+  protected selectedCategory = 'Default';
+
+  protected readonly categoryOptions: string[] = [
+    'Default',
+    'BirthRecord',
+    'Person',
+    'Address',
+    'DeathRecord',
+    'MarriageRecord',
+  ];
+
+  private readonly rawDocuments$ = this.activeCategoryFilter$.pipe(
+    switchMap((category) => {
       this.documentsErrorMessage = '';
 
-      return this.documentsService.refreshDocuments().pipe(
+      const request$ = category
+        ? this.documentsService.getDocumentsByCategory(category)
+        : this.documentsService.refreshDocuments();
+
+      return request$.pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 0) {
             this.documentsErrorMessage =
               'Cannot connect to server. Check whether the backend is running.';
+          } else if (error.error?.description) {
+            this.documentsErrorMessage = error.error.description;
+          } else if (error.error?.title) {
+            this.documentsErrorMessage = error.error.title;
           } else {
             this.documentsErrorMessage = `Failed to load documents. HTTP Error ${error.status}.`;
           }
@@ -74,9 +93,7 @@ export class DocumentsPageComponent {
         return;
       }
 
-      setTimeout(() => {
-        this.refreshDocumentsTrigger$.next();
-      }, 0);
+      this.reloadCurrentDocuments();
     });
   }
 
@@ -92,9 +109,7 @@ export class DocumentsPageComponent {
         return;
       }
 
-      setTimeout(() => {
-        this.refreshDocumentsTrigger$.next();
-      }, 0);
+      this.reloadCurrentDocuments();
     });
   }
 
@@ -110,10 +125,23 @@ export class DocumentsPageComponent {
         return;
       }
 
-      setTimeout(() => {
-        this.refreshDocumentsTrigger$.next();
-      }, 0);
+      this.reloadCurrentDocuments();
     });
+  }
+
+  protected applyCategoryFilter(): void {
+    const normalizedCategory = this.selectedCategory.trim();
+
+    if (normalizedCategory === 'Default') {
+      this.resetCategoryFilterState();
+      return;
+    }
+
+    this.activeCategoryFilter$.next(normalizedCategory);
+  }
+
+  protected resetCategoryFilter(): void {
+    this.resetCategoryFilterState();
   }
 
   protected sortBy(column: SortColumn): void {
@@ -137,6 +165,25 @@ export class DocumentsPageComponent {
   protected getSortDirection(column: SortColumn): SortDirection | null {
     const currentSort = this.sortState$.value;
     return currentSort.column === column ? currentSort.direction : null;
+  }
+
+  private reloadCurrentDocuments(): void {
+    const activeCategory = this.activeCategoryFilter$.value;
+
+    if (activeCategory) {
+      this.documentsService.refreshDocumentsByCategory(activeCategory);
+      this.activeCategoryFilter$.next(activeCategory);
+      return;
+    }
+
+    this.documentsService.clearCache();
+    this.activeCategoryFilter$.next(null);
+  }
+
+  private resetCategoryFilterState(): void {
+    this.selectedCategory = 'Default';
+    this.documentsService.clearCache();
+    this.activeCategoryFilter$.next(null);
   }
 
   private sortDocuments(documents: DocumentViewModel[], sortState: SortState): DocumentViewModel[] {
