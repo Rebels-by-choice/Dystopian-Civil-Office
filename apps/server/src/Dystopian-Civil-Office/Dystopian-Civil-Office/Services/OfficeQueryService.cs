@@ -37,6 +37,22 @@ public class OfficeQueryService
             .AsNoTracking()
             .Select(d => new DocumentResponseDto
             {
+                DocumentId = d.DocumentId,
+                Name = d.Name,
+                Category = d.Category,
+                ImportDate = d.ImportDate
+            })
+            .ToListAsync();
+    }
+    
+    public async Task<List<DocumentResponseDto>> GetDocumentsByCategoryAsync(string category)
+    {
+        return await _context.Documents
+            .AsNoTracking()
+            .Where(d => d.Category == category)
+            .Select(d => new DocumentResponseDto
+            {
+                DocumentId = d.DocumentId,
                 Name = d.Name,
                 Category = d.Category,
                 ImportDate = d.ImportDate

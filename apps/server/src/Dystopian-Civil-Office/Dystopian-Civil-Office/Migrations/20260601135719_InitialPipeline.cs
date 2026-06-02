@@ -292,6 +292,12 @@ namespace Dystopian_Civil_Office.Migrations
                 column: "pesel",
                 unique: true);
             
+            migrationBuilder.CreateIndex(
+                name: "IX_documents_name",
+                table: "documents",
+                column: "name",
+                unique: true);
+            
             migrationBuilder.CreateTable(
                 name: "address_archives",
                 columns: table => new

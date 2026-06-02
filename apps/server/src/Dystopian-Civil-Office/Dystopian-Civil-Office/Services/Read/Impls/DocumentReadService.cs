@@ -16,4 +16,9 @@ public class DocumentReadService : IDocumentReadService
     {
         return await _officeQueryService.GetDocumentsAsync();
     }
+
+    public async Task<IEnumerable<DocumentResponseDto>> GetDocumentsByCategoryAsync(string category)
+    {
+        return await _officeQueryService.GetDocumentsByCategoryAsync(category);
+    }
 }

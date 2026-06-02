@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dystopian_Civil_Office.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260523153424_InitialPipeline")]
+    [Migration("20260601135719_InitialPipeline")]
     partial class InitialPipeline
     {
         /// <inheritdoc />
