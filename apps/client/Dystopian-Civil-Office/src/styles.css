@@ -41,7 +41,49 @@ body {
   font-size: 80%;
 }
 
+/* --- Section Angular Material Fixes --- */
+
 .document-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
-  background: transparent;
-  box-shadow: none;
+  background: #141414;
+  border-radius: 12px;
+  overflow: visible !important;
+}
+
+.mat-mdc-select-trigger {
+  background-color: transparent !important;
+}
+
+.mat-mdc-select-arrow-wrapper {
+  padding-right: 8px !important;
+}
+
+.mat-mdc-select-arrow svg {
+  fill: #fcfafa !important;
+}
+
+.cdk-overlay-panel {
+  z-index: 10000 !important;
+}
+
+.mat-mdc-select-panel {
+  background-color: #2e2d2d !important;
+  border: 1px solid #524e4e;
+  border-radius: 4px;
+}
+
+.mat-mdc-option {
+  color: #fcfafa !important;
+}
+
+.mat-mdc-option:hover {
+  background-color: #524e4e !important;
+}
+
+.mat-mdc-option .mdc-list-item__primary-text {
+  font-size: 12px !important;
+  font-family: 'Roboto Slab', serif !important;
+}
+
+.mat-mdc-select-value {
+  font-size: 12px !important;
 }
