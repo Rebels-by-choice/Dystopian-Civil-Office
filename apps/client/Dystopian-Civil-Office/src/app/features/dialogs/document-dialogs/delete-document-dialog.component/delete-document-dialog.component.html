@@ -1,0 +1,22 @@
+<app-dialog-shell
+  title="Delete document"
+  subtitle="Are you sure you want to delete this document?"
+  [errorMessage]="apiErrorMessage"
+>
+  <div dialog-body>
+    <div class="mb-5 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-4 text-center">
+      <p class="text-sm text-zinc-200">
+        <span class="font-semibold text-red-200">{{ data.name }}</span>
+      </p>
+      <p class="mt-1 text-xs text-zinc-400">Category: {{ data.category }}</p>
+    </div>
+    <p class="text-sm text-center text-zinc-400">
+      All data associated with this document will be deleted.
+    </p>
+  </div>
+
+  <div dialog-actions>
+    <app-button label="Cancel" variant="secondary" (buttonClick)="onCancel()"></app-button>
+    <app-button label="OK" [disabled]="isSubmitting" (buttonClick)="onConfirm()"></app-button>
+  </div>
+</app-dialog-shell>

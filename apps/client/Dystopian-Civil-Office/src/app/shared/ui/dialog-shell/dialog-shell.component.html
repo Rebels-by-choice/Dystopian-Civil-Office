@@ -1,0 +1,19 @@
+<div [ngClass]="containerClass">
+  <div class="mb-6 text-center">
+    <h2 class="text-3xl font-semibold">{{ title }}</h2>
+    <p *ngIf="subtitle" class="mt-2 text-sm text-zinc-400">{{ subtitle }}</p>
+  </div>
+
+  <ng-content select="[dialog-body]"></ng-content>
+
+  <div
+    *ngIf="errorMessage"
+    class="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-center"
+  >
+    <p class="text-sm font-medium text-red-300">{{ errorMessage }}</p>
+  </div>
+
+  <div class="mt-2 flex justify-center gap-3">
+    <ng-content select="[dialog-actions]"></ng-content>
+  </div>
+</div>
