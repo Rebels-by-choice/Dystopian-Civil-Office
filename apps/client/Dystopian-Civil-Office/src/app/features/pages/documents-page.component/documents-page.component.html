@@ -4,14 +4,14 @@
       <h1 class="text-3xl">Documents</h1>
 
       <form
-        class="mb-0 flex items-center gap-4"
+        class="mb-0 flex items-center gap-2"
         (submit)="$event.preventDefault(); applyCategoryFilter()"
       >
         <select
           id="document-category-filter"
           [(ngModel)]="selectedCategory"
           name="selectedCategory"
-          class="w-[180px] rounded-base border-2 bg-[#F5EEDA] px-3 py-2.5 text-sm font-semibold text-heading shadow-xl placeholder:text-body focus:border-brand focus:ring-brand"
+          class="w-45 rounded-base border-2 bg-dco-bg-select px-3 mr-3 py-2.5 text-sm font-semibold text-heading shadow-xl placeholder:text-body focus:border-brand focus:ring-brand"
         >
           @for (category of categoryOptions; track category) {
             <option [value]="category">{{ category }}</option>
@@ -19,13 +19,13 @@
         </select>
 
         <app-button
-          customClass="!bg-[#0662BD] hover:!bg-[#1070d1] !px-4 !text-[11px]"
+          customClass="!bg-dco-bg-button-apply-filter hover:!bg-dco-bg-button-apply-filter-hover !px-4 !text-[11px]"
           label="Filter"
           (buttonClick)="applyCategoryFilter()"
         ></app-button>
 
         <app-button
-          customClass="!bg-[#9E3D0D] hover:!bg-[#B35120] !px-4 !text-[11px]"
+          customClass="!bg-dco-bg-button-reset-filter hover:!bg-dco-bg-button-reset-filter-hover !px-4 !text-[11px]"
           label="Reset"
           (buttonClick)="resetCategoryFilter()"
         ></app-button>
@@ -37,107 +37,104 @@
 
   @if (documents$ | async; as documents) {
     @if (documentsErrorMessage) {
-      <div class="rounded-xl border border-red-300 bg-red-50 px-4 py-4 text-red-700">
+      <div class="rounded-xl border border-red-300 bg-dco-bg-error px-4 py-4 text-dco-text-error">
         {{ documentsErrorMessage }}
       </div>
     } @else {
-      <div class="overflow-hidden border border-stone-300 bg-white shadow-sm">
-        <table class="min-w-full border-collapse">
-          <thead
-            class="bg-stone-950 text-left text-xs font-bold uppercase tracking-[0.08em] text-white"
-          >
-            <tr>
-              <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('name')">
-                <div class="flex items-center gap-2">
-                  <span>Name</span>
-                  <span class="text-[10px]">
-                    @if (getSortDirection('name') === 'asc') {
-                      ▲
-                    } @else if (getSortDirection('name') === 'desc') {
-                      ▼
-                    }
-                  </span>
-                </div>
-              </th>
+      <app-table>
+        <thead
+          table-head
+          class="bg-dco-bg-thead text-left text-xs font-bold uppercase tracking-[0.08em] text-dco-text-secondary"
+        >
+          <tr>
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('name')">
+              <div class="flex items-center gap-2">
+                <span>Name</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('name') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('name') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
 
-              <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('category')">
-                <div class="flex items-center gap-2">
-                  <span>Category</span>
-                  <span class="text-[10px]">
-                    @if (getSortDirection('category') === 'asc') {
-                      ▲
-                    } @else if (getSortDirection('category') === 'desc') {
-                      ▼
-                    }
-                  </span>
-                </div>
-              </th>
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('category')">
+              <div class="flex items-center gap-2">
+                <span>Category</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('category') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('category') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
 
-              <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('importDate')">
-                <div class="flex items-center gap-2">
-                  <span>Import date</span>
-                  <span class="text-[10px]">
-                    @if (getSortDirection('importDate') === 'asc') {
-                      ▲
-                    } @else if (getSortDirection('importDate') === 'desc') {
-                      ▼
-                    }
-                  </span>
-                </div>
-              </th>
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('importDate')">
+              <div class="flex items-center gap-2">
+                <span>Import date</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('importDate') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('importDate') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
 
-              <th class="w-12 bg-transparent px-2 py-3"></th>
-              <th class="w-12 bg-transparent px-2 py-3"></th>
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+          </tr>
+        </thead>
+
+        <tbody table-body class="bg-dco-bg-table text-sm text-dco-table-contents">
+          @for (document of documents; track document.documentId) {
+            <tr class="border-b border-stone-300 last:border-b-0 hover:bg-dco-bg-table">
+              <td class="px-4 py-4">
+                <a
+                  href="http://localhost:8000/api/documents/{{ document.documentId }}/preview/"
+                  target="_blank"
+                  class="text-[#170C69] hover:underline"
+                >
+                  {{ document.name }}
+                </a>
+              </td>
+              <td class="px-4 py-4">{{ document.category }}</td>
+              <td class="px-4 py-4">{{ document.importDate | date: 'yyyy-MM-dd HH:mm' }}</td>
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openUpdateDialog(document)"
+                  aria-label="Edit document"
+                >
+                  <img src="assets/edit.png" alt="Edit" class="h-4 w-4" />
+                </button>
+              </td>
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openDeleteDialog(document)"
+                  aria-label="Delete document"
+                >
+                  <img src="assets/bin.png" alt="Delete" class="h-4 w-4" />
+                </button>
+              </td>
             </tr>
-          </thead>
-
-          <tbody class="bg-white text-sm text-stone-800">
-            @for (document of documents; track document.documentId) {
-              <tr class="border-b border-stone-300 last:border-b-0 hover:bg-stone-50">
-                <td class="px-4 py-4">
-                  <a
-                    href="http://localhost:8000/api/documents/{{ document.documentId }}/preview/"
-                    target="_blank"
-                    class="text-[#170C69] hover:underline"
-                  >
-                    {{ document.name }}
-                  </a>
-                </td>
-                <td class="px-4 py-4">{{ document.category }}</td>
-                <td class="px-4 py-4">{{ document.importDate | date: 'yyyy-MM-dd HH:mm' }}</td>
-                <td class="bg-transparent px-2 py-4 text-center">
-                  <button
-                    type="button"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-md text-stone-500 transition hover:cursor-pointer hover:bg-stone-200 hover:text-stone-900"
-                    (click)="openUpdateDialog(document)"
-                    aria-label="Edit document"
-                  >
-                    <img src="assets/edit.png" alt="Edit" class="h-4 w-4" />
-                  </button>
-                </td>
-                <td class="bg-transparent px-2 py-4 text-center">
-                  <button
-                    type="button"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-md text-stone-500 transition hover:cursor-pointer hover:bg-stone-200 hover:text-stone-900"
-                    (click)="openDeleteDialog(document)"
-                    aria-label="Delete document"
-                  >
-                    <img src="assets/bin.png" alt="Delete" class="h-4 w-4" />
-                  </button>
-                </td>
-              </tr>
-            } @empty {
-              <tr>
-                <td colspan="5" class="px-4 py-6 text-center text-stone-500">
-                  No documents found.
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+          } @empty {
+            <tr>
+              <td colspan="5" class="px-4 py-6 text-center text-dco-table-contents">No documents found.</td>
+            </tr>
+          }
+        </tbody>
+      </app-table>
     }
   } @else {
-    <div class="p-4 text-stone-500">Loading documents...</div>
+    <div class="p-4 text-dco-table-contents">Loading documents...</div>
   }
 </div>

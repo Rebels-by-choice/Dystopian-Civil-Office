@@ -5,11 +5,12 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
-import { DocumentsService } from '../../services/documents.service';
-import { UpdateDocumentModel } from '../../../shared/api-models/requests/document.model';
-import { DocumentViewModel } from '../../../shared/api-models/responses/document.viewmodel';
-import { DocumentFormValidators } from '../../../shared/validators/document-form.validators';
-import { ButtonComponent } from '../../../shared/ui/button.component/button.component';
+import { DocumentsService } from '../../../services/documents.service';
+import { UpdateDocumentModel } from '../../../../shared/api-models/requests/document.model';
+import { DocumentViewModel } from '../../../../shared/api-models/responses/document.viewmodel';
+import { DocumentFormValidators } from '../../../../shared/validators/document-form.validators';
+import { ButtonComponent } from '../../../../shared/ui/button.component/button.component';
+import { DialogShellComponent } from '../../../../shared/ui/dialog-shell/dialog-shell.component';
 
 @Component({
   selector: 'app-update-document-dialog',
@@ -21,6 +22,7 @@ import { ButtonComponent } from '../../../shared/ui/button.component/button.comp
     MatInputModule,
     MatFormFieldModule,
     ButtonComponent,
+    DialogShellComponent,
   ],
   templateUrl: './update-document-dialog.component.html',
 })

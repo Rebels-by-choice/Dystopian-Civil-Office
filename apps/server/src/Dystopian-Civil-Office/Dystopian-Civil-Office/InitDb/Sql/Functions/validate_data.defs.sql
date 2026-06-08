@@ -324,6 +324,10 @@ BEGIN
     IF length(btrim(p_category)) > 100 THEN
         RAISE EXCEPTION 'The document category cannot exceed 100 characters.';
     END IF;
+	
+	IF btrim(p_category) NOT IN ('BirthRecord', 'Person', 'Address', 'DeathRecord', 'MarriageRecord') THEN
+		RAISE EXCEPTION 'The document category must be one of the allowed values.';
+	END IF;
 
     IF p_import_date IS NULL OR p_import_date = '-infinity'::timestamp THEN
         RAISE EXCEPTION 'The import date is required.';

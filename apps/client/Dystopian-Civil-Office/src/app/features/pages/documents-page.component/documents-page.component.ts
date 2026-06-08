@@ -7,11 +7,12 @@ import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { ButtonComponent } from '../../../shared/ui/button.component/button.component';
+import { TableComponent } from '../../../shared/ui/table/table.component';
 import { DocumentsService } from '../../services/documents.service';
-import { CreateDocumentDialogComponent } from '../../dialogues/create-document-dialog.component/create-document-dialog.component';
+import { CreateDocumentDialogComponent } from '../../dialogs/document-dialogs/create-document-dialog.component/create-document-dialog.component';
 import { DocumentViewModel } from '../../../shared/api-models/responses/document.viewmodel';
-import { UpdateDocumentDialogComponent } from '../../dialogues/update-document-dialog.component/update-document-dialog.component';
-import { DeleteDocumentDialogComponent } from '../../dialogues/delete-document-dialog.component/delete-document-dialog.component';
+import { UpdateDocumentDialogComponent } from '../../dialogs/document-dialogs/update-document-dialog.component/update-document-dialog.component';
+import { DeleteDocumentDialogComponent } from '../../dialogs/document-dialogs/delete-document-dialog.component/delete-document-dialog.component';
 
 type SortColumn = 'name' | 'category' | 'importDate';
 type SortDirection = 'asc' | 'desc';
@@ -24,7 +25,7 @@ interface SortState {
 @Component({
   selector: 'app-documents-page.component',
   standalone: true,
-  imports: [ButtonComponent, AsyncPipe, DatePipe, FormsModule],
+  imports: [ButtonComponent, TableComponent, AsyncPipe, DatePipe, FormsModule],
   templateUrl: './documents-page.component.html',
   styles: ``,
 })
@@ -152,63 +153,64 @@ export class DocumentsPageComponent {
         column,
         direction: currentSort.direction === 'asc' ? 'desc' : 'asc',
       });
-
-      return;
+    } else {
+      this.sortState$.next({
+        column,
+        direction: 'asc',
+      });
     }
-
-    this.sortState$.next({
-      column,
-      direction: 'asc',
-    });
   }
 
-  protected getSortDirection(column: SortColumn): SortDirection | null {
+  protected getSortDirection(column: SortColumn): SortDirection {
     const currentSort = this.sortState$.value;
-    return currentSort.column === column ? currentSort.direction : null;
+    return currentSort.column === column ? currentSort.direction : 'asc';
   }
 
-  private reloadCurrentDocuments(): void {
-    const activeCategory = this.activeCategoryFilter$.value;
+  private sortDocuments(documents: DocumentViewModel[], sortState: SortState): DocumentViewModel[] {
+    const sorted = [...documents].sort((a, b) => {
+      let aValue: unknown;
+      let bValue: unknown;
 
-    if (activeCategory) {
-      this.documentsService.refreshDocumentsByCategory(activeCategory);
-      this.activeCategoryFilter$.next(activeCategory);
-      return;
-    }
+      switch (sortState.column) {
+        case 'name':
+          aValue = a.name.toLowerCase();
+          bValue = b.name.toLowerCase();
+          break;
+        case 'category':
+          aValue = a.category.toLowerCase();
+          bValue = b.category.toLowerCase();
+          break;
+        case 'importDate':
+          aValue = new Date(a.importDate).getTime();
+          bValue = new Date(b.importDate).getTime();
+          break;
+      }
 
-    this.documentsService.clearCache();
-    this.activeCategoryFilter$.next(null);
+      if (aValue === bValue) {
+        return 0;
+      }
+
+      const isAsc = sortState.direction === 'asc';
+      return (aValue ?? 0) < (bValue ?? 0) ? (isAsc ? -1 : 1) : isAsc ? 1 : -1;
+    });
+
+    return sorted;
   }
 
   private resetCategoryFilterState(): void {
     this.selectedCategory = 'Default';
-    this.documentsService.clearCache();
     this.activeCategoryFilter$.next(null);
   }
 
-  private sortDocuments(documents: DocumentViewModel[], sortState: SortState): DocumentViewModel[] {
-    const sorted = [...documents];
+  private reloadCurrentDocuments(): void {
+    const currentCategory = this.activeCategoryFilter$.value;
 
-    sorted.sort((a, b) => {
-      let comparison = 0;
+    if (currentCategory) {
+      this.documentsService.refreshDocumentsByCategory(currentCategory);
+    } else {
+      this.documentsService.refreshDocuments();
+    }
 
-      switch (sortState.column) {
-        case 'name':
-          comparison = a.name.localeCompare(b.name);
-          break;
-
-        case 'category':
-          comparison = a.category.localeCompare(b.category);
-          break;
-
-        case 'importDate':
-          comparison = new Date(a.importDate).getTime() - new Date(b.importDate).getTime();
-          break;
-      }
-
-      return sortState.direction === 'asc' ? comparison : -comparison;
-    });
-
-    return sorted;
+    this.activeCategoryFilter$.next(currentCategory);
   }
 }

@@ -4,10 +4,12 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { DocumentsService } from '../../services/documents.service';
-import { DocumentModel } from '../../../shared/api-models/requests/document.model';
-import { DocumentFormValidators } from '../../../shared/validators/document-form.validators';
-import { ButtonComponent } from '../../../shared/ui/button.component/button.component';
+import { MatSelectModule } from '@angular/material/select';
+import { DocumentsService } from '../../../services/documents.service';
+import { DocumentModel } from '../../../../shared/api-models/requests/document.model';
+import { DocumentFormValidators } from '../../../../shared/validators/document-form.validators';
+import { ButtonComponent } from '../../../../shared/ui/button.component/button.component';
+import { DialogShellComponent } from '../../../../shared/ui/dialog-shell/dialog-shell.component';
 
 @Component({
   selector: 'app-create-document-dialog',
@@ -18,7 +20,9 @@ import { ButtonComponent } from '../../../shared/ui/button.component/button.comp
     MatDialogModule,
     MatInputModule,
     MatFormFieldModule,
+    MatSelectModule,
     ButtonComponent,
+    DialogShellComponent,
   ],
   templateUrl: './create-document-dialog.component.html',
 })
