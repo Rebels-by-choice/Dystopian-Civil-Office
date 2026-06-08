@@ -4,13 +4,13 @@
   [errorMessage]="apiErrorMessage"
 >
   <div dialog-body>
-    <div class="mb-5 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-4 text-center">
-      <p class="text-sm text-zinc-200">
-        <span class="font-semibold text-red-200">{{ data.name }}</span>
+    <div class="mb-5 rounded-xl border border-red-500/30 bg-dco-bg-error px-4 py-4 text-center">
+      <p class="text-lg">
+        <span class="font-semibold text-dco-dialog-delete-name">{{ data.name }}</span>
       </p>
-      <p class="mt-1 text-xs text-zinc-400">Category: {{ data.category }}</p>
+      <p class="mt-1 text-xs text-color-dco-dialog-subtitle">Category: {{ data.category }}</p>
     </div>
-    <p class="text-sm text-center text-zinc-400">
+    <p class="text-sm text-center text-color-dco-dialog-subtitle">
       All data associated with this document will be deleted.
     </p>
   </div>

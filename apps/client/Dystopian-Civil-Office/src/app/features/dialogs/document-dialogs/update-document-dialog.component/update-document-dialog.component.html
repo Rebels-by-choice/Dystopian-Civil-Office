@@ -9,7 +9,7 @@
         <mat-label class="!pl-2">Name</mat-label>
         <input matInput formControlName="name" maxlength="100" class="!pl-2 !text-base" />
         @if (nameError) {
-          <mat-error class="!text-[#F28A8A]">{{ nameError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ nameError }}</mat-error>
         }
       </mat-form-field>
 
@@ -17,7 +17,7 @@
         <mat-label class="!pl-2">Category</mat-label>
         <input matInput formControlName="category" maxlength="100" class="!pl-2 !text-base" />
         @if (categoryError) {
-          <mat-error class="!text-[#F28A8A]">{{ categoryError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ categoryError }}</mat-error>
         }
       </mat-form-field>
     </form>
