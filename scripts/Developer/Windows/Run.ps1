@@ -56,6 +56,12 @@ Pop-Location
 Start-Sleep -Seconds 3
 Write-Host "Docker containers started successfully." -ForegroundColor Green
 
+Start-Step "Restoring backend packages"
+Push-Location $serverPath
+dotnet restore
+Pop-Location
+Write-Host "Backend packages restored." -ForegroundColor Green
+
 Start-Step "Running EF Core migrations"
 Push-Location $serverPath
 dotnet ef database update
