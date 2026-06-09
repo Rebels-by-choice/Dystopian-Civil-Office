@@ -17,23 +17,10 @@ builder.Services.AddExceptionHandler<ViewDataExceptionHandler>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<OfficeQueryService>();
-builder.Services.AddScoped<IQueryValidationService, QueryValidationService>();
+builder.Services.InfrastructureAddQueryServices();
 
-builder.Services.AddScoped<IMarriageReadService, MarriageReadService>();
-builder.Services.AddScoped<IPersonReadService, PersonReadService>();
-builder.Services.AddScoped<IDocumentReadService, DocumentReadService>();
-builder.Services.AddScoped<IDeathRecordReadService, DeathRecordReadService>();
-builder.Services.AddScoped<IBirthRecordService, BirthRecordReadService>();
-builder.Services.AddScoped<IPersonAddressReadService, PersonAddressReadService>();
-builder.Services.AddSingleton<IApiStatsService, ApiStatsService>();
-
-builder.Services.AddScoped<IBirthRecordWriteService, BirthRecordWriteService>();
-builder.Services.AddScoped<IDeathRecordWriteService, DeathRecordWriteService>();
-builder.Services.AddScoped<IDocumentWriteService, DocumentWriteService>();
-builder.Services.AddScoped<IMarriageWriteService, MarriageWriteService>();
-builder.Services.AddScoped<IPersonAddressWriteService, PersonAddressWriteService>();
-builder.Services.AddScoped<IPersonWriteService, PersonWriteService>();
+builder.Services.InfrastructureAddReadServices();
+builder.Services.InfrastructureAddWriteServices();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
