@@ -1,21 +1,21 @@
 name: Dystopian-Civil-Office
 
 services:
-  client-app:
-    container_name: DCO-client-app
-    build:
-      context: ./apps/client/Dystopian-Civil-Office
-      dockerfile: Dockerfile
-    ports:
-      - "32869:8080"
-
-  server-app:
-    container_name: DCO-server-app
-    build:
-      context: ./apps/server/src
-      dockerfile: Dockerfile
-    ports:
-      - "32768:8080"
+#  client-app:
+#    container_name: DCO-client-app
+#    build:
+#      context: ./apps/client/Dystopian-Civil-Office
+#      dockerfile: Dockerfile
+#    ports:
+#      - "32869:8080"
+#
+#  server-app:
+#    container_name: DCO-server-app
+#    build:
+#      context: ./apps/server/src
+#      dockerfile: Dockerfile
+#    ports:
+#      - "32768:8080"
 
   postgres-dbGlobal:
     image: postgres

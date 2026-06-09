@@ -22,6 +22,8 @@ builder.Services.InfrastructureAddQueryServices();
 builder.Services.InfrastructureAddReadServices();
 builder.Services.InfrastructureAddWriteServices();
 
+builder.Services.InfrastructureAddPaperless();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

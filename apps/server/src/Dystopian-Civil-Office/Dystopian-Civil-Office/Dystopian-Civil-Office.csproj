@@ -22,6 +22,8 @@
     <PackageReference Include="Microsoft.NET.Build.Containers" Version="10.0.300" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+    <PackageReference Include="VMelnalksnis.PaperlessDotNet" Version="2.0.0" />
+    <PackageReference Include="VMelnalksnis.PaperlessDotNet.DependencyInjection" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
