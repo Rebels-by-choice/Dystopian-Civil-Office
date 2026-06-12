@@ -1,0 +1,62 @@
+<app-dialog-shell
+  title="Create address"
+  subtitle="Fill in the required values and confirm."
+  [errorMessage]="apiErrorMessage"
+>
+  <div dialog-body>
+    <form [formGroup]="form" class="flex flex-col gap-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">City</mat-label>
+        <input matInput formControlName="city" maxlength="100" class="!pl-2 !text-base" />
+        @if (cityError) {
+          <mat-error class="!text-dco-text-error">{{ cityError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Street</mat-label>
+        <input matInput formControlName="street" maxlength="100" class="!pl-2 !text-base" />
+        @if (streetError) {
+          <mat-error class="!text-dco-text-error">{{ streetError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">House number</mat-label>
+        <input matInput formControlName="houseNumber" maxlength="20" class="!pl-2 !text-base" />
+        @if (houseNumberError) {
+          <mat-error class="!text-dco-text-error">{{ houseNumberError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Apartment number</mat-label>
+        <input matInput formControlName="apartmentNumber" maxlength="20" class="!pl-2 !text-base" />
+        @if (apartmentNumberError) {
+          <mat-error class="!text-dco-text-error">{{ apartmentNumberError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Postal code</mat-label>
+        <input matInput formControlName="postalCode" maxlength="15" class="!pl-2 !text-base" />
+        @if (postalCodeError) {
+          <mat-error class="!text-dco-text-error">{{ postalCodeError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Country</mat-label>
+        <input matInput formControlName="country" maxlength="60" class="!pl-2 !text-base" />
+        @if (countryError) {
+          <mat-error class="!text-dco-text-error">{{ countryError }}</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </div>
+
+  <div dialog-actions>
+    <app-button label="Cancel" variant="secondary" (buttonClick)="onCancel()"></app-button>
+    <app-button label="Confirm" [disabled]="isSubmitting" (buttonClick)="onConfirm()"></app-button>
+  </div>
+</app-dialog-shell>

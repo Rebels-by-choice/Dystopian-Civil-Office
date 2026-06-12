@@ -1,4 +1,4 @@
-export interface DocumentModel {
+export interface CreateDocumentModel {
   name: string;
   category: string;
   importDate: string;

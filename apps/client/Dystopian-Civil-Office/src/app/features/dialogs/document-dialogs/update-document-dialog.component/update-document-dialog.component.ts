@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-
+import { MatSelectModule } from '@angular/material/select';
 import { DocumentsService } from '../../../services/documents.service';
 import { UpdateDocumentModel } from '../../../../shared/api-models/requests/document.model';
 import { DocumentViewModel } from '../../../../shared/api-models/responses/document.viewmodel';
@@ -18,6 +18,7 @@ import { DialogShellComponent } from '../../../../shared/ui/dialog-shell/dialog-
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatSelectModule,
     MatDialogModule,
     MatInputModule,
     MatFormFieldModule,
