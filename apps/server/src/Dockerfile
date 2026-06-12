@@ -5,8 +5,9 @@ WORKDIR /source
 
 COPY ./Dystopian-Civil-Office ./Dystopian-Civil-Office
 
-WORKDIR Dystopian-Civil-Office
-RUN dotnet publish -a ${TARGETARCH/amd64/x64} --use-current-runtime --self-contained false -o /app
+WORKDIR /source/Dystopian-Civil-Office
+RUN dotnet restore
+RUN dotnet publish -a ${TARGETARCH/amd64/x64} --use-current-runtime --self-contained false -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS final
 WORKDIR /app
@@ -14,6 +15,9 @@ WORKDIR /app
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-COPY --from=build /app .
+COPY --from=build /app/publish ./
+COPY ./Dystopian-Civil-Office/entrypoint.sh ./entrypoint.sh
 
-ENTRYPOINT ["dotnet", "Dystopian-Civil-Office.dll"]
+RUN chmod +x ./entrypoint.sh
+
+ENTRYPOINT ["sh", "./entrypoint.sh"]
