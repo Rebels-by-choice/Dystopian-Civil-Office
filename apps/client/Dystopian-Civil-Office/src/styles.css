@@ -14,6 +14,10 @@
   */
   --color-dco-text-primary: #141414;
   --color-dco-text-secondary: #fcfafa;
+  --color-dco-text-error: #de1009;
+  --color-dco-dialog-subtitle: #6e6c6b;
+  --color-dco-dialog-delete-name: #e8c4c3;
+  --color-dco-table-contents: #242222;
   /*
     Background colors
   */
@@ -21,10 +25,19 @@
   --color-dco-bg-navbar-active: #111212;
   --color-dco-bg-navbar-hoover: #524e4e;
   --color-dco-bg-navbar-cases: #354a3a;
-  --color-dco-bg-navbar-cases-hoover: #4b7054;
+  --color-dco-bg-navbar-cases-hover: #4b7054;
   --color-dco-bg-button-main: #1c7032;
   --color-dco-bg-button-main-hover: #8c8618;
   --color-dco-bg-footer: #2e2d2d;
+  --color-dco-bg-error: #2F1A1D;
+  --color-dco-bg-table: #f5f2f2;
+  --color-dco-bg-select: #F5EEDA;
+  --color-dco-bg-button-apply-filter: #0662BD;
+  --color-dco-bg-button-apply-filter-hover: #2483e3;
+  --color-dco-bg-button-reset-filter: #9E3D0D;
+  --color-dco-bg-button-reset-filter-hover: #C54D12;
+  --color-dco-bg-thead: #1a1919;
+  --color-dco-table-icon-hover: #e6e3e3;
 }
 
 :root {
