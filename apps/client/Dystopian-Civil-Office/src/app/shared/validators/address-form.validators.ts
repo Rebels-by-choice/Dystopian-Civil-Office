@@ -2,7 +2,7 @@ import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import { GlobalFormValidators } from './global-form.validators';
 
-export class AddressesFormValidators {
+export class AddressFormValidators {
   public static cityValidators(): ValidatorFn[] {
     return [
       Validators.required,
@@ -60,7 +60,7 @@ export class AddressesFormValidators {
   public static getControlErrorMessage = GlobalFormValidators.getControlErrorMessage;
   public static getApiErrorMessage = GlobalFormValidators.getApiErrorMessage;
 
-  public static hasAddressesChanges(
+  public static hasAddressChanges(
     form: FormGroup,
     originalCity: string,
     originalStreet: string,

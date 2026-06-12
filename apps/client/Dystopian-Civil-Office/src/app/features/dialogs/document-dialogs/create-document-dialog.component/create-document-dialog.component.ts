@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { DocumentsService } from '../../../services/documents.service';
-import { DocumentModel } from '../../../../shared/api-models/requests/document.model';
+import { CreateDocumentModel } from '../../../../shared/api-models/requests/document.model';
 import { DocumentFormValidators } from '../../../../shared/validators/document-form.validators';
 import { ButtonComponent } from '../../../../shared/ui/button.component/button.component';
 import { DialogShellComponent } from '../../../../shared/ui/dialog-shell/dialog-shell.component';
@@ -65,7 +65,7 @@ export class CreateDocumentDialogComponent {
       return;
     }
 
-    const request: DocumentModel = {
+    const request: CreateDocumentModel = {
       name: this.form.controls.name.value!.trim(),
       category: this.form.controls.category.value!.trim(),
       importDate: new Date().toISOString(),
