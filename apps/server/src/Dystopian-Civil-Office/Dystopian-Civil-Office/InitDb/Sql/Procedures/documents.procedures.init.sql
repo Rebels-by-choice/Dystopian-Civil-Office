@@ -2,13 +2,14 @@
     Section for documents
 */
 DROP PROCEDURE IF EXISTS public.create_document(
-    varchar, varchar, timestamptz
+    varchar, varchar, timestamptz, integer
 );
 
 CREATE OR REPLACE PROCEDURE public.create_document(
     IN p_name varchar(100),
     IN p_category varchar(100),
-    IN p_import_date timestamptz
+    IN p_import_date timestamptz,
+    IN p_paperless_document_id integer
 )
 LANGUAGE plpgsql
 AS $$
@@ -28,12 +29,14 @@ BEGIN
     INSERT INTO public.documents (
         name,
         category,
-        import_date
+        import_date,
+        PaperlessDocumentId
     )
     VALUES (
         v_name,
         v_category,
-        v_import_date
+        v_import_date,
+        p_paperless_document_id
     );
 
 EXCEPTION

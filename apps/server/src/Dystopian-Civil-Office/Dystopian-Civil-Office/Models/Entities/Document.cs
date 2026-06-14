@@ -5,6 +5,7 @@ namespace Dystopian_Civil_Office.Models.Entities;
 public class Document
 {
     public int DocumentId { get; set; }
+    public int PaperlessDocumentId { get; set; }
 
     [Required]
     [MaxLength(100)]

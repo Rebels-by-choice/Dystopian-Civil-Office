@@ -2,11 +2,6 @@ using Dystopian_Civil_Office.DataSource;
 using Dystopian_Civil_Office.Exceptions;
 using Dystopian_Civil_Office.Middleware;
 using Dystopian_Civil_Office.Services;
-using Dystopian_Civil_Office.Services.Read.Interfaces;
-using Dystopian_Civil_Office.Services.Read.Impls;
-using Dystopian_Civil_Office.Services.Validation;
-using Dystopian_Civil_Office.Services.Write.Interfaces;
-using Dystopian_Civil_Office.Services.Write.Impls;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
