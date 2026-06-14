@@ -1,18 +1,15 @@
-/*
-    Section for death records
-*/
 DROP PROCEDURE IF EXISTS public.create_death_record(
-    varchar, integer, date, varchar, date, varchar, integer
+    varchar, varchar, date, varchar, date, varchar, varchar
 );
 
 CREATE OR REPLACE PROCEDURE public.create_death_record(
     IN p_registry_number varchar(50),
-    IN p_person_id integer,
+    IN p_person_pesel varchar(11),
     IN p_death_date date,
     IN p_death_place varchar(100),
     IN p_registry_date date,
     IN p_cause_of_death varchar(200),
-    IN p_document_id integer
+    IN p_document_name varchar(100)
 )
 LANGUAGE plpgsql
 AS $$
@@ -25,6 +22,28 @@ DECLARE
     v_cause_of_death varchar(200);
     v_document_id integer;
 BEGIN
+    SELECT p.person_id
+    INTO v_person_id
+    FROM public.persons p
+    WHERE p.pesel = btrim(p_person_pesel);
+
+    IF v_person_id IS NULL THEN
+        RAISE EXCEPTION 'The selected person was not found.';
+    END IF;
+
+    IF NULLIF(btrim(p_document_name), '') IS NOT NULL THEN
+        SELECT d.document_id
+        INTO v_document_id
+        FROM public.documents d
+        WHERE d.name = btrim(p_document_name);
+
+        IF v_document_id IS NULL THEN
+            RAISE EXCEPTION 'The selected document was not found.';
+        END IF;
+    ELSE
+        v_document_id := NULL;
+    END IF;
+
     SELECT
         v.registry_number,
         v.person_id,
@@ -43,12 +62,12 @@ BEGIN
         v_document_id
     FROM public.validate_death_record_data(
         p_registry_number,
-        p_person_id,
+        v_person_id,
         p_death_date,
         p_death_place,
         p_registry_date,
         p_cause_of_death,
-        p_document_id
+        v_document_id
     ) v;
 
     INSERT INTO public.death_records (
@@ -96,24 +115,23 @@ END;
 $$;
 
 DROP PROCEDURE IF EXISTS public.update_death_record(
-    integer, varchar, integer, date, varchar, date, varchar, integer
+    integer, varchar, varchar, date, varchar, date, varchar, varchar
 );
 
 CREATE OR REPLACE PROCEDURE public.update_death_record(
     IN p_death_record_id integer,
     IN p_registry_number varchar(50) DEFAULT NULL,
-    IN p_person_id integer DEFAULT NULL,
+    IN p_person_pesel varchar(11) DEFAULT NULL,
     IN p_death_date date DEFAULT NULL,
     IN p_death_place varchar(100) DEFAULT NULL,
     IN p_registry_date date DEFAULT NULL,
     IN p_cause_of_death varchar(200) DEFAULT NULL,
-    IN p_document_id integer DEFAULT NULL
+    IN p_document_name varchar(100) DEFAULT NULL
 )
 LANGUAGE plpgsql
 AS $$
 DECLARE
     v_current_death_record public.death_records%ROWTYPE;
-
     v_final_registry_number varchar(50);
     v_final_person_id integer;
     v_final_death_date date;
@@ -121,7 +139,6 @@ DECLARE
     v_final_registry_date date;
     v_final_cause_of_death varchar(200);
     v_final_document_id integer;
-
     v_validated_registry_number varchar(50);
     v_validated_person_id integer;
     v_validated_death_date date;
@@ -139,13 +156,39 @@ BEGIN
         RAISE EXCEPTION 'The death record to update was not found.';
     END IF;
 
-    v_final_registry_number := COALESCE(p_registry_number, v_current_death_record.registry_number);
-    v_final_person_id := COALESCE(p_person_id, v_current_death_record.person_id);
+    v_final_registry_number := COALESCE(NULLIF(btrim(p_registry_number), ''), v_current_death_record.registry_number);
     v_final_death_date := COALESCE(p_death_date, v_current_death_record.death_date);
-    v_final_death_place := COALESCE(p_death_place, v_current_death_record.death_place);
+    v_final_death_place := COALESCE(NULLIF(btrim(p_death_place), ''), v_current_death_record.death_place);
     v_final_registry_date := COALESCE(p_registry_date, v_current_death_record.registry_date);
-    v_final_cause_of_death := COALESCE(p_cause_of_death, v_current_death_record.cause_of_death);
-    v_final_document_id := COALESCE(p_document_id, v_current_death_record.document_id);
+    v_final_cause_of_death := COALESCE(NULLIF(btrim(p_cause_of_death), ''), v_current_death_record.cause_of_death);
+
+    IF p_person_pesel IS NULL THEN
+        v_final_person_id := v_current_death_record.person_id;
+    ELSE
+        SELECT p.person_id
+        INTO v_final_person_id
+        FROM public.persons p
+        WHERE p.pesel = btrim(p_person_pesel);
+
+        IF v_final_person_id IS NULL THEN
+            RAISE EXCEPTION 'The selected person was not found.';
+        END IF;
+    END IF;
+
+    IF p_document_name IS NULL THEN
+        v_final_document_id := v_current_death_record.document_id;
+    ELSIF NULLIF(btrim(p_document_name), '') IS NULL THEN
+        v_final_document_id := NULL;
+    ELSE
+        SELECT d.document_id
+        INTO v_final_document_id
+        FROM public.documents d
+        WHERE d.name = btrim(p_document_name);
+
+        IF v_final_document_id IS NULL THEN
+            RAISE EXCEPTION 'The selected document was not found.';
+        END IF;
+    END IF;
 
     SELECT
         v.registry_number,

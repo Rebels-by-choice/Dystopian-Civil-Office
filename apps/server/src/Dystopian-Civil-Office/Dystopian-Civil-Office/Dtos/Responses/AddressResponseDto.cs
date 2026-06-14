@@ -1,8 +1,9 @@
 ﻿namespace Dystopian_Civil_Office.Dtos.Responses;
 
-public class PersonAddressResponseDto
+public class AddressResponseDto
 {
-    public string PersonPesel { get; set; } = string.Empty;
+    public int AddressId { get; set; }
+    public string RegistryNumber { get; set; } = string.Empty;
     public string City { get; set; } = string.Empty;
     public string Street { get; set; } = string.Empty;
     public string HouseNumber { get; set; } = string.Empty;

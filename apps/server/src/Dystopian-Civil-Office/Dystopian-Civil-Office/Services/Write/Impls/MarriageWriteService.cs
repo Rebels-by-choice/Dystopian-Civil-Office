@@ -35,12 +35,12 @@ public class MarriageWriteService : IMarriageWriteService
             cancellationToken);
     }
 
-    public async Task UpdateMarriageAsync(string registryNumber, UpdateMarriageRequestDto request, CancellationToken cancellationToken = default)
+    public async Task UpdateMarriageAsync(int marriageRecordId, UpdateMarriageRequestDto request, CancellationToken cancellationToken = default)
     {
         var parameters = new[]
         {
-            new NpgsqlParameter("p_current_registry_number", registryNumber),
-            new NpgsqlParameter("p_new_registry_number", (object?)request.RegistryNumber ?? DBNull.Value),
+            new NpgsqlParameter("p_marriage_record_id", marriageRecordId),
+            new NpgsqlParameter("p_registry_number", (object?)request.RegistryNumber ?? DBNull.Value),
             new NpgsqlParameter("p_registry_date", (object?)request.RegistryDate ?? DBNull.Value),
             new NpgsqlParameter("p_spouse1_pesel", (object?)request.Spouse1Pesel ?? DBNull.Value),
             new NpgsqlParameter("p_spouse2_pesel", (object?)request.Spouse2Pesel ?? DBNull.Value),
@@ -50,20 +50,20 @@ public class MarriageWriteService : IMarriageWriteService
         };
 
         await _dbContext.Database.ExecuteSqlRawAsync(
-            "CALL public.update_marriage_record(@p_current_registry_number, @p_new_registry_number, @p_registry_date, @p_spouse1_pesel, @p_spouse2_pesel, @p_marriage_date, @p_marriage_place, @p_document_name)",
+            "CALL public.update_marriage_record(@p_marriage_record_id, @p_registry_number, @p_registry_date, @p_spouse1_pesel, @p_spouse2_pesel, @p_marriage_date, @p_marriage_place, @p_document_name)",
             parameters,
             cancellationToken);
     }
 
-    public async Task DeleteMarriageAsync(string registryNumber, CancellationToken cancellationToken = default)
+    public async Task DeleteMarriageAsync(int marriageRecordId, CancellationToken cancellationToken = default)
     {
         var parameters = new[]
         {
-            new NpgsqlParameter("p_registry_number", registryNumber)
+            new NpgsqlParameter("p_marriage_record_id", marriageRecordId)
         };
 
         await _dbContext.Database.ExecuteSqlRawAsync(
-            "CALL public.delete_marriage_record(@p_registry_number)",
+            "CALL public.delete_marriage_record(@p_marriage_record_id)",
             parameters,
             cancellationToken);
     }

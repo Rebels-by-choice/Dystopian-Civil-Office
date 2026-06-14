@@ -37,6 +37,7 @@ namespace Dystopian_Civil_Office.Migrations
                 {
                     address_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    registry_number = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     city = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     street = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     house_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
@@ -205,6 +206,12 @@ namespace Dystopian_Civil_Office.Migrations
                 name: "IX_addresses_document_id",
                 table: "addresses",
                 column: "document_id",
+                unique: true);
+            
+            migrationBuilder.CreateIndex(
+                name: "IX_addresses_registry_number",
+                table: "addresses",
+                column: "registry_number",
                 unique: true);
 
             migrationBuilder.CreateIndex(

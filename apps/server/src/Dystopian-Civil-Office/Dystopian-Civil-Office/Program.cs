@@ -41,28 +41,28 @@ builder.Services.AddScoped<IPersonReadService, PersonReadService>();
 builder.Services.AddScoped<IDocumentReadService, DocumentReadService>();
 builder.Services.AddScoped<IDeathRecordReadService, DeathRecordReadService>();
 builder.Services.AddScoped<IBirthRecordService, BirthRecordReadService>();
-builder.Services.AddScoped<IPersonAddressReadService, PersonAddressReadService>();
+builder.Services.AddScoped<IAddressReadService, AddressReadService>();
 builder.Services.AddSingleton<IApiStatsService, ApiStatsService>();
 
 builder.Services.AddScoped<IBirthRecordWriteService, BirthRecordWriteService>();
 builder.Services.AddScoped<IDeathRecordWriteService, DeathRecordWriteService>();
 builder.Services.AddScoped<IDocumentWriteService, DocumentWriteService>();
 builder.Services.AddScoped<IMarriageWriteService, MarriageWriteService>();
-builder.Services.AddScoped<IPersonAddressWriteService, PersonAddressWriteService>();
+builder.Services.AddScoped<IAddressWriteService, AddressWriteService>();
 builder.Services.AddScoped<IPersonWriteService, PersonWriteService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("FrontendPolicy", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("FrontendPolicy", policy =>
+//     {
+//         policy.WithOrigins("http://localhost:4200")
+//               .AllowAnyHeader()
+//               .AllowAnyMethod();
+//     });
+// });
 
 var app = builder.Build();
 

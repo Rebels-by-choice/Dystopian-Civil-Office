@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dystopian_Civil_Office.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260601135719_InitialPipeline")]
+    [Migration("20260613192159_InitialPipeline")]
     partial class InitialPipeline
     {
         /// <inheritdoc />
@@ -338,6 +338,12 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnType("character varying(15)")
                         .HasColumnName("postal_code");
 
+                    b.Property<string>("RegistryNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("registry_number");
+
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -347,6 +353,9 @@ namespace Dystopian_Civil_Office.Migrations
                     b.HasKey("AddressId");
 
                     b.HasIndex("DocumentId")
+                        .IsUnique();
+
+                    b.HasIndex("RegistryNumber")
                         .IsUnique();
 
                     b.ToTable("addresses", (string)null);
@@ -488,6 +497,9 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("DocumentId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("documents", (string)null);
                 });
@@ -714,7 +726,7 @@ namespace Dystopian_Civil_Office.Migrations
                     b.HasOne("Dystopian_Civil_Office.Models.Entities.Address", "Address")
                         .WithMany("Persons")
                         .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Dystopian_Civil_Office.Models.Entities.Document", "Document")

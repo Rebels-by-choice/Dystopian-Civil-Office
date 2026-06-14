@@ -2,6 +2,7 @@
 
 public class BirthRecordResponseDto
 {
+    public int BirthRecordId { get; set; }
     public string RegistryNumber { get; set; } = string.Empty;
     public DateOnly RegistryDate { get; set; }
     public string BornPersonPesel { get; set; } = string.Empty;

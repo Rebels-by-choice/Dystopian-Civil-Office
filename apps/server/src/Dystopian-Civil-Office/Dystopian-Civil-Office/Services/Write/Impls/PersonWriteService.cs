@@ -27,12 +27,12 @@ public class PersonWriteService : IPersonWriteService
             new NpgsqlParameter("p_gender", request.Gender),
             new NpgsqlParameter("p_birth_date", request.BirthDate),
             new NpgsqlParameter("p_birth_place", request.BirthPlace),
-            new NpgsqlParameter("p_address_id", request.AddressId),
-            new NpgsqlParameter("p_document_id", (object?)request.DocumentId ?? DBNull.Value)
+            new NpgsqlParameter("p_address_registry_number", (object?)request.AddressRegistryNumber ?? DBNull.Value),
+            new NpgsqlParameter("p_document_name", (object?)request.DocumentName ?? DBNull.Value)
         };
 
         await _dbContext.Database.ExecuteSqlRawAsync(
-            "CALL public.create_person(@p_pesel, @p_first_name, @p_middle_name, @p_last_name, @p_gender, @p_birth_date, @p_birth_place, @p_address_id, @p_document_id)",
+            "CALL public.create_person(@p_pesel, @p_first_name, @p_middle_name, @p_last_name, @p_gender, @p_birth_date, @p_birth_place, @p_address_registry_number, @p_document_name)",
             parameters,
             cancellationToken);
     }
@@ -49,12 +49,12 @@ public class PersonWriteService : IPersonWriteService
             new NpgsqlParameter("p_gender", (object?)request.Gender ?? DBNull.Value),
             new NpgsqlParameter("p_birth_date", (object?)request.BirthDate ?? DBNull.Value),
             new NpgsqlParameter("p_birth_place", (object?)request.BirthPlace ?? DBNull.Value),
-            new NpgsqlParameter("p_address_id", (object?)request.AddressId ?? DBNull.Value),
-            new NpgsqlParameter("p_document_id", (object?)request.DocumentId ?? DBNull.Value)
+            new NpgsqlParameter("p_address_registry_number", (object?)request.AddressRegistryNumber ?? DBNull.Value),
+            new NpgsqlParameter("p_document_name", (object?)request.DocumentName ?? DBNull.Value)
         };
 
         await _dbContext.Database.ExecuteSqlRawAsync(
-            "CALL public.update_person(@p_person_id, @p_pesel, @p_first_name, @p_middle_name, @p_last_name, @p_gender, @p_birth_date, @p_birth_place, @p_address_id, @p_document_id)",
+            "CALL public.update_person(@p_person_id, @p_pesel, @p_first_name, @p_middle_name, @p_last_name, @p_gender, @p_birth_date, @p_birth_place, @p_address_registry_number, @p_document_name)",
             parameters,
             cancellationToken);
     }
