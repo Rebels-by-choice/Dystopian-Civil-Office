@@ -1,8 +1,9 @@
 DROP FUNCTION IF EXISTS public.validate_address_data(
-    varchar, varchar, varchar, varchar, varchar, varchar, integer
+    varchar, varchar, varchar, varchar, varchar, varchar, varchar, integer
 );
 
 CREATE OR REPLACE FUNCTION public.validate_address_data(
+    p_registry_number varchar(50),
     p_city varchar(100),
     p_street varchar(100),
     p_house_number varchar(20),
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION public.validate_address_data(
     p_document_id integer
 )
 RETURNS TABLE (
+    registry_number varchar(50),
     city varchar(100),
     street varchar(100),
     house_number varchar(20),
@@ -23,6 +25,10 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 AS $$
 BEGIN
+    IF p_registry_number IS NOT NULL AND length(btrim(p_registry_number)) > 50 THEN
+        RAISE EXCEPTION 'The registry number cannot exceed 50 characters.';
+    END IF;
+
     IF NULLIF(btrim(p_city), '') IS NULL THEN
         RAISE EXCEPTION 'The city is required.';
     END IF;
@@ -77,6 +83,11 @@ BEGIN
         END IF;
     END IF;
 
+    registry_number := CASE
+        WHEN NULLIF(btrim(p_registry_number), '') IS NOT NULL THEN btrim(p_registry_number)
+        ELSE NULL
+    END;
+
     city := btrim(p_city);
     street := btrim(p_street);
     house_number := btrim(p_house_number);
@@ -118,10 +129,6 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF NULLIF(btrim(p_registry_number), '') IS NULL THEN
-        RAISE EXCEPTION 'The registry number is required.';
-    END IF;
-
     IF length(btrim(p_registry_number)) > 50 THEN
         RAISE EXCEPTION 'The registry number cannot exceed 50 characters.';
     END IF;
@@ -222,10 +229,6 @@ RETURNS TABLE (
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    IF NULLIF(btrim(p_registry_number), '') IS NULL THEN
-        RAISE EXCEPTION 'The registry number is required.';
-    END IF;
-
     IF length(btrim(p_registry_number)) > 50 THEN
         RAISE EXCEPTION 'The registry number cannot exceed 50 characters.';
     END IF;
@@ -341,61 +344,96 @@ BEGIN
 END;
 $$;
 
-DROP FUNCTION IF EXISTS public.validate_record_marriage_data(
-    varchar, varchar, varchar, varchar
+DROP FUNCTION IF EXISTS public.validate_marriage_record_data(
+    varchar, integer, integer, date, varchar, date, integer
 );
 
 CREATE OR REPLACE FUNCTION public.validate_marriage_record_data(
     p_registry_number varchar(50),
-    p_spouse1_pesel varchar(11),
-    p_spouse2_pesel varchar(11),
-    p_document_name varchar(100)
+    p_spouse1_id integer,
+    p_spouse2_id integer,
+    p_marriage_date date,
+    p_marriage_place varchar(100),
+    p_registry_date date,
+    p_document_id integer
 )
 RETURNS TABLE (
+    registry_number varchar(50),
     spouse1_id integer,
     spouse2_id integer,
+    marriage_date date,
+    marriage_place varchar(100),
+    registry_date date,
     document_id integer
 )
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    SELECT p.person_id
-    INTO spouse1_id
-    FROM public.persons p
-    WHERE p.pesel = p_spouse1_pesel;
+    IF length(btrim(p_registry_number)) > 50 THEN
+        RAISE EXCEPTION 'The registry number cannot exceed 50 characters.';
+    END IF;
 
-    IF spouse1_id IS NULL THEN
+    IF p_spouse1_id IS NULL THEN
+        RAISE EXCEPTION 'The first spouse is required.';
+    END IF;
+
+    IF p_spouse2_id IS NULL THEN
+        RAISE EXCEPTION 'The second spouse is required.';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM public.persons p WHERE p.person_id = p_spouse1_id
+    ) THEN
         RAISE EXCEPTION 'The first spouse was not found.';
     END IF;
 
-    SELECT p.person_id
-    INTO spouse2_id
-    FROM public.persons p
-    WHERE p.pesel = p_spouse2_pesel;
-
-    IF spouse2_id IS NULL THEN
+    IF NOT EXISTS (
+        SELECT 1 FROM public.persons p WHERE p.person_id = p_spouse2_id
+    ) THEN
         RAISE EXCEPTION 'The second spouse was not found.';
     END IF;
 
-    IF spouse1_id = spouse2_id THEN
+    IF p_spouse1_id = p_spouse2_id THEN
         RAISE EXCEPTION 'Spouses cannot be the same person.';
     END IF;
 
-    IF NULLIF(btrim(p_document_name), '') IS NOT NULL THEN
-        SELECT d.document_id
-        INTO document_id
-        FROM public.documents d
-        WHERE d.name = p_document_name;
-
-        IF document_id IS NULL THEN
-            RAISE EXCEPTION 'The selected document was not found.';
-        END IF;
-    ELSE
-        document_id := NULL;
+    IF p_marriage_date IS NULL THEN
+        RAISE EXCEPTION 'The marriage date is required.';
     END IF;
 
-    RETURN QUERY
-    SELECT spouse1_id, spouse2_id, document_id;
+    IF NULLIF(btrim(p_marriage_place), '') IS NULL THEN
+        RAISE EXCEPTION 'The marriage place is required.';
+    END IF;
+
+    IF length(btrim(p_marriage_place)) > 100 THEN
+        RAISE EXCEPTION 'The marriage place cannot exceed 100 characters.';
+    END IF;
+
+    IF p_registry_date IS NULL THEN
+        RAISE EXCEPTION 'The registry date is required.';
+    END IF;
+
+    IF p_registry_date < p_marriage_date THEN
+        RAISE EXCEPTION 'The registry date cannot be earlier than the marriage date.';
+    END IF;
+
+    IF p_document_id IS NOT NULL THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM public.documents d WHERE d.document_id = p_document_id
+        ) THEN
+            RAISE EXCEPTION 'The selected document was not found.';
+        END IF;
+    END IF;
+
+    registry_number := btrim(p_registry_number);
+    spouse1_id := p_spouse1_id;
+    spouse2_id := p_spouse2_id;
+    marriage_date := p_marriage_date;
+    marriage_place := btrim(p_marriage_place);
+    registry_date := p_registry_date;
+    document_id := p_document_id;
+
+    RETURN NEXT;
 END;
 $$;
 
@@ -476,16 +514,14 @@ BEGIN
         RAISE EXCEPTION 'The birth place cannot exceed 100 characters.';
     END IF;
 
-    IF p_address_id IS NULL THEN
-        RAISE EXCEPTION 'The address is required.';
-    END IF;
-
-    IF NOT EXISTS (
-        SELECT 1
-        FROM public.addresses a
-        WHERE a.address_id = p_address_id
-    ) THEN
-        RAISE EXCEPTION 'The selected address was not found.';
+    IF p_address_id IS NOT NULL THEN
+        IF NOT EXISTS (
+            SELECT 1
+            FROM public.addresses a
+            WHERE a.address_id = p_address_id
+        ) THEN
+            RAISE EXCEPTION 'The selected address was not found.';
+        END IF;
     END IF;
 
     IF p_document_id IS NOT NULL THEN

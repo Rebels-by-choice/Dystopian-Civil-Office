@@ -46,6 +46,8 @@ public class ApplicationDbContext : DbContext
                 .HasMaxLength(100)
                 .IsRequired();
 
+            entity.HasIndex(e => e.Name).IsUnique();
+
             entity.Property(e => e.Category)
                 .HasColumnName("category")
                 .HasMaxLength(100)
@@ -65,6 +67,11 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.AddressId)
                 .HasColumnName("address_id")
                 .UseIdentityByDefaultColumn();
+
+            entity.Property(e => e.RegistryNumber)
+                .HasColumnName("registry_number")
+                .HasMaxLength(50)
+                .IsRequired();
 
             entity.Property(e => e.City)
                 .HasColumnName("city")
@@ -99,6 +106,9 @@ public class ApplicationDbContext : DbContext
                 .HasColumnName("document_id");
 
             entity.HasIndex(e => e.DocumentId)
+                .IsUnique();
+
+            entity.HasIndex(e => e.RegistryNumber)
                 .IsUnique();
 
             entity.HasOne(e => e.Document)
@@ -155,8 +165,7 @@ public class ApplicationDbContext : DbContext
                 .IsRequired();
 
             entity.Property(e => e.AddressId)
-                .HasColumnName("address_id")
-                .IsRequired();
+                .HasColumnName("address_id");
 
             entity.Property(e => e.DocumentId)
                 .HasColumnName("document_id");
@@ -167,7 +176,7 @@ public class ApplicationDbContext : DbContext
             entity.HasOne(e => e.Address)
                 .WithMany(a => a.Persons)
                 .HasForeignKey(e => e.AddressId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(e => e.Document)
                 .WithOne(d => d.Person)

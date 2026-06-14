@@ -2,6 +2,7 @@
 
 public class DeathRecordResponseDto
 {
+    public int DeathRecordId { get; set; }
     public string RegistryNumber { get; set; } = string.Empty;
     public DateOnly RegistryDate { get; set; }
     public string PersonPesel { get; set; } = string.Empty;

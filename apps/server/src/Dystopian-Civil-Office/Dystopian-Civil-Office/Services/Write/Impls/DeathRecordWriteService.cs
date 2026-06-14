@@ -21,16 +21,16 @@ public class DeathRecordWriteService : IDeathRecordWriteService
         var parameters = new[]
         {
             new NpgsqlParameter("p_registry_number", request.RegistryNumber),
-            new NpgsqlParameter("p_person_id", request.PersonId),
+            new NpgsqlParameter("p_person_pesel", request.PersonPesel),
             new NpgsqlParameter("p_death_date", request.DeathDate),
             new NpgsqlParameter("p_death_place", request.DeathPlace),
             new NpgsqlParameter("p_registry_date", request.RegistryDate),
             new NpgsqlParameter("p_cause_of_death", request.CauseOfDeath),
-            new NpgsqlParameter("p_document_id", (object?)request.DocumentId ?? DBNull.Value)
+            new NpgsqlParameter("p_document_name", (object?)request.DocumentName ?? DBNull.Value)
         };
 
         await _dbContext.Database.ExecuteSqlRawAsync(
-            "CALL public.create_death_record(@p_registry_number, @p_person_id, @p_death_date, @p_death_place, @p_registry_date, @p_cause_of_death, @p_document_id)",
+            "CALL public.create_death_record(@p_registry_number, @p_person_pesel, @p_death_date, @p_death_place, @p_registry_date, @p_cause_of_death, @p_document_name)",
             parameters,
             cancellationToken);
     }
@@ -41,16 +41,16 @@ public class DeathRecordWriteService : IDeathRecordWriteService
         {
             new NpgsqlParameter("p_death_record_id", deathRecordId),
             new NpgsqlParameter("p_registry_number", (object?)request.RegistryNumber ?? DBNull.Value),
-            new NpgsqlParameter("p_person_id", (object?)request.PersonId ?? DBNull.Value),
+            new NpgsqlParameter("p_person_pesel", (object?)request.PersonPesel ?? DBNull.Value),
             new NpgsqlParameter("p_death_date", (object?)request.DeathDate ?? DBNull.Value),
             new NpgsqlParameter("p_death_place", (object?)request.DeathPlace ?? DBNull.Value),
             new NpgsqlParameter("p_registry_date", (object?)request.RegistryDate ?? DBNull.Value),
             new NpgsqlParameter("p_cause_of_death", (object?)request.CauseOfDeath ?? DBNull.Value),
-            new NpgsqlParameter("p_document_id", (object?)request.DocumentId ?? DBNull.Value)
+            new NpgsqlParameter("p_document_name", (object?)request.DocumentName ?? DBNull.Value)
         };
 
         await _dbContext.Database.ExecuteSqlRawAsync(
-            "CALL public.update_death_record(@p_death_record_id, @p_registry_number, @p_person_id, @p_death_date, @p_death_place, @p_registry_date, @p_cause_of_death, @p_document_id)",
+            "CALL public.update_death_record(@p_death_record_id, @p_registry_number, @p_person_pesel, @p_death_date, @p_death_place, @p_registry_date, @p_cause_of_death, @p_document_name)",
             parameters,
             cancellationToken);
     }

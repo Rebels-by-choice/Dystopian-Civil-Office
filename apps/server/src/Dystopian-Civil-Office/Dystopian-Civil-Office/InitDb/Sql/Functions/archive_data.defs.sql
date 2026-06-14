@@ -6,7 +6,7 @@ DECLARE
     v_document_name varchar(255);
 BEGIN
     IF OLD.document_id IS NOT NULL THEN
-        SELECT d.name
+        SELECT d.document_name
         INTO v_document_name
         FROM public.documents d
         WHERE d.document_id = OLD.document_id;
@@ -16,6 +16,7 @@ BEGIN
 
     INSERT INTO public.address_archives
     (
+        registry_number,
         city,
         street,
         house_number,
@@ -27,6 +28,7 @@ BEGIN
     )
     VALUES
     (
+        OLD.registry_number,
         OLD.city,
         OLD.street,
         OLD.house_number,

@@ -9,6 +9,6 @@ public class UpdatePersonRequestDto
     public string? Gender { get; set; }
     public DateOnly? BirthDate { get; set; }
     public string? BirthPlace { get; set; }
-    public int? AddressId { get; set; }
-    public int? DocumentId { get; set; }
+    public string? AddressRegistryNumber { get; set; }
+    public string? DocumentName { get; set; }
 }

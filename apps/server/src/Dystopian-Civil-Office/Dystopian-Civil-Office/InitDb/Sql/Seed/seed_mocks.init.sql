@@ -100,27 +100,36 @@ INSERT INTO documents (name, category, import_date) VALUES
 ('Death Certificate Dossier 019', 'DeathRecord', '2024-05-19 16:30:00+00'),
 ('Death Certificate Dossier 020', 'DeathRecord', '2024-05-20 16:35:00+00');
 
-INSERT INTO addresses (city, street, house_number, apartment_number, postal_code, country, document_id) VALUES
-('London', 'Baker Street', '221B', '1', 'NW1 6XE', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 001')),
-('Manchester', 'Deansgate', '14', NULL, 'M3 1AZ', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 002')),
-('Bristol', 'Park Street', '58', '4A', 'BS1 5JG', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 003')),
-('Liverpool', 'Bold Street', '102', NULL, 'L1 4HR', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 004')),
-('Leeds', 'Boar Lane', '77', '8', 'LS1 6HW', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 005')),
-('Birmingham', 'New Street', '19', NULL, 'B2 4QA', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 006')),
-('Oxford', 'High Street', '33', '2', 'OX1 4AU', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 007')),
-('Cambridge', 'King Parade', '9', NULL, 'CB2 1SJ', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 008')),
-('York', 'Stonegate', '45', '5B', 'YO1 8AS', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 009')),
-('Bath', 'Milsom Street', '11', NULL, 'BA1 1DE', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 010')),
-('Brighton', 'Church Road', '88', '7', 'BN1 1UF', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 011')),
-('Edinburgh', 'Princes Street', '120', NULL, 'EH2 4AD', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 012')),
-('Glasgow', 'Sauchiehall Street', '66', '3C', 'G2 3DE', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 013')),
-('Cardiff', 'Queen Street', '29', NULL, 'CF10 2AQ', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 014')),
-('Belfast', 'Royal Avenue', '51', '10', 'BT1 1FF', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 015')),
-('Nottingham', 'Derby Road', '72', NULL, 'NG1 5FB', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 016')),
-('Sheffield', 'Ecclesall Road', '93', '6', 'S11 8HY', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 017')),
-('Newcastle', 'Grey Street', '17', NULL, 'NE1 6EE', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 018')),
-('Southampton', 'Above Bar Street', '61', '12A', 'SO14 7DQ', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 019')),
-('Canterbury', 'St Georges Street', '24', NULL, 'CT1 2TB', 'United Kingdom', (SELECT document_id FROM documents WHERE name = 'Address Verification Pack 020'));
+INSERT INTO public.addresses (
+    registry_number,
+    city,
+    street,
+    house_number,
+    apartment_number,
+    postal_code,
+    country,
+    document_id
+) VALUES
+('ADDRESS-DEFAULT-1',  'London',      'Baker Street',        '221B', '1',   'NW1 6XE', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 001')),
+('ADDRESS-DEFAULT-2',  'Manchester',  'Deansgate',           '14',   NULL,  'M3 1AZ',  'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 002')),
+('ADDRESS-DEFAULT-3',  'Bristol',     'Park Street',         '58',   '4A',  'BS1 5JG', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 003')),
+('ADDRESS-DEFAULT-4',  'Liverpool',   'Bold Street',         '102',  NULL,  'L1 4HR',  'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 004')),
+('ADDRESS-DEFAULT-5',  'Leeds',       'Boar Lane',           '77',   '8',   'LS1 6HW', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 005')),
+('ADDRESS-DEFAULT-6',  'Birmingham',  'New Street',          '19',   NULL,  'B2 4QA',  'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 006')),
+('ADDRESS-DEFAULT-7',  'Oxford',      'High Street',         '33',   '2',   'OX1 4AU', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 007')),
+('ADDRESS-DEFAULT-8',  'Cambridge',   'King Parade',         '9',    NULL,  'CB2 1SJ', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 008')),
+('ADDRESS-DEFAULT-9',  'York',        'Stonegate',           '45',   '5B',  'YO1 8AS', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 009')),
+('ADDRESS-DEFAULT-10', 'Bath',        'Milsom Street',       '11',   NULL,  'BA1 1DE', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 010')),
+('ADDRESS-DEFAULT-11', 'Brighton',    'Church Road',         '88',   '7',   'BN1 1UF', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 011')),
+('ADDRESS-DEFAULT-12', 'Edinburgh',   'Princes Street',      '120',  NULL,  'EH2 4AD', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 012')),
+('ADDRESS-DEFAULT-13', 'Glasgow',     'Sauchiehall Street',  '66',   '3C',  'G2 3DE',  'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 013')),
+('ADDRESS-DEFAULT-14', 'Cardiff',     'Queen Street',        '29',   NULL,  'CF10 2AQ','United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 014')),
+('ADDRESS-DEFAULT-15', 'Belfast',     'Royal Avenue',        '51',   '10',  'BT1 1FF', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 015')),
+('ADDRESS-DEFAULT-16', 'Nottingham',  'Derby Road',          '72',   NULL,  'NG1 5FB', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 016')),
+('ADDRESS-DEFAULT-17', 'Sheffield',   'Ecclesall Road',      '93',   '6',   'S11 8HY', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 017')),
+('ADDRESS-DEFAULT-18', 'Newcastle',   'Grey Street',         '17',   NULL,  'NE1 6EE', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 018')),
+('ADDRESS-DEFAULT-19', 'Southampton', 'Above Bar Street',    '61',   '12A', 'SO14 7DQ','United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 019')),
+('ADDRESS-DEFAULT-20', 'Canterbury',  'St Georges Street',   '24',   NULL,  'CT1 2TB', 'United Kingdom', (SELECT document_id FROM public.documents WHERE name = 'Address Verification Pack 020'));
 
 INSERT INTO persons (pesel, first_name, middle_name, last_name, gender, birth_date, birth_place, address_id, document_id) VALUES
 ('92010100001', 'Arthur', 'James', 'Bennett', 'Male', '1992-01-01', 'London', (SELECT address_id FROM addresses WHERE city = 'London' AND street = 'Baker Street' AND house_number = '221B'), (SELECT document_id FROM documents WHERE name = 'Citizen Identity Scan 001')),

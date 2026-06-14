@@ -9,6 +9,6 @@ public class CreatePersonRequestDto
     public string Gender { get; set; } = string.Empty;
     public DateOnly BirthDate { get; set; }
     public string BirthPlace { get; set; } = string.Empty;
-    public int AddressId { get; set; }
-    public int? DocumentId { get; set; }
+    public string? AddressRegistryNumber { get; set; }
+    public string? DocumentName { get; set; }
 }

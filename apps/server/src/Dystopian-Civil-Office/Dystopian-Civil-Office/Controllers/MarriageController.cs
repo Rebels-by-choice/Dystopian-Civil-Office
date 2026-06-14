@@ -38,22 +38,22 @@ public class MarriageController : ControllerBase
         return StatusCode(StatusCodes.Status201Created);
     }
 
-    [HttpPut("{registryNumber}")]
+    [HttpPut("{marriageRecordId}")]
     public async Task<IActionResult> UpdateAsync(
-        string registryNumber,
+        int marriageRecordId,
         [FromBody] UpdateMarriageRequestDto request,
         CancellationToken cancellationToken)
     {
-        await _marriageWriteService.UpdateMarriageAsync(registryNumber, request, cancellationToken);
+        await _marriageWriteService.UpdateMarriageAsync(marriageRecordId, request, cancellationToken);
         return NoContent();
     }
 
-    [HttpDelete("{registryNumber}")]
+    [HttpDelete("{marriageRecordId}")]
     public async Task<IActionResult> DeleteAsync(
-        string registryNumber,
+        int marriageRecordId,
         CancellationToken cancellationToken)
     {
-        await _marriageWriteService.DeleteMarriageAsync(registryNumber, cancellationToken);
+        await _marriageWriteService.DeleteMarriageAsync(marriageRecordId, cancellationToken);
         return NoContent();
     }
 }
