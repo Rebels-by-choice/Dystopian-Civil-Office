@@ -33,6 +33,27 @@ public class OfficeQueryService
             .ToListAsync();
     }
     
+    public async Task<List<PersonResponseDto>> GetPersonsByGenderAsync(string gender)
+    {
+        return await _context.Persons
+            .AsNoTracking()
+            .Where(p => p.Gender == gender)
+            .Select(p => new PersonResponseDto
+            {
+                PersonId = p.PersonId,
+                PersonPesel = p.Pesel,
+                FirstName = p.FirstName,
+                MiddleName = p.MiddleName,
+                LastName = p.LastName,
+                Gender = p.Gender,
+                BirthDate = p.BirthDate,
+                BirthPlace = p.BirthPlace,
+                AddressRegistryNumber = p.Address.RegistryNumber,
+                DocumentName = p.Document != null ? p.Document.Name : null
+            })
+            .ToListAsync();
+    }
+    
     public async Task<List<DocumentResponseDto>> GetDocumentsAsync()
     {
         return await _context.Documents
