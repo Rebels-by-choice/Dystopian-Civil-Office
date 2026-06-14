@@ -1,15 +1,18 @@
-name: Develop Pipeline
+name: Develop and Main Pipeline
 
 on:
   push:
     branches:
       - develop
+      - main
   pull_request:
     branches:
       - develop
+      - main
 
 jobs:
-  build-and-run:
+  build-and-run-develop:
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'pull_request' && github.base_ref == 'develop')
     runs-on: ubuntu-latest
     env:
       ConnectionStrings__DefaultConnection: ${{ secrets.ConnectionStrings__DefaultConnection }}
@@ -56,4 +59,20 @@ jobs:
           sleep 30
 
       - name: Show running containers
+        run: docker compose ps
+
+  build-and-run-main:
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && github.base_ref == 'main')
+    runs-on: ubuntu-latest
+    env:
+      ConnectionStrings__DefaultConnectionProd: ${{ secrets.ConnectionStrings__DefaultConnectionProd }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start production containers from root compose
+        run: docker compose --profile production up -d --build
+
+      - name: Show running production containers
         run: docker compose ps
