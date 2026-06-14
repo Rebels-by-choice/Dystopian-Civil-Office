@@ -2,6 +2,7 @@ using Dystopian_Civil_Office.Dtos.Requests.Create;
 using Dystopian_Civil_Office.Dtos.Requests.Update;
 using Dystopian_Civil_Office.Dtos.Responses;
 using Dystopian_Civil_Office.Services.Read.Interfaces;
+using Dystopian_Civil_Office.Services.Validation;
 using Dystopian_Civil_Office.Services.Write.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,19 +14,30 @@ public class PersonController : ControllerBase
 {
     private readonly IPersonReadService _personReadService;
     private readonly IPersonWriteService _personWriteService;
+    private readonly IQueryValidationService _queryValidationService;
 
     public PersonController(
         IPersonReadService personReadService,
-        IPersonWriteService personWriteService)
+        IPersonWriteService personWriteService, IQueryValidationService queryValidationService)
     {
         _personReadService = personReadService;
         _personWriteService = personWriteService;
+        _queryValidationService = queryValidationService;
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PersonResponseDto>>> GetResponseAsync()
     {
         var persons = await _personReadService.GetPersonsAsync();
+        return Ok(persons);
+    }
+
+    [HttpGet("genders")]
+    public async Task<ActionResult<IEnumerable<PersonResponseDto>>> GetResponseByGenderAsync([FromQuery] string gender)
+    {
+        _queryValidationService.ValidateGender(gender);
+        
+        var persons = await _personReadService.GetPersonsByGenderAsync(gender);
         return Ok(persons);
     }
 
