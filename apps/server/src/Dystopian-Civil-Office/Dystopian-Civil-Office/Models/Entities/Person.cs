@@ -5,6 +5,7 @@ namespace Dystopian_Civil_Office.Models.Entities;
 public class Person
 {
     public int PersonId { get; set; }
+    public bool? IsFunctionary { get; set; }
 
     [Required]
     [StringLength(11)]
