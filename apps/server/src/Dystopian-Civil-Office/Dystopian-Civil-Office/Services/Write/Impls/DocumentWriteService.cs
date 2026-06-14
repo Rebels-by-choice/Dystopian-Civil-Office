@@ -24,6 +24,9 @@ public class DocumentWriteService : IDocumentWriteService
         CreateDocumentRequestDto request,
         CancellationToken cancellationToken = default)
     {
+        if (_paperlessClient.Documents.Get(doc => doc.Title == request.Name).AnyAsync().Result)
+            throw new Exception("Document with this name already exists");
+        
         var document = request.DocumentFile.OpenReadStream();
         var result = await _paperlessClient.Documents.Create(new DocumentCreation(document, request.Name));
 
@@ -42,6 +45,8 @@ public class DocumentWriteService : IDocumentWriteService
                 parameters,
                 cancellationToken);
         }
+        else if (result is ImportFailed failedImport)
+            throw new Exception($"Document import failed. Reason: {failedImport.Result}");
     }
 
     public async Task UpdateDocumentAsync(
