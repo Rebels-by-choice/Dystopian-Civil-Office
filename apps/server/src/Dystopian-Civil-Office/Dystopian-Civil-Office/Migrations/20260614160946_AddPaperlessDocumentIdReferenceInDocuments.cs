@@ -11,7 +11,7 @@ namespace Dystopian_Civil_Office.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "PaperlessDocumentId",
+                name: "paperless_document_id",
                 table: "documents",
                 type: "integer",
                 nullable: false,
@@ -22,7 +22,7 @@ namespace Dystopian_Civil_Office.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PaperlessDocumentId",
+                name: "paperless_document_id",
                 table: "documents");
         }
     }

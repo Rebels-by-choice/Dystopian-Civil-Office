@@ -30,7 +30,7 @@ BEGIN
         name,
         category,
         import_date,
-        PaperlessDocumentId
+        paperless_document_id
     )
     VALUES (
         v_name,
