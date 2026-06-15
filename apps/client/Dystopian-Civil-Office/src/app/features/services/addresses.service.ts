@@ -2,10 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, map, shareReplay, tap, throwError } from 'rxjs';
 
-import { PersonAddressViewModel } from '../../shared/api-models/responses/personAddress.viewmodel';
+import { AddressViewModel } from '../../shared/api-models/responses/address.viewmodel';
 import { apiConfig } from '../../core/config/api-main-url';
 import {
-  DeleteAddressModel,
   CreateAddressModel,
   UpdateAddressModel,
 } from '../../shared/api-models/requests/address.model';
@@ -15,13 +14,13 @@ import {
 })
 export class AddressesService {
   private http = inject(HttpClient);
-  private readonly url = `${apiConfig.baseUrl}/PersonAddress`;
+  private readonly url = `${apiConfig.baseUrl}/Address`;
 
-  private addresses$?: Observable<PersonAddressViewModel[]>;
+  private addresses$?: Observable<AddressViewModel[]>;
 
-  public getAddresses(): Observable<PersonAddressViewModel[]> {
+  public getAddresses(): Observable<AddressViewModel[]> {
     if (!this.addresses$) {
-      this.addresses$ = this.http.get<PersonAddressViewModel[]>(this.url).pipe(
+      this.addresses$ = this.http.get<AddressViewModel[]>(this.url).pipe(
         map((addresses) => [...addresses].reverse()),
         shareReplay({ bufferSize: 1, refCount: true }),
         catchError((error) => {
@@ -55,7 +54,7 @@ export class AddressesService {
     );
   }
 
-  public refreshAddresses(): Observable<PersonAddressViewModel[]> {
+  public refreshAddresses(): Observable<AddressViewModel[]> {
     this.addresses$ = undefined;
     return this.getAddresses();
   }
