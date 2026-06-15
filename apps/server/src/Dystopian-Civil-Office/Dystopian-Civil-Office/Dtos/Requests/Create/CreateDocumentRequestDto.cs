@@ -7,4 +7,5 @@ public class CreateDocumentRequestDto
     public DateTimeOffset ImportDate { get; set; }
     public IFormFile DocumentFile { get; set; }
     public int CaseId { get; set; }
+    public int DocumentIssuerId { get; set; }
 }

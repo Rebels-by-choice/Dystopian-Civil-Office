@@ -13,13 +13,11 @@ public class CaseService(ApplicationDbContext dbContext) : ICaseService
     {
         var parameters = new[]
         {
-            new NpgsqlParameter("p_status", request.Status),
-            new NpgsqlParameter("p_created_at", request.CreatedAt),
             new NpgsqlParameter("p_initiator_id", request.InitiatorId),
         };
 
         await dbContext.Database.ExecuteSqlRawAsync(
-            "CALL public.create_case(@p_status, @p_created_at, @p_initiator_id)",
+            "CALL public.create_case(@p_initiator_id)",
             parameters,
             CancellationToken.None);
     }

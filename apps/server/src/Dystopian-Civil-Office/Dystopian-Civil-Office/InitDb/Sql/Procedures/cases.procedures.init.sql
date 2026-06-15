@@ -3,8 +3,6 @@ DROP PROCEDURE IF EXISTS public.create_case(
     );
 
 CREATE OR REPLACE PROCEDURE public.create_case(
-	IN p_status integer,
-    IN p_created_at timestamptz,
 	IN p_initiator_id integer
 )
 LANGUAGE plpgsql
@@ -16,8 +14,8 @@ INSERT INTO public.cases (
     initiator_id
 )
 VALUES (
-           p_status,
-           p_created_at,
+            0,
+           clock_timestamp(),
            p_initiator_id
        );
 

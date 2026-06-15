@@ -39,11 +39,12 @@ public class DocumentWriteService : IDocumentWriteService
                 new NpgsqlParameter("p_category", request.Category),
                 new NpgsqlParameter("p_import_date", request.ImportDate),
                 new NpgsqlParameter("p_paperless_document_id", documentCreated.Id),
-                new NpgsqlParameter("p_case_id", request.CaseId)
+                new NpgsqlParameter("p_case_id", request.CaseId),
+                new NpgsqlParameter("p_document_issuer_id", request.DocumentIssuerId)
             };
 
             await _dbContext.Database.ExecuteSqlRawAsync(
-                "CALL public.create_document(@p_name, @p_category, @p_import_date, @p_paperless_document_id, @p_case_id)",
+                "CALL public.create_document(@p_name, @p_category, @p_import_date, @p_paperless_document_id, @p_case_id, @p_document_issuer_id)",
                 parameters,
                 cancellationToken);
         }
