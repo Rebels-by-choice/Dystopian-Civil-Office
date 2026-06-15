@@ -1,6 +1,6 @@
 using Dystopian_Civil_Office.DataSource;
 using Dystopian_Civil_Office.Dtos.Requests.Create;
-using Dystopian_Civil_Office.Models.Enums;
+using Dystopian_Civil_Office.Dtos.Requests.Update;
 using Dystopian_Civil_Office.Services.Write.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;

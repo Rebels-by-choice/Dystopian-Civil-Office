@@ -1,6 +1,6 @@
 using Dystopian_Civil_Office.Models.Enums;
 
-namespace Dystopian_Civil_Office.Dtos.Requests.Create;
+namespace Dystopian_Civil_Office.Dtos.Requests.Update;
 
 public class UpdateCaseRequestDto
 {
