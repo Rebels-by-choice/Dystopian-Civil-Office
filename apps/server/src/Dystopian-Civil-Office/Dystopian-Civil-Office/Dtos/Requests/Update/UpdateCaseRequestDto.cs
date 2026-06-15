@@ -6,5 +6,5 @@ public class UpdateCaseRequestDto
 {
     public int CaseId { get; set; }
     public CaseStatus NewStatus { get; set; }
-    public int ResponderId { get; set; }
+    public int PartyId { get; set; }
 }

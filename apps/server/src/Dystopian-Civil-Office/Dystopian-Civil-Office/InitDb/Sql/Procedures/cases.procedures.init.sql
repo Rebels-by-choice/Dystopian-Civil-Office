@@ -31,7 +31,7 @@ DROP PROCEDURE IF EXISTS public.update_case(
 CREATE OR REPLACE PROCEDURE public.update_case(
     IN p_case_id integer,
     IN p_new_status integer,
-    IN p_responder_id integer
+    IN p_party_id integer
 )
 LANGUAGE plpgsql
 AS $$
@@ -42,12 +42,17 @@ v_existing_responder_id integer;
 	v_success boolean;
 	v_is_responder_functionary boolean;
 BEGIN
-SELECT v.initiator_id, v.responder_id, v.status, v.is_functionary
+SELECT v.initiator_id, v.responder_id, v.status
 INTO v_existing_initiator_id, v_existing_responder_id, v_existing_status, v_is_responder_functionary
 FROM public.cases v
 WHERE v.case_id = p_case_id;
 
-IF p_responder_id = v_existing_initiator_id THEN
+SELECT p.is_functionary
+INTO v_is_responder_functionary
+FROM public.persons p
+    WHERE p.person_id = p_party_id;
+
+IF v_existing_responder_id = v_existing_initiator_id THEN
         RAISE EXCEPTION 'You can''t respond to your own case.';
 END IF;	
 
@@ -60,29 +65,27 @@ IF v_existing_status >= 2 THEN
         RAISE EXCEPTION 'You''re not authorized. Case is closed.';
 END IF;
 
-IF (p_new_status = 1 OR p_new_status = 2) AND NOT v_is_responder_functionary OR
-   (p_new_status = 0 OR p_new_status = 3) AND v_is_responder_functionary THEN
+    IF (p_new_status = 1 OR p_new_status = 2) AND v_is_responder_functionary IS NOT TRUE OR
+    (p_new_status = 0 OR p_new_status = 3) AND v_is_responder_functionary THEN
         RAISE EXCEPTION 'You''re not authorized to perform this kind of action.';
-END IF;
+    END IF;
 
-	
-    IF v_existing_responder_id IS NULL THEN
-UPDATE public.cases
-SET responder_id = p_responder_id,
-    status = p_new_status
-WHERE case_id = p_case_id;
-
-v_success = true;
-
-    ELSIF v_existing_responder_id = p_responder_id THEN
-UPDATE public.cases
-SET status = p_new_status
-WHERE case_id = p_case_id;
-
-v_success = true;
-ELSE
+    IF v_existing_responder_id IS NULL THEN       
+        UPDATE public.cases
+        SET responder_id = p_party_id,
+            status = p_new_status
+        WHERE case_id = p_case_id;
+              
+        v_success = true;
+    ELSIF v_existing_responder_id <> p_party_id AND v_is_responder_functionary THEN
         RAISE EXCEPTION 'You''re not authorized. Someone else took over that case.';
-END IF;
+    ELSE    
+        UPDATE public.cases
+        SET status = p_new_status
+        WHERE case_id = p_case_id;
+
+        v_success = true;
+    END IF;
 
 	IF v_success AND p_new_status >= 2 THEN
 UPDATE public.cases

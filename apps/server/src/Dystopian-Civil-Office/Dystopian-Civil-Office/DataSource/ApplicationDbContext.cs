@@ -18,6 +18,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<MarriageRecord> MarriageRecords { get; set; }
     public DbSet<DeathRecord> DeathRecords { get; set; }
     public DbSet<Document> Documents { get; set; }
+    public DbSet<Case> Cases { get; set; }
 
     // ORM to archive tables
     public DbSet<DocumentArchive> DocumentArchives { get; set; }
@@ -31,6 +32,41 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Case>(entity =>
+        {
+            entity.ToTable("cases");
+
+            entity.HasKey(e => e.CaseId);
+            
+            entity.Property(e => e.CaseId)
+                .HasColumnName("case_id")
+                .UseIdentityByDefaultColumn();
+
+            entity.Property(e => e.Status)
+                .HasColumnName("status")
+                .IsRequired();
+            entity.Property(e => e.CreatedAt)
+                .HasColumnName("created_at")
+                .IsRequired();
+            entity.Property(e => e.ClosedAt)
+                .HasColumnName("closed_at");
+            entity.Property(e => e.InitiatorId)
+                .HasColumnName("initiator_id")
+                .IsRequired();
+            entity.Property(e => e.ResponderId)
+                .HasColumnName("responder_id");
+            
+            entity.HasOne(e => e.Initiator)
+                .WithMany() // Leave empty if Person doesn't have an "InitiatedCases" collection property
+                .HasForeignKey(e => e.InitiatorId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasOne(e => e.Responder)
+                .WithMany() // Leave empty if Person doesn't have a "RespondedCases" collection property
+                .HasForeignKey(e => e.ResponderId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        
         modelBuilder.Entity<Document>(entity =>
         {
             entity.ToTable("documents");

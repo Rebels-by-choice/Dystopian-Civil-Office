@@ -2,6 +2,8 @@ using Dystopian_Civil_Office.DataSource;
 using Dystopian_Civil_Office.Exceptions;
 using Dystopian_Civil_Office.Middleware;
 using Dystopian_Civil_Office.Services;
+using Dystopian_Civil_Office.Services.Write.Impls;
+using Dystopian_Civil_Office.Services.Write.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,11 +17,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         .UseSnakeCaseNamingConvention());
 
 builder.Services.InfrastructureAddQueryServices();
-
 builder.Services.InfrastructureAddReadServices();
 builder.Services.InfrastructureAddWriteServices();
-
 builder.Services.InfrastructureAddPaperless();
+builder.Services.AddScoped<ICaseService, CaseService>();
+    
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
