@@ -1,4 +1,6 @@
 ﻿using System;
+using Dystopian_Civil_Office.DataSource;
+using static Dystopian_Civil_Office.Migrations.MigrationHelpers;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -75,6 +77,8 @@ namespace Dystopian_Civil_Office.Migrations
                 principalTable: "cases",
                 principalColumn: "case_id",
                 onDelete: ReferentialAction.Cascade);
+            
+            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Procedures.cases.procedures.init.sql");
         }
 
         /// <inheritdoc />
