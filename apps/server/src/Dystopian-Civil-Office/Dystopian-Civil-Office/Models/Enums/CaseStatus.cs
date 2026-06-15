@@ -4,5 +4,6 @@ public enum CaseStatus
 {
     Open,
     PendingDocuments,
-    Closed
+    Closed,
+    Cancelled
 }

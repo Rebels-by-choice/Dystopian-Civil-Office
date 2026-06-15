@@ -38,18 +38,35 @@ CREATE OR REPLACE PROCEDURE public.update_case(
 LANGUAGE plpgsql
 AS $$
 DECLARE
+v_existing_initiator_id integer;
 v_existing_responder_id integer;
     v_existing_status integer;
 	v_success boolean;
+	v_is_responder_functionary boolean;
 BEGIN
-SELECT v.responder_id, v.status
-INTO v_existing_responder_id, v_existing_status
+SELECT v.initiator_id, v.responder_id, v.status, v.is_functionary
+INTO v_existing_initiator_id, v_existing_responder_id, v_existing_status, v_is_responder_functionary
 FROM public.cases v
 WHERE v.case_id = p_case_id;
 
-IF v_existing_status = 2 THEN
+IF p_responder_id = v_existing_initiator_id THEN
+        RAISE EXCEPTION 'You can''t respond to your own case.';
+END IF;	
+
+-- 0 Open
+-- 1 PendingDocuments
+-- 2 Closed
+-- 3 Cancelled
+
+IF v_existing_status >= 2 THEN
         RAISE EXCEPTION 'You''re not authorized. Case is closed.';
 END IF;
+
+IF (p_new_status = 1 OR p_new_status = 2) AND NOT v_is_responder_functionary OR
+   (p_new_status = 0 OR p_new_status = 3) AND v_is_responder_functionary THEN
+        RAISE EXCEPTION 'You''re not authorized to perform this kind of action.';
+END IF;
+
 	
     IF v_existing_responder_id IS NULL THEN
 UPDATE public.cases
@@ -69,7 +86,7 @@ ELSE
         RAISE EXCEPTION 'You''re not authorized. Someone else took over that case.';
 END IF;
 
-	IF v_success AND p_new_status = 2 THEN
+	IF v_success AND p_new_status >= 2 THEN
 UPDATE public.cases
 SET closed_at = clock_timestamp()
 WHERE case_id = p_case_id;
