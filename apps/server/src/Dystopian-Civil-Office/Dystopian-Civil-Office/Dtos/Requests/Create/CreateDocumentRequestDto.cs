@@ -6,4 +6,5 @@ public class CreateDocumentRequestDto
     public string Category { get; set; } = string.Empty;
     public DateTimeOffset ImportDate { get; set; }
     public IFormFile DocumentFile { get; set; }
+    public int CaseId { get; set; }
 }

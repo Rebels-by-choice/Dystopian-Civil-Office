@@ -2,14 +2,15 @@
     Section for documents
 */
 DROP PROCEDURE IF EXISTS public.create_document(
-    varchar, varchar, timestamptz, integer
+    varchar, varchar, timestamptz, integer, integer
 );
 
 CREATE OR REPLACE PROCEDURE public.create_document(
     IN p_name varchar(100),
     IN p_category varchar(100),
     IN p_import_date timestamptz,
-    IN p_paperless_document_id integer
+    IN p_paperless_document_id integer,
+    IN p_case_id integer
 )
 LANGUAGE plpgsql
 AS $$
@@ -17,7 +18,19 @@ DECLARE
     v_name varchar(100);
     v_category varchar(100);
     v_import_date timestamptz;
+    v_case_status integer;
 BEGIN
+    SELECT status
+    INTO v_case_status
+    FROM public.cases
+    WHERE case_id = p_case_id;
+
+    IF v_case_status IS NULL THEN
+       RAISE EXCEPTION 'The case specified to which the document would belong does not exist.';
+    ELSIF v_case_status = 2 THEN
+       RAISE EXCEPTION 'The case specified to which the document would belong is closed.';
+    END IF;
+
     SELECT v.name, v.category, v.import_date
     INTO v_name, v_category, v_import_date
     FROM public.validate_document_data(
@@ -30,13 +43,15 @@ BEGIN
         name,
         category,
         import_date,
-        paperless_document_id
+        paperless_document_id,
+        case_id
     )
     VALUES (
         v_name,
         v_category,
         v_import_date,
-        p_paperless_document_id
+        p_paperless_document_id,
+        p_case_id
     );
 
 EXCEPTION

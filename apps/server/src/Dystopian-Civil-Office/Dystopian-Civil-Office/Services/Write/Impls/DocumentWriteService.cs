@@ -24,7 +24,8 @@ public class DocumentWriteService : IDocumentWriteService
         CreateDocumentRequestDto request,
         CancellationToken cancellationToken = default)
     {
-        if (_paperlessClient.Documents.Get(doc => doc.Title == request.Name).AnyAsync().Result)
+        var paperlessDocumentExists = await _paperlessClient.Documents.Get(doc => doc.Title == request.Name).AnyAsync();
+        if (paperlessDocumentExists)
             throw new Exception("Document with this name already exists");
         
         var document = request.DocumentFile.OpenReadStream();
@@ -37,11 +38,12 @@ public class DocumentWriteService : IDocumentWriteService
                 new NpgsqlParameter("p_name", request.Name),
                 new NpgsqlParameter("p_category", request.Category),
                 new NpgsqlParameter("p_import_date", request.ImportDate),
-                new NpgsqlParameter("p_paperless_document_id", documentCreated.Id)
+                new NpgsqlParameter("p_paperless_document_id", documentCreated.Id),
+                new NpgsqlParameter("p_case_id", request.CaseId)
             };
 
             await _dbContext.Database.ExecuteSqlRawAsync(
-                "CALL public.create_document(@p_name, @p_category, @p_import_date, @p_paperless_document_id)",
+                "CALL public.create_document(@p_name, @p_category, @p_import_date, @p_paperless_document_id, @p_case_id)",
                 parameters,
                 cancellationToken);
         }
