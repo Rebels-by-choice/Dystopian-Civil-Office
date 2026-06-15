@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using Dystopian_Civil_Office.Models.Enums;
 
 namespace Dystopian_Civil_Office.Models.Entities;

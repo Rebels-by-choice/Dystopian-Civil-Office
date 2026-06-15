@@ -1,16 +1,41 @@
+using Dystopian_Civil_Office.DataSource;
+using Dystopian_Civil_Office.Dtos.Requests.Create;
+using Dystopian_Civil_Office.Models.Enums;
 using Dystopian_Civil_Office.Services.Write.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Dystopian_Civil_Office.Services.Write.Impls;
 
-public class CaseService : ICaseService
+public class CaseService(ApplicationDbContext dbContext) : ICaseService
 {
-    public Task CreateAsync()
+    public async Task CreateAsync(CreateCaseRequestDto request)
     {
-        throw new NotImplementedException();
+        var parameters = new[]
+        {
+            new NpgsqlParameter("p_status", request.Status),
+            new NpgsqlParameter("p_created_at", request.CreatedAt),
+            new NpgsqlParameter("p_initiator_id", request.InitiatorId),
+        };
+
+        await dbContext.Database.ExecuteSqlRawAsync(
+            "CALL public.create_case(@p_status, @p_created_at, @p_initiator_id)",
+            parameters,
+            CancellationToken.None);
     }
 
-    public Task UpdateStatusAsync()
+    public Task UpdateStatusAsync(UpdateCaseRequestDto request)
     {
-        throw new NotImplementedException();
+        var parameters = new[]
+        {
+            new NpgsqlParameter("p_case_id", request.CaseId),
+            new NpgsqlParameter("p_new_status", request.NewStatus),
+            new NpgsqlParameter("p_responder_id", request.ResponderId),
+        };
+        
+        return dbContext.Database.ExecuteSqlRawAsync(
+            "CALL public.update_case(@p_case_id, @p_new_status, @p_responder_id)",
+            parameters,
+            CancellationToken.None);
     }
 }
