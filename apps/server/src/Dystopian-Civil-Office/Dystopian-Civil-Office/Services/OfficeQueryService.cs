@@ -28,7 +28,8 @@ public class OfficeQueryService
                 BirthDate = p.BirthDate,
                 BirthPlace = p.BirthPlace,
                 AddressRegistryNumber = p.Address.RegistryNumber,
-                DocumentName = p.Document != null ? p.Document.Name : null
+                DocumentName = p.Document != null ? p.Document.Name : null,
+                IsFunctionary = p.IsFunctionary
             })
             .ToListAsync();
     }
@@ -49,7 +50,8 @@ public class OfficeQueryService
                 BirthDate = p.BirthDate,
                 BirthPlace = p.BirthPlace,
                 AddressRegistryNumber = p.Address.RegistryNumber,
-                DocumentName = p.Document != null ? p.Document.Name : null
+                DocumentName = p.Document != null ? p.Document.Name : null,
+                IsFunctionary = p.IsFunctionary
             })
             .ToListAsync();
     }
