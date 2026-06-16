@@ -77,7 +77,7 @@ BEGIN
         OLD.first_name,
         OLD.middle_name,
         OLD.last_name,
-        OLD.wgender,
+        OLD.gender,
         OLD.birth_date,
         OLD.birth_place,
         v_document_name,

@@ -428,7 +428,6 @@ namespace Dystopian_Civil_Office.Migrations
              * SQL Section
              * Clean, Seed, Functions, Procedures, Triggers
              */
-            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Seed.seed_mocks.init.sql");
 
             ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Functions.validate_data.defs.sql");
             ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Functions.archive_data.defs.sql");
