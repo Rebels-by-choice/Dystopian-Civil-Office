@@ -5,7 +5,7 @@ export interface BirthRecordViewModel {
   bornPersonPesel: string;
   motherPesel: string;
   fatherPesel: string;
-  birthdate: Date;
+  birthDate: Date;
   birthPlace: string;
   documentName: string;
 }

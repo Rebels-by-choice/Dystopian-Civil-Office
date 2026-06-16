@@ -10,6 +10,7 @@ export interface CreateAddressModel {
 }
 
 export interface UpdateAddressModel {
+  registryNumber?: string;
   city?: string;
   street?: string;
   houseNumber?: string;
