@@ -5,7 +5,6 @@ import { Observable, catchError, map, shareReplay, tap, throwError } from 'rxjs'
 import { DocumentViewModel } from '../../shared/api-models/responses/document.viewmodel';
 import { apiConfig } from '../../core/config/api-main-url';
 import {
-  DeleteDocumentModel,
   CreateDocumentModel,
   UpdateDocumentModel,
 } from '../../shared/api-models/requests/document.model';

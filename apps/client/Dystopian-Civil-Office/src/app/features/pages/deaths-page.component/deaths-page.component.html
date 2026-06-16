@@ -1,1 +1,166 @@
-<p>deaths-page.component works!</p>
+<div class="p-2 pb-17">
+  <div class="mb-6 flex items-center justify-between gap-6">
+    <div class="flex items-center gap-6">
+      <h1 class="text-3xl">Death records</h1>
+    </div>
+
+    <app-button label="Add death" (buttonClick)="openCreateDialog()"></app-button>
+  </div>
+
+  @if (deaths$ | async; as deaths) {
+    @if (deathsErrorMessage) {
+      <div class="rounded-xl border border-red-300 bg-dco-bg-error px-4 py-4 text-dco-text-error">
+        {{ deathsErrorMessage }}
+      </div>
+    } @else {
+      <app-table>
+        <thead
+          table-head
+          class="bg-dco-bg-thead text-left text-xs font-bold uppercase tracking-[0.08em] text-dco-text-secondary"
+        >
+          <tr>
+            <th
+              class="select-none px-4 py-3 hover:cursor-pointer"
+              (click)="sortBy('registryNumber')"
+            >
+              <div class="flex items-center gap-2">
+                <span>Registry number</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('registryNumber') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('registryNumber') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('registryDate')">
+              <div class="flex items-center gap-2">
+                <span>Registry date</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('registryDate') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('registryDate') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('personPesel')">
+              <div class="flex items-center gap-2">
+                <span>Person PESEL</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('personPesel') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('personPesel') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('deathDate')">
+              <div class="flex items-center gap-2">
+                <span>Death date</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('deathDate') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('deathDate') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('deathPlace')">
+              <div class="flex items-center gap-2">
+                <span>Death place</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('deathPlace') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('deathPlace') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('causeOfDeath')">
+              <div class="flex items-center gap-2">
+                <span>Cause of death</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('causeOfDeath') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('causeOfDeath') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('documentName')">
+              <div class="flex items-center gap-2">
+                <span>Document name</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('documentName') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('documentName') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+          </tr>
+        </thead>
+
+        <tbody table-body class="bg-dco-bg-table text-sm text-dco-table-contents">
+          @for (death of deaths; track death.deathRecordId) {
+            <tr class="border-b border-stone-300 last:border-b-0 hover:bg-dco-bg-table">
+              <td class="px-4 py-4">{{ death.registryNumber }}</td>
+              <td class="px-4 py-4">{{ death.registryDate | date: 'yyyy-MM-dd' }}</td>
+              <td class="px-4 py-4">{{ death.personPesel }}</td>
+              <td class="px-4 py-4">{{ death.deathDate | date: 'yyyy-MM-dd' }}</td>
+              <td class="px-4 py-4">{{ death.deathPlace }}</td>
+              <td class="px-4 py-4">{{ death.causeOfDeath }}</td>
+              <td class="px-4 py-4">{{ death.documentName }}</td>
+
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openUpdateDialog(death)"
+                  aria-label="Edit death"
+                >
+                  <img src="assets/edit.png" alt="Edit" class="h-4 w-4" />
+                </button>
+              </td>
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openDeleteDialog(death)"
+                  aria-label="Delete death"
+                >
+                  <img src="assets/bin.png" alt="Delete" class="h-4 w-4" />
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="px-4 py-6 text-center text-dco-table-contents">
+                No death records found.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </app-table>
+    }
+  } @else {
+    <div class="p-4 text-dco-table-contents">Loading death records...</div>
+  }
+</div>

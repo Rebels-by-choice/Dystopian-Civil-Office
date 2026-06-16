@@ -1,0 +1,15 @@
+"Postgres main temporary connection:"
+user: postgres
+passwd: postgres
+
+"Postgres app connection: (not implemented yet)"
+user: dco_admin
+passwd: dco_123!%
+
+=========
+Recommended example of paperless registration
+=========
+
+"Paperless webpage connection":
+user: dco_admin
+passwd: dco_123!%
