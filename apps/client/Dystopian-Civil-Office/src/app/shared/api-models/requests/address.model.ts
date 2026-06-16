@@ -6,7 +6,7 @@ export interface CreateAddressModel {
   apartmentNumber: string;
   postalCode: string;
   country: string;
-  documentName: number;
+  documentName: string;
 }
 
 export interface UpdateAddressModel {
@@ -17,7 +17,7 @@ export interface UpdateAddressModel {
   apartmentNumber?: string;
   postalCode?: string;
   country?: string;
-  documentName?: number;
+  documentName?: string;
 }
 
 export interface DeleteAddressModel {

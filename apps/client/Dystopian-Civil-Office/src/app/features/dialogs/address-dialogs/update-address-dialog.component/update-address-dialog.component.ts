@@ -42,22 +42,37 @@ export class UpdateAddressDialogComponent implements OnInit {
 
   public ngOnInit(): void {
     this.form = this.fb.group({
-      city: [this.data.city, AddressFormValidators.cityValidators()],
-      street: [this.data.street, AddressFormValidators.streetValidators()],
-      houseNumber: [this.data.houseNumber, AddressFormValidators.houseNumberValidators()],
+      registryNumber: [
+        this.data.registryNumber ?? '',
+        AddressFormValidators.registryNumberValidators?.() ?? [],
+      ],
+      documentName: [
+        this.data.documentName ?? '',
+        AddressFormValidators.documentNameValidators?.() ?? [],
+      ],
+      city: [this.data.city ?? '', AddressFormValidators.cityValidators()],
+      street: [this.data.street ?? '', AddressFormValidators.streetValidators()],
+      houseNumber: [this.data.houseNumber ?? '', AddressFormValidators.houseNumberValidators()],
       apartmentNumber: [
-        this.data.apartmentNumber,
+        this.data.apartmentNumber ?? '',
         AddressFormValidators.apartmentNumberValidators(),
       ],
-      postalCode: [this.data.postalCode, AddressFormValidators.postalCodeValidators()],
-      country: [this.data.country, AddressFormValidators.countryValidators()],
+      postalCode: [this.data.postalCode ?? '', AddressFormValidators.postalCodeValidators()],
+      country: [this.data.country ?? '', AddressFormValidators.countryValidators()],
     });
   }
 
   protected get registryNumberError(): string {
     return GlobalFormValidators.getControlErrorMessage(
       this.form.controls['registryNumber'],
-      'registryNumber',
+      'Registry number',
+    );
+  }
+
+  protected get documentNameError(): string {
+    return GlobalFormValidators.getControlErrorMessage(
+      this.form.controls['documentName'],
+      'Document name',
     );
   }
 
@@ -92,13 +107,6 @@ export class UpdateAddressDialogComponent implements OnInit {
 
   protected get countryError(): string {
     return GlobalFormValidators.getControlErrorMessage(this.form.controls['country'], 'Country');
-  }
-
-  protected get documentNameError(): string {
-    return GlobalFormValidators.getControlErrorMessage(
-      this.form.controls['documentName'],
-      'documentName',
-    );
   }
 
   protected onCancel(): void {
@@ -137,46 +145,46 @@ export class UpdateAddressDialogComponent implements OnInit {
       return;
     }
 
-    const trimmedRegistryNumber = this.form.controls['registryNumber'].value!.trim();
-    const trimmedCity = this.form.controls['city'].value!.trim();
-    const trimmedStreet = this.form.controls['street'].value!.trim();
-    const trimmedHouseNumber = this.form.controls['houseNumber'].value!.trim();
-    const trimmedApartmentNumber = this.form.controls['apartmentNumber'].value!.trim();
-    const trimmedPostalCode = this.form.controls['postalCode'].value!.trim();
-    const trimmedCountry = this.form.controls['country'].value!.trim();
-    const trimmedDocumentName = this.form.controls['documentName'].value!.trim();
+    const trimmedRegistryNumber = (this.form.controls['registryNumber'].value ?? '').trim();
+    const trimmedCity = (this.form.controls['city'].value ?? '').trim();
+    const trimmedStreet = (this.form.controls['street'].value ?? '').trim();
+    const trimmedHouseNumber = (this.form.controls['houseNumber'].value ?? '').trim();
+    const trimmedApartmentNumber = (this.form.controls['apartmentNumber'].value ?? '').trim();
+    const trimmedPostalCode = (this.form.controls['postalCode'].value ?? '').trim();
+    const trimmedCountry = (this.form.controls['country'].value ?? '').trim();
+    const trimmedDocumentName = (this.form.controls['documentName'].value ?? '').trim();
 
     const request: UpdateAddressModel = {};
 
-    if (trimmedRegistryNumber !== this.data.registryNumber.trim()) {
+    if (trimmedRegistryNumber !== (this.data.registryNumber ?? '').trim()) {
       request.registryNumber = trimmedRegistryNumber;
     }
 
-    if (trimmedCity !== this.data.city.trim()) {
+    if (trimmedCity !== (this.data.city ?? '').trim()) {
       request.city = trimmedCity;
     }
 
-    if (trimmedStreet !== this.data.street.trim()) {
+    if (trimmedStreet !== (this.data.street ?? '').trim()) {
       request.street = trimmedStreet;
     }
 
-    if (trimmedHouseNumber !== this.data.houseNumber.trim()) {
+    if (trimmedHouseNumber !== (this.data.houseNumber ?? '').trim()) {
       request.houseNumber = trimmedHouseNumber;
     }
 
-    if (trimmedApartmentNumber !== this.data.apartmentNumber.trim()) {
+    if (trimmedApartmentNumber !== (this.data.apartmentNumber ?? '').trim()) {
       request.apartmentNumber = trimmedApartmentNumber;
     }
 
-    if (trimmedPostalCode !== this.data.postalCode.trim()) {
+    if (trimmedPostalCode !== (this.data.postalCode ?? '').trim()) {
       request.postalCode = trimmedPostalCode;
     }
 
-    if (trimmedCountry !== this.data.country.trim()) {
+    if (trimmedCountry !== (this.data.country ?? '').trim()) {
       request.country = trimmedCountry;
     }
 
-    if (trimmedDocumentName !== this.data.documentName.trim()) {
+    if (trimmedDocumentName !== (this.data.documentName ?? '').trim()) {
       request.documentName = trimmedDocumentName;
     }
 

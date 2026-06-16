@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+
 import { AddressesService } from '../../../services/addresses.service';
 import { CreateAddressModel } from '../../../../shared/api-models/requests/address.model';
 import { AddressFormValidators } from '../../../../shared/validators/address-form.validators';
@@ -14,13 +14,13 @@ import { GlobalFormValidators } from '../../../../shared/validators/global-form.
 
 @Component({
   selector: 'app-create-address-dialog.component',
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatInputModule,
     MatFormFieldModule,
-    MatSelectModule,
     ButtonComponent,
     DialogShellComponent,
   ],
@@ -34,14 +34,14 @@ export class CreateAddressDialogComponent {
   private readonly addressesService = inject(AddressesService);
 
   protected readonly form = this.fb.group({
-    registryNumber: ['', AddressFormValidators.registryNumberValidators()],
+    registryNumber: ['', AddressFormValidators.registryNumberValidators?.() ?? []],
+    documentName: ['', AddressFormValidators.documentNameValidators?.() ?? []],
     city: ['', AddressFormValidators.cityValidators()],
     street: ['', AddressFormValidators.streetValidators()],
     houseNumber: ['', AddressFormValidators.houseNumberValidators()],
     apartmentNumber: ['', AddressFormValidators.apartmentNumberValidators()],
     postalCode: ['', AddressFormValidators.postalCodeValidators()],
     country: ['', AddressFormValidators.countryValidators()],
-    documentId: ['', AddressFormValidators.documentIdValidators()],
   });
 
   protected isSubmitting = false;
@@ -51,6 +51,13 @@ export class CreateAddressDialogComponent {
     return GlobalFormValidators.getControlErrorMessage(
       this.form.controls.registryNumber,
       'Registry number',
+    );
+  }
+
+  protected get documentNameError(): string {
+    return GlobalFormValidators.getControlErrorMessage(
+      this.form.controls.documentName,
+      'Document name',
     );
   }
 
@@ -87,13 +94,6 @@ export class CreateAddressDialogComponent {
     return GlobalFormValidators.getControlErrorMessage(this.form.controls.country, 'Country');
   }
 
-  protected get documentIdError(): string {
-    return GlobalFormValidators.getControlErrorMessage(
-      this.form.controls.documentId,
-      'Document ID',
-    );
-  }
-
   protected onCancel(): void {
     if (this.isSubmitting) {
       return;
@@ -112,14 +112,14 @@ export class CreateAddressDialogComponent {
     }
 
     const request: CreateAddressModel = {
-      registryNumber: this.form.value.registryNumber?.trim() ?? '',
-      city: this.form.value.city!.trim(),
-      street: this.form.value.street!.trim(),
-      houseNumber: this.form.value.houseNumber!.trim(),
-      apartmentNumber: this.form.value.apartmentNumber!.trim(),
-      postalCode: this.form.value.postalCode!.trim(),
-      country: this.form.value.country!.trim(),
-      documentName: Number(this.form.value.documentId),
+      registryNumber: (this.form.controls.registryNumber.value ?? '').trim(),
+      documentName: (this.form.controls.documentName.value ?? '').trim(),
+      city: (this.form.controls.city.value ?? '').trim(),
+      street: (this.form.controls.street.value ?? '').trim(),
+      houseNumber: (this.form.controls.houseNumber.value ?? '').trim(),
+      apartmentNumber: (this.form.controls.apartmentNumber.value ?? '').trim(),
+      postalCode: (this.form.controls.postalCode.value ?? '').trim(),
+      country: (this.form.controls.country.value ?? '').trim(),
     };
 
     this.isSubmitting = true;

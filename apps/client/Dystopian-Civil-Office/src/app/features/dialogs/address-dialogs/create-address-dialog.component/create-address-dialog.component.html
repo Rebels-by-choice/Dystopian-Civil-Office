@@ -6,6 +6,14 @@
   <div dialog-body>
     <form [formGroup]="form" class="flex flex-col gap-4">
       <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Registry number</mat-label>
+        <input matInput formControlName="registryNumber" maxlength="50" class="!pl-2 !text-base" />
+        @if (registryNumberError) {
+          <mat-error class="!text-dco-text-error">{{ registryNumberError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
         <mat-label class="!pl-2">City</mat-label>
         <input matInput formControlName="city" maxlength="100" class="!pl-2 !text-base" />
         @if (cityError) {
@@ -50,6 +58,14 @@
         <input matInput formControlName="country" maxlength="60" class="!pl-2 !text-base" />
         @if (countryError) {
           <mat-error class="!text-dco-text-error">{{ countryError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Document name</mat-label>
+        <input matInput formControlName="documentName" maxlength="150" class="!pl-2 !text-base" />
+        @if (documentNameError) {
+          <mat-error class="!text-dco-text-error">{{ documentNameError }}</mat-error>
         }
       </mat-form-field>
     </form>
