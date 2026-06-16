@@ -5,6 +5,7 @@ using Dystopian_Civil_Office.Services;
 using Dystopian_Civil_Office.Services.Write.Impls;
 using Dystopian_Civil_Office.Services.Write.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,9 @@ builder.Services.AddExceptionHandler<ViewDataExceptionHandler>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options
         .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-        .UseSnakeCaseNamingConvention());
+        .UseSnakeCaseNamingConvention()
+        .ConfigureWarnings(w => w.Log(RelationalEventId.PendingModelChangesWarning))); 
+        // DbSet<Case> is added before its migration, therefore we need to ignore it for now
 
 builder.Services.InfrastructureAddQueryServices();
 builder.Services.InfrastructureAddReadServices();
