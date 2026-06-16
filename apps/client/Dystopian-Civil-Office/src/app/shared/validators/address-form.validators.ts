@@ -40,7 +40,7 @@ export class AddressFormValidators {
   }
 
   public static apartmentNumberValidators(): ValidatorFn[] {
-    return [Validators.minLength(1), Validators.maxLength(20), GlobalFormValidators.notBlank()];
+    return [Validators.minLength(1), Validators.maxLength(20)];
   }
 
   public static postalCodeValidators(): ValidatorFn[] {
@@ -62,7 +62,7 @@ export class AddressFormValidators {
   }
 
   public static documentNameValidators(): ValidatorFn[] {
-    return [Validators.minLength(2), Validators.maxLength(100), GlobalFormValidators.notBlank()];
+    return [Validators.minLength(2), Validators.maxLength(100)];
   }
 
   public static getControlErrorMessage = GlobalFormValidators.getControlErrorMessage;
