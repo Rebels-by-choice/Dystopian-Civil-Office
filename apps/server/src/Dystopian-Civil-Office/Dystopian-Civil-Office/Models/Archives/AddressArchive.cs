@@ -3,8 +3,7 @@
 public class AddressArchive
 {
     public int AddressArchiveId { get; set; }
-    // public string RegistryNumber { get; set; } = string.Empty; TODO: to add
-
+    public required string RegistryNumber { get; set; }
     public string City { get; set; } = string.Empty;
     public string Street { get; set; } = string.Empty;
     public string HouseNumber { get; set; } = string.Empty;

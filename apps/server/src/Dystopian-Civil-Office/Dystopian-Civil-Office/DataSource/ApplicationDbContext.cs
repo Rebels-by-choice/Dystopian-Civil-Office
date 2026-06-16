@@ -477,6 +477,7 @@ public class ApplicationDbContext : DbContext
         {
             entity.ToTable("address_archives");
             entity.HasKey(e => e.AddressArchiveId);
+            entity.Property(e => e.RegistryNumber).HasMaxLength(50).IsRequired();
             entity.Property(e => e.City).HasMaxLength(100).IsRequired();
             entity.Property(e => e.Street).HasMaxLength(150).IsRequired();
             entity.Property(e => e.HouseNumber).HasMaxLength(20).IsRequired();
