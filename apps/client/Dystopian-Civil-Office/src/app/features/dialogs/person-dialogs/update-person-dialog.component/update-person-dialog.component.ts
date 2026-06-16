@@ -133,6 +133,26 @@ export class UpdatePersonDialogComponent implements OnInit {
       return;
     }
 
+    if (
+      !PersonFormValidators.hasPersonChanges(
+        this.form,
+        this.data.personPesel,
+        this.data.firstName,
+        this.data.middleName,
+        this.data.lastName,
+        this.data.gender,
+        this.data.birthDate,
+        this.data.birthPlace,
+        this.data.addressRegistryNumber,
+        this.data.documentName,
+      )
+    ) {
+      this.apiErrorMessage =
+        'Provided data is the same as current. Please make changes before submitting.';
+      this.cdr.detectChanges();
+      return;
+    }
+
     const trimmedPesel = this.form.controls['pesel'].value!.trim();
     const trimmedFirstName = this.form.controls['firstName'].value!.trim();
     const trimmedMiddleName = this.form.controls['middleName'].value?.trim() ?? '';

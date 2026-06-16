@@ -17,22 +17,15 @@ export class StatisticsPageComponent {
   readonly summary$ = this.statisticsService.getStatistics().pipe(
     map((entries) => {
       return {
-        newRecords: entries.filter(
-          (entry) => entry.method === 'POST' && entry.statusCode === 201
-        ).length,
+        newRecords: entries.filter((entry) => entry.method === 'POST' && entry.statusCode === 201)
+          .length,
         editedRecords: entries.filter(
-          (entry) =>
-            entry.method === 'PUT' &&
-            entry.statusCode >= 200 &&
-            entry.statusCode < 300
+          (entry) => entry.method === 'PUT' && entry.statusCode >= 200 && entry.statusCode < 300,
         ).length,
         deletedRecords: entries.filter(
-          (entry) =>
-            entry.method === 'DELETE' &&
-            entry.statusCode >= 200 &&
-            entry.statusCode < 300
-        ).length
+          (entry) => entry.method === 'DELETE' && entry.statusCode >= 200 && entry.statusCode < 300,
+        ).length,
       };
-    })
+    }),
   );
 }
