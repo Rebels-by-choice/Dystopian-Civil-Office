@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { ButtonComponent } from '../../../shared/ui/button.component/button.component';
 import { TableComponent } from '../../../shared/ui/table/table.component';
@@ -21,6 +21,7 @@ type SortColumn =
   | 'postalCode'
   | 'country'
   | 'documentName';
+
 type SortDirection = 'asc' | 'desc';
 
 interface SortState {
@@ -46,15 +47,10 @@ export class AddressesPageComponent {
 
   protected addressesErrorMessage = '';
 
-  private readonly rawAddresses$ = this.sortState$.pipe(
-    switchMap(() => {
-      this.addressesErrorMessage = '';
-      return this.addressesService.getAddresses().pipe(
-        catchError((error) => {
-          this.addressesErrorMessage = 'Failed to load addresses.';
-          return of([]);
-        }),
-      );
+  private readonly rawAddresses$ = this.addressesService.getAddresses().pipe(
+    catchError(() => {
+      this.addressesErrorMessage = 'Failed to load addresses.';
+      return of([]);
     }),
   );
 
@@ -130,59 +126,73 @@ export class AddressesPageComponent {
     return currentSort.column === column ? currentSort.direction : 'asc';
   }
 
-  private sortAddresses(addresses: AddressViewModel[], sortState: SortState): AddressViewModel[] {
-    const sorted = [...addresses].sort((a, b) => {
-      let aValue: unknown;
-      let bValue: unknown;
+  protected getApartmentNumberDisplayValue(address: AddressViewModel): string {
+    return address.apartmentNumber?.trim() || 'No apartment number';
+  }
 
-      switch (sortState.column) {
-        case 'registryNumber':
-          aValue = a.registryNumber.toLowerCase();
-          bValue = b.registryNumber.toLowerCase();
-          break;
-        case 'city':
-          aValue = a.city.toLowerCase();
-          bValue = b.city.toLowerCase();
-          break;
-        case 'street':
-          aValue = a.street.toLowerCase();
-          bValue = b.street.toLowerCase();
-          break;
-        case 'houseNumber':
-          aValue = a.houseNumber.toLowerCase();
-          bValue = b.houseNumber.toLowerCase();
-          break;
-        case 'apartmentNumber':
-          aValue = a.apartmentNumber.toLowerCase();
-          bValue = b.apartmentNumber.toLowerCase();
-          break;
-        case 'postalCode':
-          aValue = a.postalCode.toLowerCase();
-          bValue = b.postalCode.toLowerCase();
-          break;
-        case 'country':
-          aValue = a.country.toLowerCase();
-          bValue = b.country.toLowerCase();
-          break;
-        case 'documentName':
-          aValue = a.documentName.toLowerCase();
-          bValue = b.documentName.toLowerCase();
-          break;
-      }
+  protected getDocumentNameDisplayValue(address: AddressViewModel): string {
+    return address.documentName?.trim() || 'No document provided';
+  }
+
+  private sortAddresses(addresses: AddressViewModel[], sortState: SortState): AddressViewModel[] {
+    return [...addresses].sort((a, b) => {
+      const aValue = this.getSortableAddressValue(a, sortState.column);
+      const bValue = this.getSortableAddressValue(b, sortState.column);
 
       if (aValue === bValue) {
         return 0;
       }
 
-      const isAsc = sortState.direction === 'asc';
-      return (aValue ?? 0) < (bValue ?? 0) ? (isAsc ? -1 : 1) : isAsc ? 1 : -1;
-    });
+      const comparison = aValue.localeCompare(bValue, undefined, {
+        numeric: true,
+        sensitivity: 'base',
+      });
 
-    return sorted;
+      return sortState.direction === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  private getSortableAddressValue(address: AddressViewModel, column: SortColumn): string {
+    switch (column) {
+      case 'registryNumber':
+        return this.normalizeSortValue(address.registryNumber);
+      case 'city':
+        return this.normalizeSortValue(address.city);
+      case 'street':
+        return this.normalizeSortValue(address.street);
+      case 'houseNumber':
+        return this.normalizeSortValue(address.houseNumber);
+      case 'apartmentNumber':
+        return this.normalizeSortValue(
+          address.apartmentNumber,
+          this.getApartmentNumberDisplayValue(address),
+        );
+      case 'postalCode':
+        return this.normalizeSortValue(address.postalCode);
+      case 'country':
+        return this.normalizeSortValue(address.country);
+      case 'documentName':
+        return this.normalizeSortValue(
+          address.documentName,
+          this.getDocumentNameDisplayValue(address),
+        );
+      default:
+        return '';
+    }
+  }
+
+  private normalizeSortValue(value: string | null | undefined, fallback = ''): string {
+    return (value ?? fallback).toString().trim().toLowerCase();
   }
 
   private reloadCurrentAddresses(): void {
-    this.addressesService.refreshAddresses();
-    this.sortState$.next(this.sortState$.value);
+    this.addressesService.refreshAddresses().subscribe({
+      next: () => {
+        this.addressesErrorMessage = '';
+      },
+      error: () => {
+        this.addressesErrorMessage = 'Failed to load addresses.';
+      },
+    });
   }
 }

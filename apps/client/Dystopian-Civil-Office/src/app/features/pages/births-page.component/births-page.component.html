@@ -140,15 +140,11 @@
               <td class="px-4 py-4">{{ birth.registryNumber }}</td>
               <td class="px-4 py-4">{{ birth.registryDate | date: 'yyyy-MM-dd' }}</td>
               <td class="px-4 py-4">{{ birth.bornPersonPesel }}</td>
-              <td class="px-4 py-4">{{ birth.motherPesel }}</td>
-              <td class="px-4 py-4">{{ birth.fatherPesel }}</td>
+              <td class="px-4 py-4">{{ getMotherPeselDisplayValue(birth) }}</td>
+              <td class="px-4 py-4">{{ getFatherPeselDisplayValue(birth) }}</td>
               <td class="px-4 py-4">{{ birth.birthDate | date: 'yyyy-MM-dd' }}</td>
               <td class="px-4 py-4">{{ birth.birthPlace }}</td>
-              @if (birth.documentName) {
-                <td class="px-4 py-4">{{ birth.documentName }}</td>
-              } @else {
-                <td class="px-4 py-4">no document provided</td>
-              }
+              <td class="px-4 py-4">{{ getDocumentNameDisplayValue(birth) }}</td>
               <td class="bg-transparent px-2 py-4 text-center">
                 <button
                   type="button"

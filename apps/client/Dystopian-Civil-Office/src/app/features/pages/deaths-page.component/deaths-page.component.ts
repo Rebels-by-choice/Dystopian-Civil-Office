@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { ButtonComponent } from '../../../shared/ui/button.component/button.component';
 import { TableComponent } from '../../../shared/ui/table/table.component';
@@ -20,6 +20,7 @@ type SortColumn =
   | 'deathPlace'
   | 'causeOfDeath'
   | 'documentName';
+
 type SortDirection = 'asc' | 'desc';
 
 interface SortState {
@@ -45,15 +46,10 @@ export class DeathsPageComponent {
 
   protected deathsErrorMessage = '';
 
-  private readonly rawDeaths$ = this.sortState$.pipe(
-    switchMap(() => {
-      this.deathsErrorMessage = '';
-      return this.deathRecordsService.getDeathRecords().pipe(
-        catchError((error) => {
-          this.deathsErrorMessage = 'Failed to load death records.';
-          return of([]);
-        }),
-      );
+  private readonly rawDeaths$ = this.deathRecordsService.getDeathRecords().pipe(
+    catchError(() => {
+      this.deathsErrorMessage = 'Failed to load death records.';
+      return of([]);
     }),
   );
 
@@ -129,55 +125,77 @@ export class DeathsPageComponent {
     return currentSort.column === column ? currentSort.direction : 'asc';
   }
 
-  private sortDeaths(deaths: DeathRecordViewModel[], sortState: SortState): DeathRecordViewModel[] {
-    const sorted = [...deaths].sort((a, b) => {
-      let aValue: unknown;
-      let bValue: unknown;
+  protected getDocumentNameDisplayValue(death: DeathRecordViewModel): string {
+    return death.documentName?.trim() || 'No document provided';
+  }
 
-      switch (sortState.column) {
-        case 'registryNumber':
-          aValue = a.registryNumber.toLowerCase();
-          bValue = b.registryNumber.toLowerCase();
-          break;
-        case 'registryDate':
-          aValue = new Date(a.registryDate).getTime();
-          bValue = new Date(b.registryDate).getTime();
-          break;
-        case 'personPesel':
-          aValue = a.personPesel.toLowerCase();
-          bValue = b.personPesel.toLowerCase();
-          break;
-        case 'deathDate':
-          aValue = new Date(a.deathDate).getTime();
-          bValue = new Date(b.deathDate).getTime();
-          break;
-        case 'deathPlace':
-          aValue = a.deathPlace.toLowerCase();
-          bValue = b.deathPlace.toLowerCase();
-          break;
-        case 'causeOfDeath':
-          aValue = a.causeOfDeath.toLowerCase();
-          bValue = b.causeOfDeath.toLowerCase();
-          break;
-        case 'documentName':
-          aValue = a.documentName.toLowerCase();
-          bValue = b.documentName.toLowerCase();
-          break;
-      }
+  private sortDeaths(deaths: DeathRecordViewModel[], sortState: SortState): DeathRecordViewModel[] {
+    return [...deaths].sort((a, b) => {
+      const aValue = this.getSortableDeathValue(a, sortState.column);
+      const bValue = this.getSortableDeathValue(b, sortState.column);
 
       if (aValue === bValue) {
         return 0;
       }
 
-      const isAsc = sortState.direction === 'asc';
-      return (aValue ?? 0) < (bValue ?? 0) ? (isAsc ? -1 : 1) : isAsc ? 1 : -1;
-    });
+      const comparison =
+        typeof aValue === 'number' && typeof bValue === 'number'
+          ? aValue - bValue
+          : aValue.toString().localeCompare(bValue.toString(), undefined, {
+              numeric: true,
+              sensitivity: 'base',
+            });
 
-    return sorted;
+      return sortState.direction === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  private getSortableDeathValue(death: DeathRecordViewModel, column: SortColumn): string | number {
+    switch (column) {
+      case 'registryNumber':
+        return this.normalizeRequiredSortValue(death.registryNumber);
+
+      case 'registryDate':
+        return death.registryDate
+          ? new Date(death.registryDate).getTime()
+          : Number.MIN_SAFE_INTEGER;
+
+      case 'personPesel':
+        return this.normalizeRequiredSortValue(death.personPesel);
+
+      case 'deathDate':
+        return death.deathDate ? new Date(death.deathDate).getTime() : Number.MIN_SAFE_INTEGER;
+
+      case 'deathPlace':
+        return this.normalizeRequiredSortValue(death.deathPlace);
+
+      case 'causeOfDeath':
+        return this.normalizeRequiredSortValue(death.causeOfDeath);
+
+      case 'documentName':
+        return this.normalizeSortValue(death.documentName, this.getDocumentNameDisplayValue(death));
+
+      default:
+        return '';
+    }
+  }
+
+  private normalizeRequiredSortValue(value: string): string {
+    return value.trim().toLowerCase();
+  }
+
+  private normalizeSortValue(value: string | null | undefined, fallback = ''): string {
+    return (value ?? fallback).toString().trim().toLowerCase();
   }
 
   private reloadCurrentDeaths(): void {
-    this.deathRecordsService.refreshDeathRecords();
-    this.sortState$.next(this.sortState$.value);
+    this.deathRecordsService.refreshDeathRecords().subscribe({
+      next: () => {
+        this.deathsErrorMessage = '';
+      },
+      error: () => {
+        this.deathsErrorMessage = 'Failed to load death records.';
+      },
+    });
   }
 }

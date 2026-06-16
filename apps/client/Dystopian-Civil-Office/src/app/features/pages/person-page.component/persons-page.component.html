@@ -177,25 +177,13 @@
             <tr class="border-b border-stone-300 last:border-b-0 hover:bg-dco-bg-table">
               <td class="px-4 py-4">{{ person.personPesel }}</td>
               <td class="px-4 py-4">{{ person.firstName }}</td>
-              @if (person.middleName) {
-                <td class="px-4 py-4">{{ person.middleName }}</td>
-              } @else {
-                <td class="px-4 py-4">no middle name</td>
-              }
+              <td class="px-4 py-4">{{ getMiddleNameDisplayValue(person) }}</td>
               <td class="px-4 py-4">{{ person.lastName }}</td>
               <td class="px-4 py-4">{{ person.gender }}</td>
               <td class="px-4 py-4">{{ person.birthDate | date: 'yyyy-MM-dd' }}</td>
               <td class="px-4 py-4">{{ person.birthPlace }}</td>
-              @if (person.addressRegistryNumber) {
-                <td class="px-4 py-4">{{ person.addressRegistryNumber }}</td>
-              } @else {
-                <td class="px-4 py-4">no address provided</td>
-              }
-              @if (person.documentName) {
-                <td class="px-4 py-4">{{ person.documentName }}</td>
-              } @else {
-                <td class="px-4 py-4">no document provided</td>
-              }
+              <td class="px-4 py-4">{{ getAddressRegistryNumberDisplayValue(person) }}</td>
+              <td class="px-4 py-4">{{ getDocumentNameDisplayValue(person) }}</td>
               <td class="bg-transparent px-2 py-4 text-center">
                 <button
                   type="button"

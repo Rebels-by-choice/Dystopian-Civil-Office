@@ -39,6 +39,7 @@ export class DocumentsPageComponent {
   });
 
   private readonly activeCategoryFilter$ = new BehaviorSubject<string | null>(null);
+  private readonly refreshTrigger$ = new BehaviorSubject<number>(0);
 
   protected documentsErrorMessage = '';
   protected selectedCategory = 'Default';
@@ -52,12 +53,15 @@ export class DocumentsPageComponent {
     'MarriageRecord',
   ];
 
-  private readonly rawDocuments$ = this.activeCategoryFilter$.pipe(
-    switchMap((category) => {
+  private readonly rawDocuments$ = combineLatest([
+    this.activeCategoryFilter$,
+    this.refreshTrigger$,
+  ]).pipe(
+    switchMap(([category]) => {
       this.documentsErrorMessage = '';
 
       const request$ = category
-        ? this.documentsService.getDocumentsByCategory(category)
+        ? this.documentsService.refreshDocumentsByCategory(category)
         : this.documentsService.refreshDocuments();
 
       return request$.pipe(
@@ -133,7 +137,7 @@ export class DocumentsPageComponent {
   protected applyCategoryFilter(): void {
     const normalizedCategory = this.selectedCategory.trim();
 
-    if (normalizedCategory === 'Default') {
+    if (!normalizedCategory || normalizedCategory === 'Default') {
       this.resetCategoryFilterState();
       return;
     }
@@ -167,34 +171,49 @@ export class DocumentsPageComponent {
   }
 
   private sortDocuments(documents: DocumentViewModel[], sortState: SortState): DocumentViewModel[] {
-    const sorted = [...documents].sort((a, b) => {
-      let aValue: unknown;
-      let bValue: unknown;
-
-      switch (sortState.column) {
-        case 'name':
-          aValue = a.name.toLowerCase();
-          bValue = b.name.toLowerCase();
-          break;
-        case 'category':
-          aValue = a.category.toLowerCase();
-          bValue = b.category.toLowerCase();
-          break;
-        case 'importDate':
-          aValue = new Date(a.importDate).getTime();
-          bValue = new Date(b.importDate).getTime();
-          break;
-      }
+    return [...documents].sort((a, b) => {
+      const aValue = this.getSortableDocumentValue(a, sortState.column);
+      const bValue = this.getSortableDocumentValue(b, sortState.column);
 
       if (aValue === bValue) {
         return 0;
       }
 
-      const isAsc = sortState.direction === 'asc';
-      return (aValue ?? 0) < (bValue ?? 0) ? (isAsc ? -1 : 1) : isAsc ? 1 : -1;
-    });
+      const comparison =
+        typeof aValue === 'number' && typeof bValue === 'number'
+          ? aValue - bValue
+          : aValue.toString().localeCompare(bValue.toString(), undefined, {
+              numeric: true,
+              sensitivity: 'base',
+            });
 
-    return sorted;
+      return sortState.direction === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  private getSortableDocumentValue(
+    document: DocumentViewModel,
+    column: SortColumn,
+  ): string | number {
+    switch (column) {
+      case 'name':
+        return this.normalizeRequiredSortValue(document.name);
+
+      case 'category':
+        return this.normalizeRequiredSortValue(document.category);
+
+      case 'importDate':
+        return document.importDate
+          ? new Date(document.importDate).getTime()
+          : Number.MIN_SAFE_INTEGER;
+
+      default:
+        return '';
+    }
+  }
+
+  private normalizeRequiredSortValue(value: string): string {
+    return value.trim().toLowerCase();
   }
 
   private resetCategoryFilterState(): void {
@@ -203,14 +222,6 @@ export class DocumentsPageComponent {
   }
 
   private reloadCurrentDocuments(): void {
-    const currentCategory = this.activeCategoryFilter$.value;
-
-    if (currentCategory) {
-      this.documentsService.refreshDocumentsByCategory(currentCategory);
-    } else {
-      this.documentsService.refreshDocuments();
-    }
-
-    this.activeCategoryFilter$.next(currentCategory);
+    this.refreshTrigger$.next(this.refreshTrigger$.value + 1);
   }
 }
