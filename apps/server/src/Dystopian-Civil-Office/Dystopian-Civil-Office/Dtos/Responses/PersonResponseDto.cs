@@ -2,6 +2,7 @@
 
 public class PersonResponseDto
 {
+    public int PersonId { get; set; }
     public string PersonPesel { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string? MiddleName { get; set; }
@@ -9,5 +10,6 @@ public class PersonResponseDto
     public string Gender { get; set; } = string.Empty;
     public DateOnly BirthDate { get; set; }
     public string BirthPlace { get; set; } = string.Empty;
+    public string? AddressRegistryNumber { get; set; }
     public string? DocumentName { get; set; }
 }

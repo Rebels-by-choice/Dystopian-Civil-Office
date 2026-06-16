@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
                 .AddScoped<IDocumentReadService, DocumentReadService>()
                 .AddScoped<IDeathRecordReadService, DeathRecordReadService>()
                 .AddScoped<IBirthRecordService, BirthRecordReadService>()
-                .AddScoped<IPersonAddressReadService, PersonAddressReadService>()
+                .AddScoped<IAddressReadService, AddressReadService>()
                 .AddSingleton<IApiStatsService, ApiStatsService>();
 
         return services;
@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IDeathRecordWriteService, DeathRecordWriteService>()
             .AddScoped<IDocumentWriteService, DocumentWriteService>()
             .AddScoped<IMarriageWriteService, MarriageWriteService>()
-            .AddScoped<IPersonAddressWriteService, PersonAddressWriteService>()
+            .AddScoped<IAddressWriteService, AddressWriteService>()
             .AddScoped<IPersonWriteService, PersonWriteService>();
 
         return services;

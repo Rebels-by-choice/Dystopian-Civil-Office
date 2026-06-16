@@ -16,4 +16,9 @@ public class PersonReadService : IPersonReadService
     {
         return await _officeQueryService.GetPersonsAsync();
     }
+
+    public async Task<IEnumerable<PersonResponseDto>> GetPersonsByGenderAsync(string gender)
+    {
+        return await _officeQueryService.GetPersonsByGenderAsync(gender);
+    }
 }

@@ -1,3 +1,4 @@
+using Dystopian_Civil_Office.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -18,6 +19,18 @@ public class DatabaseExceptionHandlingMiddleware
         {
             await _next(context);
         }
+        catch (DatasetNotFoundException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            context.Response.ContentType = "application/problem+json";
+
+            await context.Response.WriteAsJsonAsync(new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = ex.Title,
+                Detail = ex.Description
+            });
+        }
         catch (PostgresException ex)
         {
             var statusCode = GetStatusCode(ex);
@@ -30,6 +43,18 @@ public class DatabaseExceptionHandlingMiddleware
                 Status = statusCode,
                 Title = GetTitle(statusCode),
                 Detail = ex.MessageText
+            });
+        }
+        catch (Exception)
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "application/problem+json";
+
+            await context.Response.WriteAsJsonAsync(new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Internal server error",
+                Detail = "An unexpected error occurred."
             });
         }
     }

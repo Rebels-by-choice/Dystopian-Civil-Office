@@ -2,7 +2,7 @@
     Section for persons
 */
 DROP PROCEDURE IF EXISTS public.create_person(
-    varchar, varchar, varchar, varchar, varchar, date, varchar, integer, integer
+    varchar, varchar, varchar, varchar, varchar, date, varchar, varchar, varchar
 );
 
 CREATE OR REPLACE PROCEDURE public.create_person(
@@ -13,8 +13,8 @@ CREATE OR REPLACE PROCEDURE public.create_person(
     IN p_gender varchar(20),
     IN p_birth_date date,
     IN p_birth_place varchar(100),
-    IN p_address_id integer,
-    IN p_document_id integer
+    IN p_address_registry_number varchar(50),
+    IN p_document_name varchar(255)
 )
 LANGUAGE plpgsql
 AS $$
@@ -29,6 +29,32 @@ DECLARE
     v_address_id integer;
     v_document_id integer;
 BEGIN
+    IF NULLIF(btrim(p_address_registry_number), '') IS NULL THEN
+        v_address_id := NULL;
+    ELSE
+        SELECT a.address_id
+        INTO v_address_id
+        FROM public.addresses a
+        WHERE a.registry_number = btrim(p_address_registry_number);
+
+        IF v_address_id IS NULL THEN
+            RAISE EXCEPTION 'The selected address was not found.';
+        END IF;
+    END IF;
+
+    IF NULLIF(btrim(p_document_name), '') IS NOT NULL THEN
+        SELECT d.document_id
+        INTO v_document_id
+        FROM public.documents d
+        WHERE d.name = btrim(p_document_name);
+
+        IF v_document_id IS NULL THEN
+            RAISE EXCEPTION 'The selected document was not found.';
+        END IF;
+    ELSE
+        v_document_id := NULL;
+    END IF;
+
     SELECT
         v.pesel,
         v.first_name,
@@ -57,8 +83,8 @@ BEGIN
         p_gender,
         p_birth_date,
         p_birth_place,
-        p_address_id,
-        p_document_id
+        v_address_id,
+        v_document_id
     ) v;
 
     INSERT INTO public.persons (
@@ -92,6 +118,7 @@ EXCEPTION
 END;
 $$;
 
+
 DROP PROCEDURE IF EXISTS public.delete_person(integer);
 
 CREATE OR REPLACE PROCEDURE public.delete_person(
@@ -113,8 +140,9 @@ EXCEPTION
 END;
 $$;
 
+
 DROP PROCEDURE IF EXISTS public.update_person(
-    integer, varchar, varchar, varchar, varchar, varchar, date, varchar, integer, integer
+    integer, varchar, varchar, varchar, varchar, varchar, date, varchar, varchar, varchar
 );
 
 CREATE OR REPLACE PROCEDURE public.update_person(
@@ -126,8 +154,8 @@ CREATE OR REPLACE PROCEDURE public.update_person(
     IN p_gender varchar(20) DEFAULT NULL,
     IN p_birth_date date DEFAULT NULL,
     IN p_birth_place varchar(100) DEFAULT NULL,
-    IN p_address_id integer DEFAULT NULL,
-    IN p_document_id integer DEFAULT NULL
+    IN p_address_registry_number varchar(50) DEFAULT NULL,
+    IN p_document_name varchar(255) DEFAULT NULL
 )
 LANGUAGE plpgsql
 AS $$
@@ -163,15 +191,43 @@ BEGIN
         RAISE EXCEPTION 'The person to update was not found.';
     END IF;
 
-    v_final_pesel := COALESCE(p_pesel, v_current_person.pesel);
-    v_final_first_name := COALESCE(p_first_name, v_current_person.first_name);
-    v_final_middle_name := COALESCE(p_middle_name, v_current_person.middle_name);
-    v_final_last_name := COALESCE(p_last_name, v_current_person.last_name);
-    v_final_gender := COALESCE(p_gender, v_current_person.gender);
+    v_final_pesel := COALESCE(NULLIF(btrim(p_pesel), ''), v_current_person.pesel);
+    v_final_first_name := COALESCE(NULLIF(btrim(p_first_name), ''), v_current_person.first_name);
+    v_final_middle_name := COALESCE(NULLIF(btrim(p_middle_name), ''), v_current_person.middle_name);
+    v_final_last_name := COALESCE(NULLIF(btrim(p_last_name), ''), v_current_person.last_name);
+    v_final_gender := COALESCE(NULLIF(btrim(p_gender), ''), v_current_person.gender);
     v_final_birth_date := COALESCE(p_birth_date, v_current_person.birth_date);
-    v_final_birth_place := COALESCE(p_birth_place, v_current_person.birth_place);
-    v_final_address_id := COALESCE(p_address_id, v_current_person.address_id);
-    v_final_document_id := COALESCE(p_document_id, v_current_person.document_id);
+    v_final_birth_place := COALESCE(NULLIF(btrim(p_birth_place), ''), v_current_person.birth_place);
+
+    IF p_address_registry_number IS NULL THEN
+        v_final_address_id := v_current_person.address_id;
+    ELSIF NULLIF(btrim(p_address_registry_number), '') IS NULL THEN
+        v_final_address_id := NULL;
+    ELSE
+        SELECT a.address_id
+        INTO v_final_address_id
+        FROM public.addresses a
+        WHERE a.registry_number = btrim(p_address_registry_number);
+
+        IF v_final_address_id IS NULL THEN
+            RAISE EXCEPTION 'The selected address was not found.';
+        END IF;
+    END IF;
+
+    IF p_document_name IS NULL THEN
+        v_final_document_id := v_current_person.document_id;
+    ELSIF NULLIF(btrim(p_document_name), '') IS NULL THEN
+        v_final_document_id := NULL;
+    ELSE
+        SELECT d.document_id
+        INTO v_final_document_id
+        FROM public.documents d
+        WHERE d.name = btrim(p_document_name);
+
+        IF v_final_document_id IS NULL THEN
+            RAISE EXCEPTION 'The selected document was not found.';
+        END IF;
+    END IF;
 
     SELECT
         v.pesel,

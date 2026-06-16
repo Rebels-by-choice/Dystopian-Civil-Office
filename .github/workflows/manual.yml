@@ -1,0 +1,78 @@
+name: Develop and Main Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  build-and-run-develop:
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'pull_request' && github.base_ref == 'develop')
+    runs-on: ubuntu-latest
+    env:
+      ConnectionStrings__DefaultConnection: ${{ secrets.ConnectionStrings__DefaultConnection }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Start containers from root compose
+        run: docker compose up -d --build
+
+      - name: Build .NET application
+        working-directory: apps/server/src/Dystopian-Civil-Office/Dystopian-Civil-Office
+        run: |
+          dotnet restore
+          dotnet build --configuration Release --no-restore
+
+      - name: Run .NET application
+        working-directory: apps/server/src/Dystopian-Civil-Office/Dystopian-Civil-Office
+        run: |
+          dotnet run --configuration Release &
+          sleep 20
+
+      - name: Build Angular application
+        working-directory: apps/client/Dystopian-Civil-Office
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run Angular application
+        working-directory: apps/client/Dystopian-Civil-Office
+        run: |
+          npx ng serve --host 0.0.0.0 --port 4200 &
+          sleep 30
+
+      - name: Show running containers
+        run: docker compose ps
+
+  build-and-run-main:
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && github.base_ref == 'main')
+    runs-on: ubuntu-latest
+    env:
+      ConnectionStrings__DefaultConnectionProd: ${{ secrets.ConnectionStrings__DefaultConnectionProd }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start production containers from root compose
+        run: docker compose --profile production up -d --build
+
+      - name: Show running production containers
+        run: docker compose ps

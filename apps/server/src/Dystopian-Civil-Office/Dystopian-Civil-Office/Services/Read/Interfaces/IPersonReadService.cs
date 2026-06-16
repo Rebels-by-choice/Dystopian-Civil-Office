@@ -5,4 +5,6 @@ namespace Dystopian_Civil_Office.Services.Read.Interfaces;
 public interface IPersonReadService
 {
     Task<IEnumerable<PersonResponseDto>> GetPersonsAsync();
+    
+    Task<IEnumerable<PersonResponseDto>> GetPersonsByGenderAsync(string gender);
 }

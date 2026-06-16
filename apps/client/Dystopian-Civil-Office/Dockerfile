@@ -4,14 +4,14 @@
 ARG NODE_VERSION=24.12.0-alpine
 ARG NGINX_VERSION=alpine3.22
 
-# Use a lightweight Node.js image for building (customizable via ARG)
+# Use a lightweight DHI Node.js image for building
 FROM node:${NODE_VERSION} AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Copy package-related files first to leverage Docker's caching mechanism
-COPY package.json *package-lock.json* ./
+COPY package.json package-lock.json* ./
 
 # Install project dependencies using npm ci (ensures a clean, reproducible install)
 RUN --mount=type=cache,target=/root/.npm npm ci
@@ -34,7 +34,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copy the static build output from the build stage to Nginx's default HTML serving directory
 COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
 
-# Use a built-in non-root user for security best practices
+# Use a non-root user for security best practices
 USER nginx
 
 # Expose port 8080 to allow HTTP traffic

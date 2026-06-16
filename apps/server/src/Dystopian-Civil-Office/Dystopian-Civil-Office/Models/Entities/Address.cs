@@ -5,6 +5,10 @@ namespace Dystopian_Civil_Office.Models.Entities;
 public class Address
 {
     public int AddressId { get; set; }
+    
+    [Required]
+    [MaxLength(50)]
+    public string RegistryNumber { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(100)]

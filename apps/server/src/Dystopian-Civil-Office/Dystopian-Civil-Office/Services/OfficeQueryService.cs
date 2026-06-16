@@ -19,6 +19,7 @@ public class OfficeQueryService
             .AsNoTracking()
             .Select(p => new PersonResponseDto
             {
+                PersonId = p.PersonId,
                 PersonPesel = p.Pesel,
                 FirstName = p.FirstName,
                 MiddleName = p.MiddleName,
@@ -26,6 +27,28 @@ public class OfficeQueryService
                 Gender = p.Gender,
                 BirthDate = p.BirthDate,
                 BirthPlace = p.BirthPlace,
+                AddressRegistryNumber = p.Address.RegistryNumber,
+                DocumentName = p.Document != null ? p.Document.Name : null
+            })
+            .ToListAsync();
+    }
+    
+    public async Task<List<PersonResponseDto>> GetPersonsByGenderAsync(string gender)
+    {
+        return await _context.Persons
+            .AsNoTracking()
+            .Where(p => p.Gender == gender)
+            .Select(p => new PersonResponseDto
+            {
+                PersonId = p.PersonId,
+                PersonPesel = p.Pesel,
+                FirstName = p.FirstName,
+                MiddleName = p.MiddleName,
+                LastName = p.LastName,
+                Gender = p.Gender,
+                BirthDate = p.BirthDate,
+                BirthPlace = p.BirthPlace,
+                AddressRegistryNumber = p.Address.RegistryNumber,
                 DocumentName = p.Document != null ? p.Document.Name : null
             })
             .ToListAsync();
@@ -66,6 +89,7 @@ public class OfficeQueryService
             .AsNoTracking()
             .Select(dr => new DeathRecordResponseDto
             {
+                DeathRecordId =  dr.DeathRecordId,
                 RegistryNumber = dr.RegistryNumber,
                 RegistryDate = dr.RegistryDate,
                 PersonPesel = dr.Person.Pesel,
@@ -83,6 +107,7 @@ public class OfficeQueryService
             .AsNoTracking()
             .Select(br => new BirthRecordResponseDto
             {
+                BirthRecordId =  br.BirthRecordId,
                 RegistryNumber = br.RegistryNumber,
                 RegistryDate = br.RegistryDate,
                 BornPersonPesel = br.Person.Pesel,
@@ -101,6 +126,7 @@ public class OfficeQueryService
             .AsNoTracking()
             .Select(mr => new MarriageResponseDto
             {
+                MarriageRecordId =  mr.MarriageRecordId,
                 RegistryNumber = mr.RegistryNumber,
                 RegistryDate = mr.RegistryDate,
                 Spouse1Pesel = mr.Spouse1.Pesel,
@@ -112,13 +138,14 @@ public class OfficeQueryService
             .ToListAsync();
     }
     
-    public async Task<List<PersonAddressResponseDto>> GetPersonAddressesAsync()
+    public async Task<List<AddressResponseDto>> GetAddressesAsync()
     {
         return await _context.Persons
             .AsNoTracking()
-            .Select(p => new PersonAddressResponseDto
+            .Select(p => new AddressResponseDto
             {
-                PersonPesel = p.Pesel,
+                AddressId = p.Address.AddressId,
+                RegistryNumber = p.Address.RegistryNumber,
                 City = p.Address.City,
                 Street = p.Address.Street,
                 HouseNumber = p.Address.HouseNumber,

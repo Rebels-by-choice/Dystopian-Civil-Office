@@ -6,7 +6,7 @@ import { DocumentViewModel } from '../../shared/api-models/responses/document.vi
 import { apiConfig } from '../../core/config/api-main-url';
 import {
   DeleteDocumentModel,
-  DocumentModel,
+  CreateDocumentModel,
   UpdateDocumentModel,
 } from '../../shared/api-models/requests/document.model';
 
@@ -61,7 +61,7 @@ export class DocumentsService {
     return request$;
   }
 
-  public createDocument(request: DocumentModel): Observable<void> {
+  public createDocument(request: CreateDocumentModel): Observable<void> {
     return this.http.post<void>(this.url, request).pipe(
       tap(() => this.clearCache()),
       catchError((error) => throwError(() => error)),

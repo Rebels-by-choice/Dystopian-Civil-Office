@@ -1,22 +1,6 @@
 name: Dystopian-Civil-Office
 
 services:
-#  client-app:
-#    container_name: DCO-client-app
-#    build:
-#      context: ./apps/client/Dystopian-Civil-Office
-#      dockerfile: Dockerfile
-#    ports:
-#      - "32869:8080"
-#
-#  server-app:
-#    container_name: DCO-server-app
-#    build:
-#      context: ./apps/server/src
-#      dockerfile: Dockerfile
-#    ports:
-#      - "32768:8080"
-
   postgres-dbGlobal:
     image: postgres
     container_name: DCO-main-postgresdb
@@ -25,15 +9,16 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: Dystopian-Civil-Office-DB
-
       POSTGRES_APP_ROLE: clerk
       POSTGRES_APP_PASSWORD: clerk_access12!
     ports:
-      - "5435:5432"
+      - '5435:5432'
+
   broker:
     image: docker.io/library/redis:8
     container_name: DCO-Paperless-ngx-broker
     restart: unless-stopped
+
   ngx-db:
     image: docker.io/library/postgres:18
     container_name: DCO-Paperless-ngx-postgresdb
@@ -42,6 +27,7 @@ services:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
       POSTGRES_PASSWORD: paperless
+
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: DCO-Paperless-ngx-webserver
@@ -50,8 +36,38 @@ services:
       - ngx-db
       - broker
     ports:
-      - "8000:8000"
-    env_file: docker-compose.env
+      - '8000:8000'
+    env_file:
+      - docker-compose.env
     environment:
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBHOST: ngx-db
+
+  # Application services only run in production profile
+  server-app:
+    container_name: DCO-server-app
+    profiles:
+      - production
+    build:
+      context: ./apps/server/src
+      dockerfile: Dockerfile
+    ports:
+      - '5159:8080'
+    depends_on:
+      - postgres-dbGlobal
+    env_file:
+      - .env
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+
+  client-app:
+    container_name: DCO-client-app
+    profiles:
+      - production
+    build:
+      context: ./apps/client/Dystopian-Civil-Office
+      dockerfile: Dockerfile
+    ports:
+      - '4200:8080'
+    depends_on:
+      - server-app

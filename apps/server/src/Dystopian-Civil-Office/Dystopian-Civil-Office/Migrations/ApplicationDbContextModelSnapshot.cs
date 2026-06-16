@@ -393,6 +393,12 @@ namespace Dystopian_Civil_Office.Migrations
                         .HasColumnType("character varying(15)")
                         .HasColumnName("postal_code");
 
+                    b.Property<string>("RegistryNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("registry_number");
+
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -405,6 +411,9 @@ namespace Dystopian_Civil_Office.Migrations
                     b.HasIndex("DocumentId")
                         .IsUnique()
                         .HasDatabaseName("ix_addresses_document_id");
+
+                    b.HasIndex("RegistryNumber")
+                        .IsUnique();
 
                     b.ToTable("addresses", (string)null);
                 });
@@ -615,6 +624,9 @@ namespace Dystopian_Civil_Office.Migrations
 
                     b.HasIndex("DocumentIssuerId")
                         .HasDatabaseName("ix_documents_document_issuer_id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("documents", (string)null);
                 });
