@@ -1,1 +1,190 @@
-<p>addresses-page.component works!</p>
+<div class="p-2 pb-17">
+  <div class="mb-6 flex items-center justify-between gap-6">
+    <div class="flex items-center gap-6">
+      <h1 class="text-3xl">Addresses</h1>
+    </div>
+
+    <app-button label="Add address" (buttonClick)="openCreateDialog()"></app-button>
+  </div>
+
+  @if (addresses$ | async; as addresses) {
+    @if (addressesErrorMessage) {
+      <div class="rounded-xl border border-red-300 bg-dco-bg-error px-4 py-4 text-dco-text-error">
+        {{ addressesErrorMessage }}
+      </div>
+    } @else {
+      <app-table>
+        <thead
+          table-head
+          class="bg-dco-bg-thead text-left text-xs font-bold uppercase tracking-[0.08em] text-dco-text-secondary"
+        >
+          <tr>
+            <th
+              class="select-none px-4 py-3 hover:cursor-pointer"
+              (click)="sortBy('registryNumber')"
+            >
+              <div class="flex items-center gap-2">
+                <span>Registry number</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('registryNumber') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('registryNumber') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('city')">
+              <div class="flex items-center gap-2">
+                <span>City</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('city') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('city') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('street')">
+              <div class="flex items-center gap-2">
+                <span>Street</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('street') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('street') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('houseNumber')">
+              <div class="flex items-center gap-2">
+                <span>House number</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('houseNumber') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('houseNumber') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th
+              class="select-none px-4 py-3 hover:cursor-pointer"
+              (click)="sortBy('apartmentNumber')"
+            >
+              <div class="flex items-center gap-2">
+                <span>Apartment number</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('apartmentNumber') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('apartmentNumber') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('postalCode')">
+              <div class="flex items-center gap-2">
+                <span>Postal code</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('postalCode') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('postalCode') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('country')">
+              <div class="flex items-center gap-2">
+                <span>Country</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('country') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('country') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('documentName')">
+              <div class="flex items-center gap-2">
+                <span>Document name</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('documentName') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('documentName') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+          </tr>
+        </thead>
+
+        <tbody table-body class="bg-dco-bg-table text-sm text-dco-table-contents">
+          @for (address of addresses; track address.addressId) {
+            <tr class="border-b border-stone-300 last:border-b-0 hover:bg-dco-bg-table">
+              <td class="px-4 py-4">{{ address.registryNumber }}</td>
+              <td class="px-4 py-4">{{ address.city }}</td>
+              <td class="px-4 py-4">{{ address.street }}</td>
+              <td class="px-4 py-4">{{ address.houseNumber }}</td>
+              @if (address.apartmentNumber) {
+                <td class="px-4 py-4">{{ address.apartmentNumber }}</td>
+              } @else {
+                <td class="px-4 py-4">No apartment number</td>
+              }
+              <td class="px-4 py-4">{{ address.postalCode }}</td>
+              <td class="px-4 py-4">{{ address.country }}</td>
+              @if (address.documentName) {
+                <td class="px-4 py-4">{{ address.documentName }}</td>
+              } @else {
+                <td class="px-4 py-4">no document provided</td>
+              }
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openUpdateDialog(address)"
+                  aria-label="Edit address"
+                >
+                  <img src="assets/edit.png" alt="Edit" class="h-4 w-4" />
+                </button>
+              </td>
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openDeleteDialog(address)"
+                  aria-label="Delete address"
+                >
+                  <img src="assets/bin.png" alt="Delete" class="h-4 w-4" />
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="px-4 py-6 text-center text-dco-table-contents">
+                No addresses found.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </app-table>
+    }
+  } @else {
+    <div class="p-4 text-dco-table-contents">Loading addresses...</div>
+  }
+</div>

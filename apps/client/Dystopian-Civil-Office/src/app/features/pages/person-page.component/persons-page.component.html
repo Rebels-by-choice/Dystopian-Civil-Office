@@ -1,1 +1,233 @@
-<p>persons-page.component works!</p>
+<div class="p-2 pb-17">
+  <div class="mb-6 flex items-center justify-between gap-6">
+    <div class="flex items-center gap-6">
+      <h1 class="text-3xl">Persons</h1>
+
+      <form
+        class="mb-0 flex items-center gap-2"
+        (submit)="$event.preventDefault(); applyGenderFilter()"
+      >
+        <select
+          id="person-gender-filter"
+          [(ngModel)]="selectedGender"
+          name="selectedGender"
+          class="w-45 rounded-base border-2 bg-dco-bg-select px-3 mr-3 py-2.5 text-sm font-semibold text-heading shadow-xl placeholder:text-body focus:border-brand focus:ring-brand"
+        >
+          @for (gender of genderOptions; track gender) {
+            <option [value]="gender">{{ gender }}</option>
+          }
+        </select>
+
+        <app-button
+          customClass="!bg-dco-bg-button-apply-filter hover:!bg-dco-bg-button-apply-filter-hover !px-4 !text-[11px]"
+          label="Filter"
+          (buttonClick)="applyGenderFilter()"
+        ></app-button>
+
+        <app-button
+          customClass="!bg-dco-bg-button-reset-filter hover:!bg-dco-bg-button-reset-filter-hover !px-4 !text-[11px]"
+          label="Reset"
+          (buttonClick)="resetGenderFilter()"
+        ></app-button>
+      </form>
+    </div>
+
+    <app-button label="Add person" (buttonClick)="openCreateDialog()"></app-button>
+  </div>
+
+  @if (persons$ | async; as persons) {
+    @if (personsErrorMessage) {
+      <div class="rounded-xl border border-red-300 bg-dco-bg-error px-4 py-4 text-dco-text-error">
+        {{ personsErrorMessage }}
+      </div>
+    } @else {
+      <app-table>
+        <thead
+          table-head
+          class="bg-dco-bg-thead text-left text-xs font-bold uppercase tracking-[0.08em] text-dco-text-secondary"
+        >
+          <tr>
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('personPesel')">
+              <div class="flex items-center gap-2">
+                <span>PESEL</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('personPesel') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('personPesel') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('firstName')">
+              <div class="flex items-center gap-2">
+                <span>First name</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('firstName') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('firstName') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('middleName')">
+              <div class="flex items-center gap-2">
+                <span>Middle name</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('middleName') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('middleName') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('lastName')">
+              <div class="flex items-center gap-2">
+                <span>Last name</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('lastName') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('lastName') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('gender')">
+              <div class="flex items-center gap-2">
+                <span>Gender</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('gender') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('gender') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('birthDate')">
+              <div class="flex items-center gap-2">
+                <span>Birth date</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('birthDate') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('birthDate') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('birthPlace')">
+              <div class="flex items-center gap-2">
+                <span>Birth place</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('birthPlace') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('birthPlace') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th
+              class="select-none px-4 py-3 hover:cursor-pointer"
+              (click)="sortBy('addressRegistryNumber')"
+            >
+              <div class="flex items-center gap-2">
+                <span>Address registry number</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('addressRegistryNumber') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('addressRegistryNumber') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('documentName')">
+              <div class="flex items-center gap-2">
+                <span>Document name</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('documentName') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('documentName') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+          </tr>
+        </thead>
+
+        <tbody table-body class="bg-dco-bg-table text-sm text-dco-table-contents">
+          @for (person of persons; track person.personId) {
+            <tr class="border-b border-stone-300 last:border-b-0 hover:bg-dco-bg-table">
+              <td class="px-4 py-4">{{ person.personPesel }}</td>
+              <td class="px-4 py-4">{{ person.firstName }}</td>
+              @if (person.middleName) {
+                <td class="px-4 py-4">{{ person.middleName }}</td>
+              } @else {
+                <td class="px-4 py-4">no middle name</td>
+              }
+              <td class="px-4 py-4">{{ person.lastName }}</td>
+              <td class="px-4 py-4">{{ person.gender }}</td>
+              <td class="px-4 py-4">{{ person.birthDate | date: 'yyyy-MM-dd' }}</td>
+              <td class="px-4 py-4">{{ person.birthPlace }}</td>
+              @if (person.addressRegistryNumber) {
+                <td class="px-4 py-4">{{ person.addressRegistryNumber }}</td>
+              } @else {
+                <td class="px-4 py-4">no address provided</td>
+              }
+              @if (person.documentName) {
+                <td class="px-4 py-4">{{ person.documentName }}</td>
+              } @else {
+                <td class="px-4 py-4">no document provided</td>
+              }
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openUpdateDialog(person)"
+                  aria-label="Edit person"
+                >
+                  <img src="assets/edit.png" alt="Edit" class="h-4 w-4" />
+                </button>
+              </td>
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openDeleteDialog(person)"
+                  aria-label="Delete person"
+                >
+                  <img src="assets/bin.png" alt="Delete" class="h-4 w-4" />
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="11" class="px-4 py-6 text-center text-dco-table-contents">
+                No persons found.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </app-table>
+    }
+  } @else {
+    <div class="p-4 text-dco-table-contents">Loading persons...</div>
+  }
+</div>

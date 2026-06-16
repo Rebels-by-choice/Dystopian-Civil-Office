@@ -34,16 +34,25 @@ export class CreateAddressDialogComponent {
   private readonly addressesService = inject(AddressesService);
 
   protected readonly form = this.fb.group({
+    registryNumber: ['', AddressFormValidators.registryNumberValidators()],
     city: ['', AddressFormValidators.cityValidators()],
     street: ['', AddressFormValidators.streetValidators()],
     houseNumber: ['', AddressFormValidators.houseNumberValidators()],
     apartmentNumber: ['', AddressFormValidators.apartmentNumberValidators()],
     postalCode: ['', AddressFormValidators.postalCodeValidators()],
     country: ['', AddressFormValidators.countryValidators()],
+    documentId: ['', AddressFormValidators.documentIdValidators()],
   });
 
   protected isSubmitting = false;
   protected apiErrorMessage = '';
+
+  protected get registryNumberError(): string {
+    return GlobalFormValidators.getControlErrorMessage(
+      this.form.controls.registryNumber,
+      'Registry number',
+    );
+  }
 
   protected get cityError(): string {
     return GlobalFormValidators.getControlErrorMessage(this.form.controls.city, 'City');
@@ -78,6 +87,13 @@ export class CreateAddressDialogComponent {
     return GlobalFormValidators.getControlErrorMessage(this.form.controls.country, 'Country');
   }
 
+  protected get documentIdError(): string {
+    return GlobalFormValidators.getControlErrorMessage(
+      this.form.controls.documentId,
+      'Document ID',
+    );
+  }
+
   protected onCancel(): void {
     if (this.isSubmitting) {
       return;
@@ -96,12 +112,14 @@ export class CreateAddressDialogComponent {
     }
 
     const request: CreateAddressModel = {
+      registryNumber: this.form.value.registryNumber?.trim() ?? '',
       city: this.form.value.city!.trim(),
       street: this.form.value.street!.trim(),
       houseNumber: this.form.value.houseNumber!.trim(),
       apartmentNumber: this.form.value.apartmentNumber!.trim(),
       postalCode: this.form.value.postalCode!.trim(),
       country: this.form.value.country!.trim(),
+      documentName: Number(this.form.value.documentId),
     };
 
     this.isSubmitting = true;

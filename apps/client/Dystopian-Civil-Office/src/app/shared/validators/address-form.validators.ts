@@ -82,6 +82,7 @@ export class AddressFormValidators {
     originalApartmentNumber: string,
     originalPostalCode: string,
     originalCountry: string,
+    originalDocumentName: string,
   ): boolean {
     const currentRegistryNumber = form.get('registryNumber')?.value?.trim() ?? '';
     const currentCity = form.get('city')?.value?.trim() ?? '';
@@ -90,6 +91,7 @@ export class AddressFormValidators {
     const currentApartmentNumber = form.get('apartmentNumber')?.value?.trim() ?? '';
     const currentPostalCode = form.get('postalCode')?.value?.trim() ?? '';
     const currentCountry = form.get('country')?.value?.trim() ?? '';
+    const currentDocumentName = form.get('documentName')?.value?.trim() ?? '';
 
     return (
       currentRegistryNumber !== originalRegistryNumber.trim() ||
@@ -98,7 +100,8 @@ export class AddressFormValidators {
       currentHouseNumber !== originalHouseNumber.trim() ||
       currentApartmentNumber !== originalApartmentNumber.trim() ||
       currentPostalCode !== originalPostalCode.trim() ||
-      currentCountry !== originalCountry.trim()
+      currentCountry !== originalCountry.trim() ||
+      currentDocumentName !== originalDocumentName.trim()
     );
   }
 }

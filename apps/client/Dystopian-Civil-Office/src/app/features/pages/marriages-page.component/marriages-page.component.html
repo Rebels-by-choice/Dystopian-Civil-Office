@@ -1,1 +1,169 @@
-<p>marriages-page.component works!</p>
+<div class="p-2 pb-17">
+  <div class="mb-6 flex items-center justify-between gap-6">
+    <div class="flex items-center gap-6">
+      <h1 class="text-3xl">Marriages</h1>
+    </div>
+
+    <app-button label="Add marriage" (buttonClick)="openCreateDialog()"></app-button>
+  </div>
+
+  @if (marriages$ | async; as marriages) {
+    @if (marriagesErrorMessage) {
+      <div class="rounded-xl border border-red-300 bg-dco-bg-error px-4 py-4 text-dco-text-error">
+        {{ marriagesErrorMessage }}
+      </div>
+    } @else {
+      <app-table>
+        <thead
+          table-head
+          class="bg-dco-bg-thead text-left text-xs font-bold uppercase tracking-[0.08em] text-dco-text-secondary"
+        >
+          <tr>
+            <th
+              class="select-none px-4 py-3 hover:cursor-pointer"
+              (click)="sortBy('registryNumber')"
+            >
+              <div class="flex items-center gap-2">
+                <span>Registry number</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('registryNumber') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('registryNumber') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('registryDate')">
+              <div class="flex items-center gap-2">
+                <span>Registry date</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('registryDate') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('registryDate') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('marriageDate')">
+              <div class="flex items-center gap-2">
+                <span>Marriage date</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('marriageDate') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('marriageDate') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('spouse1Pesel')">
+              <div class="flex items-center gap-2">
+                <span>Spouse 1 PESEL</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('spouse1Pesel') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('spouse1Pesel') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('spouse2Pesel')">
+              <div class="flex items-center gap-2">
+                <span>Spouse 2 PESEL</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('spouse2Pesel') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('spouse2Pesel') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th
+              class="select-none px-4 py-3 hover:cursor-pointer"
+              (click)="sortBy('marriagePlace')"
+            >
+              <div class="flex items-center gap-2">
+                <span>Marriage place</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('marriagePlace') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('marriagePlace') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="select-none px-4 py-3 hover:cursor-pointer" (click)="sortBy('documentName')">
+              <div class="flex items-center gap-2">
+                <span>Document name</span>
+                <span class="text-[10px]">
+                  @if (getSortDirection('documentName') === 'asc') {
+                    ▲
+                  } @else if (getSortDirection('documentName') === 'desc') {
+                    ▼
+                  }
+                </span>
+              </div>
+            </th>
+
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+            <th class="w-12 bg-transparent px-2 py-3"></th>
+          </tr>
+        </thead>
+
+        <tbody table-body class="bg-dco-bg-table text-sm text-dco-table-contents">
+          @for (marriage of marriages; track marriage.marriageRecordId) {
+            <tr class="border-b border-stone-300 last:border-b-0 hover:bg-dco-bg-table">
+              <td class="px-4 py-4">{{ marriage.registryNumber }}</td>
+              <td class="px-4 py-4">{{ marriage.registryDate | date: 'yyyy-MM-dd' }}</td>
+              <td class="px-4 py-4">{{ marriage.marriageDate | date: 'yyyy-MM-dd' }}</td>
+              <td class="px-4 py-4">{{ marriage.spouse1Pesel }}</td>
+              <td class="px-4 py-4">{{ marriage.spouse2Pesel }}</td>
+              <td class="px-4 py-4">{{ marriage.marriagePlace }}</td>
+              <td class="px-4 py-4">{{ marriage.documentName }}</td>
+
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openUpdateDialog(marriage)"
+                  aria-label="Edit marriage"
+                >
+                  <img src="assets/edit.png" alt="Edit" class="h-4 w-4" />
+                </button>
+              </td>
+              <td class="bg-transparent px-2 py-4 text-center">
+                <button
+                  type="button"
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-md transition hover:cursor-pointer hover:bg-dco-table-icon-hover"
+                  (click)="openDeleteDialog(marriage)"
+                  aria-label="Delete marriage"
+                >
+                  <img src="assets/bin.png" alt="Delete" class="h-4 w-4" />
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="px-4 py-6 text-center text-dco-table-contents">
+                No marriages found.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </app-table>
+    }
+  } @else {
+    <div class="p-4 text-dco-table-contents">Loading marriages...</div>
+  }
+</div>
