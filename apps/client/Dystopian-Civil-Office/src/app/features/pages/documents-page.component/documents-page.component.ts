@@ -13,7 +13,6 @@ import { CreateDocumentDialogComponent } from '../../dialogs/document-dialogs/cr
 import { DocumentViewModel } from '../../../shared/api-models/responses/document.viewmodel';
 import { UpdateDocumentDialogComponent } from '../../dialogs/document-dialogs/update-document-dialog.component/update-document-dialog.component';
 import { DeleteDocumentDialogComponent } from '../../dialogs/document-dialogs/delete-document-dialog.component/delete-document-dialog.component';
-
 type SortColumn = 'name' | 'category' | 'importDate';
 type SortDirection = 'asc' | 'desc';
 

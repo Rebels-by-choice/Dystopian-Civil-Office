@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Observable } from 'rxjs';
+import { SessionStorageModel } from '../../../shared/ui/session-storage.model';
+import { LoginService } from '../../login.service';
+import { AsyncPipe } from '@angular/common';
 
 type NavItem = {
   label: string;
@@ -8,7 +12,7 @@ type NavItem = {
 
 @Component({
   selector: 'app-top-navbar-component',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, AsyncPipe],
   templateUrl: './top-navbar.component.html',
 })
 export class TopNavbarComponent {
@@ -26,4 +30,14 @@ export class TopNavbarComponent {
   ];
 
   public readonly casesPath = '/cases';
+
+  sessionStorage$: Observable<SessionStorageModel>;
+
+  constructor(private loginService: LoginService) {
+    this.sessionStorage$ = loginService.getCurrentUser();
+  }
+
+  logout() {
+    this.loginService.removeCurrentUser();
+  }
 }

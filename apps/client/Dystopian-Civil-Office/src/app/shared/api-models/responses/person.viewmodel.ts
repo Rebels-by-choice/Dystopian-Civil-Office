@@ -9,4 +9,5 @@ export interface PersonViewModel {
   birthPlace: string;
   addressRegistryNumber: string;
   documentName: string;
+  isFunctionary: boolean;
 }
