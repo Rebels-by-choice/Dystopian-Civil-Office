@@ -40,7 +40,7 @@ export class MarriageFormValidators {
   }
 
   public static documentNameValidators(): ValidatorFn[] {
-    return [Validators.maxLength(100)];
+    return [Validators.minLength(2), Validators.maxLength(100), GlobalFormValidators.notBlank()];
   }
 
   public static spousesDifferent(): ValidatorFn {

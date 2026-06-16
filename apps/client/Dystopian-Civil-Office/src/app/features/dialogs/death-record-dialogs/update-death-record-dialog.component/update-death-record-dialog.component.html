@@ -37,6 +37,14 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Cause of death</mat-label>
+        <input matInput formControlName="causeOfDeath" maxlength="11" class="!pl-2 !text-base" />
+        @if (causeOfDeathError) {
+          <mat-error class="!text-dco-text-error">{{ causeOfDeathError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
         <mat-label class="!pl-2">Death place</mat-label>
         <input matInput formControlName="deathPlace" maxlength="100" class="!pl-2 !text-base" />
         @if (deathPlaceError) {
