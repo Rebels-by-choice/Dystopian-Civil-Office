@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SessionStorageModel } from '../../../shared/ui/session-storage.model';
 import { LoginService } from '../../login.service';
@@ -16,6 +16,8 @@ type NavItem = {
   templateUrl: './top-navbar.component.html',
 })
 export class TopNavbarComponent {
+  private router: Router = inject(Router);
+
   public readonly logoPath = 'assets/logo.svg';
   public readonly homePath = '/home';
 
@@ -37,7 +39,8 @@ export class TopNavbarComponent {
     this.sessionStorage$ = loginService.getCurrentUser();
   }
 
-  logout() {
+  async logout() {
     this.loginService.removeCurrentUser();
+    await this.router.navigate(['/home']);
   }
 }
