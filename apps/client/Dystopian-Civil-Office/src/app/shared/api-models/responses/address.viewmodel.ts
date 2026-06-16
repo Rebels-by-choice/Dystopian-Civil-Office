@@ -1,6 +1,6 @@
-export interface PersonAddressViewModel {
-  personAddressId: number;
-  personPesel: string;
+export interface AddressViewModel {
+  addressId: number;
+  registryNumber: string;
   city: string;
   street: string;
   houseNumber: string;

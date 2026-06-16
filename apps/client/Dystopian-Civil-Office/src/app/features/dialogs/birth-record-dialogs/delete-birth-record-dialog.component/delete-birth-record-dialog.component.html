@@ -1,0 +1,32 @@
+<app-dialog-shell
+  title="Delete birth record"
+  subtitle="Are you sure you want to delete this birth record?"
+  [errorMessage]="apiErrorMessage"
+>
+  <div dialog-body>
+    <div class="mb-5 rounded-xl border border-red-500/30 bg-dco-bg-error px-4 py-4 text-center">
+      <p class="text-lg">
+        <span class="font-semibold text-dco-dialog-delete-name">{{ data.registryNumber }}</span>
+      </p>
+      <p class="mt-1 text-xs text-color-dco-dialog-subtitle">
+        Person PESEL: {{ data.bornPersonPesel }}
+      </p>
+      <p class="mt-1 text-xs text-color-dco-dialog-subtitle">
+        Mother PESEL: {{ data.motherPesel }}
+      </p>
+      <p class="mt-1 text-xs text-color-dco-dialog-subtitle">
+        Father PESEL: {{ data.fatherPesel }}
+      </p>
+      <p class="mt-1 text-xs text-color-dco-dialog-subtitle">Birth date: {{ data.birthDate }}</p>
+      <p class="mt-1 text-xs text-color-dco-dialog-subtitle">Birth place: {{ data.birthPlace }}</p>
+    </div>
+    <p class="text-sm text-center text-color-dco-dialog-subtitle">
+      All data associated with this birth record will be deleted.
+    </p>
+  </div>
+
+  <div dialog-actions>
+    <app-button label="Cancel" variant="secondary" (buttonClick)="onCancel()"></app-button>
+    <app-button label="OK" [disabled]="isSubmitting" (buttonClick)="onConfirm()"></app-button>
+  </div>
+</app-dialog-shell>

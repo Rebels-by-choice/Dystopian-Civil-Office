@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { AddressesService } from '../../../services/addresses.service';
 import { UpdateAddressModel } from '../../../../shared/api-models/requests/address.model';
-import { PersonAddressViewModel } from '../../../../shared/api-models/responses/personAddress.viewmodel';
+import { AddressViewModel } from '../../../../shared/api-models/responses/address.viewmodel';
 import { AddressFormValidators } from '../../../../shared/validators/address-form.validators';
 import { ButtonComponent } from '../../../../shared/ui/button.component/button.component';
 import { DialogShellComponent } from '../../../../shared/ui/dialog-shell/dialog-shell.component';
@@ -38,7 +38,7 @@ export class UpdateAddressDialogComponent implements OnInit {
   protected isSubmitting = false;
   protected apiErrorMessage = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected readonly data: PersonAddressViewModel) {}
+  constructor(@Inject(MAT_DIALOG_DATA) protected readonly data: AddressViewModel) {}
 
   public ngOnInit(): void {
     this.form = this.fb.group({
@@ -52,6 +52,13 @@ export class UpdateAddressDialogComponent implements OnInit {
       postalCode: [this.data.postalCode, AddressFormValidators.postalCodeValidators()],
       country: [this.data.country, AddressFormValidators.countryValidators()],
     });
+  }
+
+  protected get registryNumberError(): string {
+    return GlobalFormValidators.getControlErrorMessage(
+      this.form.controls['registryNumber'],
+      'registryNumber',
+    );
   }
 
   protected get cityError(): string {
@@ -87,6 +94,13 @@ export class UpdateAddressDialogComponent implements OnInit {
     return GlobalFormValidators.getControlErrorMessage(this.form.controls['country'], 'Country');
   }
 
+  protected get documentNameError(): string {
+    return GlobalFormValidators.getControlErrorMessage(
+      this.form.controls['documentName'],
+      'documentName',
+    );
+  }
+
   protected onCancel(): void {
     if (this.isSubmitting) {
       return;
@@ -107,12 +121,14 @@ export class UpdateAddressDialogComponent implements OnInit {
     if (
       !AddressFormValidators.hasAddressChanges(
         this.form,
+        this.data.registryNumber,
         this.data.city,
         this.data.street,
         this.data.houseNumber,
         this.data.apartmentNumber,
         this.data.postalCode,
         this.data.country,
+        this.data.documentName,
       )
     ) {
       this.apiErrorMessage =
@@ -121,14 +137,20 @@ export class UpdateAddressDialogComponent implements OnInit {
       return;
     }
 
+    const trimmedRegistryNumber = this.form.controls['registryNumber'].value!.trim();
     const trimmedCity = this.form.controls['city'].value!.trim();
     const trimmedStreet = this.form.controls['street'].value!.trim();
     const trimmedHouseNumber = this.form.controls['houseNumber'].value!.trim();
     const trimmedApartmentNumber = this.form.controls['apartmentNumber'].value!.trim();
     const trimmedPostalCode = this.form.controls['postalCode'].value!.trim();
     const trimmedCountry = this.form.controls['country'].value!.trim();
+    const trimmedDocumentName = this.form.controls['documentName'].value!.trim();
 
     const request: UpdateAddressModel = {};
+
+    if (trimmedRegistryNumber !== this.data.registryNumber.trim()) {
+      request.registryNumber = trimmedRegistryNumber;
+    }
 
     if (trimmedCity !== this.data.city.trim()) {
       request.city = trimmedCity;
@@ -154,7 +176,11 @@ export class UpdateAddressDialogComponent implements OnInit {
       request.country = trimmedCountry;
     }
 
-    if (this.data.personAddressId == null) {
+    if (trimmedDocumentName !== this.data.documentName.trim()) {
+      request.documentName = trimmedDocumentName;
+    }
+
+    if (this.data.addressId == null) {
       this.apiErrorMessage = 'Address ID is missing. Cannot update this record.';
       this.cdr.detectChanges();
       return;
@@ -163,7 +189,7 @@ export class UpdateAddressDialogComponent implements OnInit {
     this.isSubmitting = true;
     this.cdr.detectChanges();
 
-    this.addressesService.updateAddress(this.data.personAddressId, request).subscribe({
+    this.addressesService.updateAddress(this.data.addressId, request).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.cdr.detectChanges();

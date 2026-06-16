@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 import { AddressesService } from '../../../services/addresses.service';
-import { PersonAddressViewModel } from '../../../../shared/api-models/responses/personAddress.viewmodel';
+import { AddressViewModel } from '../../../../shared/api-models/responses/address.viewmodel';
 import { AddressFormValidators } from '../../../../shared/validators/address-form.validators';
 import { ButtonComponent } from '../../../../shared/ui/button.component/button.component';
 import { DialogShellComponent } from '../../../../shared/ui/dialog-shell/dialog-shell.component';
@@ -15,12 +15,6 @@ import { GlobalFormValidators } from '../../../../shared/validators/global-form.
   imports: [CommonModule, MatDialogModule, ButtonComponent, DialogShellComponent],
   templateUrl: 'delete-address-dialog.component.html',
 })
-@Component({
-  selector: 'app-delete-address-dialog.component',
-  imports: [],
-  templateUrl: './delete-address-dialog.component.html',
-  styles: ``,
-})
 export class DeleteAddressDialogComponent {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly dialogRef = inject(MatDialogRef<DeleteAddressDialogComponent>);
@@ -29,7 +23,7 @@ export class DeleteAddressDialogComponent {
   protected isSubmitting = false;
   protected apiErrorMessage = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) protected readonly data: PersonAddressViewModel) {}
+  constructor(@Inject(MAT_DIALOG_DATA) protected readonly data: AddressViewModel) {}
 
   protected onCancel(): void {
     if (this.isSubmitting) {
@@ -42,7 +36,7 @@ export class DeleteAddressDialogComponent {
   protected onConfirm(): void {
     this.apiErrorMessage = '';
 
-    if (!Number.isInteger(this.data.personAddressId)) {
+    if (!Number.isInteger(this.data.addressId)) {
       this.apiErrorMessage = 'Address identifier is missing.';
       this.cdr.detectChanges();
       return;
@@ -51,7 +45,7 @@ export class DeleteAddressDialogComponent {
     this.isSubmitting = true;
     this.cdr.detectChanges();
 
-    this.addressesService.deleteAddress(this.data.personAddressId).subscribe({
+    this.addressesService.deleteAddress(this.data.addressId).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.cdr.detectChanges();

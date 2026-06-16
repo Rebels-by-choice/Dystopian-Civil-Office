@@ -13,6 +13,7 @@ Dystopian Civil Office provides our idea for anarchic world, but with simular fu
 - DML operations on addresses.
 - Filtering and sorting mechanisms.
 - Storing archive data.
+- Storing and managing documents data in external microservice.
 - Analizing quick Create, Update and Delete statistics.
 
 # Requirements
@@ -26,7 +27,13 @@ You can download required runtime environments here:
 - .NET SDK: https://dotnet.microsoft.com/en-us/download.
 
 # How to use?
-We implemented production and developer versions of software. You can start them manually, or by our provided scripts. Provided scripts are compatible with windows and unix operating systems.
+We implemented production and developer versions of software. You can start them manually, or by our provided scripts. Provided scripts are compatible with windows and unix operating systems. Both in _production_ and _developer_ versions, you need to register to paperless. You need to be authorised in browser memory into paperless for viewing documents data on interface.
+> 1. Go to `http://localhost:8000`.
+> 2. Register with any credentials you want or use our example credentials in `service-users.txt`. There if you want, you can also see postgresql main connection credentials.
+
+If you are a developer or tester, you can already import mock documents data to paperless service for later UI testing on Angular.
+> 1. Go to `http://localhost:8000/documents`.
+> 2. Drag and drop all .pdf documents located in `/import/paperless`.
 
 ## Production
 Checkout our releases for clear archives, or clone the repository. After successfull run, open browser and go to http://localhost:4200.

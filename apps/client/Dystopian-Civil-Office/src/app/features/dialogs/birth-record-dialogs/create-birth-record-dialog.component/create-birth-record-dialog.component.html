@@ -1,0 +1,54 @@
+<app-dialog-shell
+  title="Create birth record"
+  subtitle="Fill in the required values and confirm."
+  [errorMessage]="apiErrorMessage"
+>
+  <div dialog-body>
+    <form [formGroup]="form" class="flex flex-col gap-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Registry number</mat-label>
+        <input matInput formControlName="registryNumber" maxlength="50" class="!pl-2 !text-base" />
+        @if (registryNumberError) {
+          <mat-error class="!text-dco-text-error">{{ registryNumberError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Person PESEL</mat-label>
+        <input matInput formControlName="personPesel" maxlength="11" class="!pl-2 !text-base" />
+        @if (personPeselError) {
+          <mat-error class="!text-dco-text-error">{{ personPeselError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Mother PESEL</mat-label>
+        <input matInput formControlName="motherPesel" maxlength="11" class="!pl-2 !text-base" />
+        @if (motherPeselError) {
+          <mat-error class="!text-dco-text-error">{{ motherPeselError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Father PESEL</mat-label>
+        <input matInput formControlName="fatherPesel" maxlength="11" class="!pl-2 !text-base" />
+        @if (fatherPeselError) {
+          <mat-error class="!text-dco-text-error">{{ fatherPeselError }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="!pl-2">Document name</mat-label>
+        <input matInput formControlName="documentName" maxlength="100" class="!pl-2 !text-base" />
+        @if (documentNameError) {
+          <mat-error class="!text-dco-text-error">{{ documentNameError }}</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </div>
+
+  <div dialog-actions>
+    <app-button label="Cancel" variant="secondary" (buttonClick)="onCancel()"></app-button>
+    <app-button label="Confirm" [disabled]="isSubmitting" (buttonClick)="onConfirm()"></app-button>
+  </div>
+</app-dialog-shell>
