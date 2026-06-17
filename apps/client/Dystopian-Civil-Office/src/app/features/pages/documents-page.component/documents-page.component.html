@@ -96,9 +96,9 @@
             <tr class="border-b border-stone-300 last:border-b-0 hover:bg-dco-bg-table">
               <td class="px-4 py-4">
                 <a
-                  href="http://localhost:8000/api/documents/{{ document.documentId }}/preview/"
+                  (click)="openDocumentPreview(document.paperlessDocumentId)"
                   target="_blank"
-                  class="text-[#170C69] hover:underline"
+                  class="text-[#170C69] hover:underline cursor-pointer"
                 >
                   {{ document.name }}
                 </a>

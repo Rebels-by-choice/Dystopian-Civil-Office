@@ -16,7 +16,7 @@
       <div class="flex flex-col gap-5">
       @for(document of current_case.documents; track document.documentId) {
         <div class="bg-amber-200 rounded-md p-4">
-          <a (click)="openDocumentPreview(document.paperlessDocumentId)">Preview
+          <a (click)="openDocumentPreview(document.paperlessDocumentId)" class="cursor-pointer">Preview
             <p class="text-2xl">#{{ document.documentId }}</p>
             <p class="text-xl">Document name: {{ document.name }}</p>
             <p class="text-gray-600 mt-4">Created: {{ document.importDate }}</p>

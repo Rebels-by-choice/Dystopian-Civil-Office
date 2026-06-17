@@ -30,7 +30,7 @@ interface SortState {
 })
 export class DocumentsPageComponent {
   private readonly dialog = inject(MatDialog);
-  private readonly documentsService = inject(DocumentsService);
+  private readonly documentService = inject(DocumentsService);
 
   private readonly sortState$ = new BehaviorSubject<SortState>({
     column: 'importDate',
@@ -56,8 +56,8 @@ export class DocumentsPageComponent {
       this.documentsErrorMessage = '';
 
       const request$ = category
-        ? this.documentsService.getDocumentsByCategory(category)
-        : this.documentsService.refreshDocuments();
+        ? this.documentService.getDocumentsByCategory(category)
+        : this.documentService.refreshDocuments();
 
       return request$.pipe(
         catchError((error: HttpErrorResponse) => {
@@ -205,11 +205,25 @@ export class DocumentsPageComponent {
     const currentCategory = this.activeCategoryFilter$.value;
 
     if (currentCategory) {
-      this.documentsService.refreshDocumentsByCategory(currentCategory);
+      this.documentService.refreshDocumentsByCategory(currentCategory);
     } else {
-      this.documentsService.refreshDocuments();
+      this.documentService.refreshDocuments();
     }
 
     this.activeCategoryFilter$.next(currentCategory);
+  }
+
+  openDocumentPreview(paperlessDocumentId: number) {
+    this.documentService.getDocumentPreview(paperlessDocumentId).subscribe({
+      next: (blob: Blob) => {
+        const objectUrl = window.URL.createObjectURL(blob);
+
+        // Open the preview in a new tab
+        window.open(objectUrl, '_blank');
+
+        // window.URL.revokeObjectURL(objectUrl);
+      },
+      error: (err) => console.error('Failed to load document preview', err),
+    });
   }
 }
