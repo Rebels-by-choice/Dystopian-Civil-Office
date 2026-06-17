@@ -100,3 +100,34 @@ body {
 .mat-mdc-select-value {
   font-size: 10px !important;
 }
+/*
+  Callendar section
+*/
+.mat-datepicker-content,
+.mat-datepicker-content .mat-calendar,
+.mat-datepicker-content .mat-calendar * {
+  color: #fcfafa !important;
+}
+
+.mat-datepicker-content {
+  background: #1a1919 !important;
+}
+
+.mat-datepicker-content .mat-calendar-body-cell-content {
+  color: #fcfafa !important;
+}
+
+.mat-datepicker-content .mat-calendar-table-header,
+.mat-datepicker-content .mat-calendar-body-label,
+.mat-datepicker-content .mat-calendar-period-button,
+.mat-datepicker-content .mat-calendar-previous-button,
+.mat-datepicker-content .mat-calendar-next-button {
+  color: #fcfafa !important;
+}
+
+.mat-datepicker-content .mat-mdc-icon-button svg,
+.mat-datepicker-content .mat-mdc-button-touch-target + *,
+.mat-datepicker-content .mat-calendar-arrow {
+  fill: #fcfafa !important;
+  color: #fcfafa !important;
+}

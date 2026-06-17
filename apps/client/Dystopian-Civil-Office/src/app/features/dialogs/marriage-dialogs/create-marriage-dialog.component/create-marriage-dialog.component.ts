@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { MarriagesService } from '../../../services/marriages.service';
 import { CreateMarriageModel } from '../../../../shared/api-models/requests/marriage.model';
@@ -18,6 +19,8 @@ import { GlobalFormValidators } from '../../../../shared/validators/global-form.
 @Component({
   selector: 'app-create-marriage-dialog',
   standalone: true,
+  templateUrl: './create-marriage-dialog.component.html',
+  providers: [provideNativeDateAdapter()],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -30,7 +33,6 @@ import { GlobalFormValidators } from '../../../../shared/validators/global-form.
     ButtonComponent,
     DialogShellComponent,
   ],
-  templateUrl: './create-marriage-dialog.component.html',
 })
 export class CreateMarriageDialogComponent {
   private readonly fb = inject(FormBuilder);

@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { PersonsService } from '../../../services/persons.service';
 import { UpdatePersonModel } from '../../../../shared/api-models/requests/person.model';
@@ -19,6 +20,7 @@ import { GlobalFormValidators } from '../../../../shared/validators/global-form.
 @Component({
   selector: 'app-update-person-dialog',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [
     CommonModule,
     ReactiveFormsModule,

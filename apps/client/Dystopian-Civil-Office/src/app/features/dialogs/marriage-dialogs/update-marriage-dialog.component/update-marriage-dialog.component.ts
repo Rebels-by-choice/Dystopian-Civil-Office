@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { MarriagesService } from '../../../services/marriages.service';
 import { UpdateMarriageModel } from '../../../../shared/api-models/requests/marriage.model';
@@ -19,6 +20,7 @@ import { GlobalFormValidators } from '../../../../shared/validators/global-form.
 @Component({
   selector: 'app-update-marriage-dialog',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -156,7 +158,7 @@ export class UpdateMarriageDialogComponent implements OnInit {
 
     if (
       currentMarriageDate &&
-      ((originalMarriageDate?.getTime?.() ?? null) !== currentMarriageDate.getTime())
+      (originalMarriageDate?.getTime?.() ?? null) !== currentMarriageDate.getTime()
     ) {
       request.marriageDate = currentMarriageDate;
     }

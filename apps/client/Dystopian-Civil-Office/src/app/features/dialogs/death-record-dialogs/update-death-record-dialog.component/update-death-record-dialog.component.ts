@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { DeathRecordsService } from '../../../services/death-records.service';
 import { UpdateBirthRecordModel } from '../../../../shared/api-models/requests/deathRecord.model';
@@ -18,6 +19,7 @@ import { GlobalFormValidators } from '../../../../shared/validators/global-form.
 @Component({
   selector: 'app-update-death-record-dialog',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [
     CommonModule,
     ReactiveFormsModule,
