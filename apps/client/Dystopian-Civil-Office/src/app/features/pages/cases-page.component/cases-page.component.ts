@@ -9,10 +9,8 @@ import { PersonsService } from '../../services/persons.service';
 import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-cases-page.component',
   imports: [AsyncPipe, NgClass, RouterLink, RouterModule],
   templateUrl: './cases-page.component.html',
-  styles: ``,
 })
 export class CasesPageComponent implements OnInit {
   private casesService = inject(CasesService);

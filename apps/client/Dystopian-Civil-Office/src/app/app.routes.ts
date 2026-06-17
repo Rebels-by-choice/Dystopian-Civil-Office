@@ -8,6 +8,7 @@ import { DeathsPageComponent } from './features/pages/deaths-page.component/deat
 import { DocumentsPageComponent } from './features/pages/documents-page.component/documents-page.component';
 import { StatisticsPageComponent } from './features/pages/statistics-page.component/statistics-page.component';
 import { CasesPageComponent } from './features/pages/cases-page.component/cases-page.component';
+import { SingularCasePageComponent } from './features/pages/singular-case-page.component/singular-case-page.component';
 
 export const routes: Routes = [
   {

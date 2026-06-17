@@ -30,6 +30,12 @@ export class CasesService {
     return this.cases$;
   }
 
+  public getCaseById(caseId: number): Observable<CaseViewModel> {
+    return this.http.get<CaseViewModel>(`${this.url}/${caseId}`).pipe(
+      catchError((error) => throwError(() => error)),
+    );
+  }
+
   public createCase(request: CreateCaseRequest): Observable<void> {
     return this.http.post<void>(this.url, request).pipe(
       tap(() => this.clearCache()),
