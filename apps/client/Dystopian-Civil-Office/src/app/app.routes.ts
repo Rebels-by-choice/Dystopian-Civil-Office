@@ -12,39 +12,43 @@ import { CasesPageComponent } from './features/pages/cases-page.component/cases-
 export const routes: Routes = [
   {
     path: 'home',
-    component: HomePageComponent
+    component: HomePageComponent,
   },
   {
     path: 'persons',
-    component: PersonsPageComponent
+    component: PersonsPageComponent,
   },
   {
     path: 'births',
-    component: BirthsPageComponent
+    component: BirthsPageComponent,
   },
   {
     path: 'addresses',
-    component: AddressesPageComponent
+    component: AddressesPageComponent,
   },
   {
     path: 'marriages',
-    component: MarriagesPageComponent
+    component: MarriagesPageComponent,
   },
   {
     path: 'deaths',
-    component: DeathsPageComponent
+    component: DeathsPageComponent,
   },
   {
     path: 'documents',
-    component: DocumentsPageComponent
+    component: DocumentsPageComponent,
   },
   {
     path: 'statistics',
-    component: StatisticsPageComponent
+    component: StatisticsPageComponent,
   },
   {
     path: 'cases',
-    component: CasesPageComponent
+    component: CasesPageComponent,
+  },
+  {
+    path: 'cases/:caseId',
+    component: SingularCasePageComponent,
   },
   {
     path: '',
