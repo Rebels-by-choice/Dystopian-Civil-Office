@@ -65,7 +65,10 @@ public class OfficeQueryService
                 DocumentId = d.DocumentId,
                 Name = d.Name,
                 Category = d.Category,
-                ImportDate = d.ImportDate
+                ImportDate = d.ImportDate,
+                CaseId = d.Case.CaseId,
+                PaperlessDocumentId = d.PaperlessDocumentId,
+                DocumentIssuerId = d.DocumentIssuerId
             })
             .ToListAsync();
     }
@@ -80,7 +83,10 @@ public class OfficeQueryService
                 DocumentId = d.DocumentId,
                 Name = d.Name,
                 Category = d.Category,
-                ImportDate = d.ImportDate
+                ImportDate = d.ImportDate,
+                CaseId = d.Case.CaseId,
+                PaperlessDocumentId = d.PaperlessDocumentId,
+                DocumentIssuerId = d.DocumentIssuerId
             })
             .ToListAsync();
     }

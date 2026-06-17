@@ -8,7 +8,7 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { ButtonComponent } from '../../../shared/ui/button.component/button.component';
 import { TableComponent } from '../../../shared/ui/table/table.component';
-import { DocumentsService } from '../../services/documents.service';
+import DocumentsService from '../../services/documents.service';
 import { CreateDocumentDialogComponent } from '../../dialogs/document-dialogs/create-document-dialog.component/create-document-dialog.component';
 import { DocumentViewModel } from '../../../shared/api-models/responses/document.viewmodel';
 import { UpdateDocumentDialogComponent } from '../../dialogs/document-dialogs/update-document-dialog.component/update-document-dialog.component';
