@@ -37,6 +37,7 @@ If you are a developer or tester, you can already import mock documents data to 
 
 ## Production
 Checkout our releases for clear archives, or clone the repository. After successfull run, open browser and go to http://localhost:4200.
+> In root create `.env` file and paste production connection string from `.env.example` or your personal config.
 
 ### Automated usage
 > 1. Go to `/scripts/Production`.
@@ -49,6 +50,8 @@ Those scripts will build run production containers. Check `scripts/Production/RE
 
 ## Developer
 After successfull installation, build and run, check backend SwaggerUI documentation: http://localhost:5159/swagger/index.html. Check application main functionalities on Angular interface: http://localhost:4200.
+> 1. Go to `apps/server/src/Dystopian-Civil-Office/Dystopian-Civil-Office`.
+> 2. Copy developer connection string from `.env.example` or create your own config: `dotnet add user secretes {connectionString}`.
 
 ### Automated usage
 > 1. Go to `/scripts/Developer`.
