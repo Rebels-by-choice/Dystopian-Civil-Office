@@ -34,11 +34,11 @@ export class DeathRecordFormValidators {
   }
 
   public static causeOfDeathValidators(): ValidatorFn[] {
-    return [Validators.maxLength(200)];
+    return [Validators.required, Validators.maxLength(200), GlobalFormValidators.notBlank()];
   }
 
   public static documentNameValidators(): ValidatorFn[] {
-    return [Validators.maxLength(100)];
+    return [Validators.minLength(2), Validators.maxLength(100)];
   }
 
   public static getControlErrorMessage = GlobalFormValidators.getControlErrorMessage;

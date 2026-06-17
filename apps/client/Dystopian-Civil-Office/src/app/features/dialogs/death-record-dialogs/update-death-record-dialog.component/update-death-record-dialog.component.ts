@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { DeathRecordsService } from '../../../services/death-records.service';
 import { UpdateBirthRecordModel } from '../../../../shared/api-models/requests/deathRecord.model';
@@ -18,6 +19,7 @@ import { GlobalFormValidators } from '../../../../shared/validators/global-form.
 @Component({
   selector: 'app-update-death-record-dialog',
   standalone: true,
+  providers: [provideNativeDateAdapter()],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -52,6 +54,7 @@ export class UpdateDeathRecordDialogComponent implements OnInit {
       personPesel: [this.data.personPesel, DeathRecordFormValidators.personPeselValidators()],
       deathDate: [this.data.deathDate, DeathRecordFormValidators.deathDateValidators()],
       deathPlace: [this.data.deathPlace, DeathRecordFormValidators.deathPlaceValidators()],
+      causeOfDeath: [this.data.causeOfDeath, DeathRecordFormValidators.causeOfDeathValidators()],
       documentName: [this.data.documentName, DeathRecordFormValidators.documentNameValidators()],
     });
   }
@@ -84,6 +87,13 @@ export class UpdateDeathRecordDialogComponent implements OnInit {
     );
   }
 
+  protected get causeOfDeathError(): string {
+    return DeathRecordFormValidators.getControlErrorMessage(
+      this.form.controls['causeOfDeath'],
+      'Cause of death',
+    );
+  }
+
   protected get documentNameError(): string {
     return DeathRecordFormValidators.getControlErrorMessage(
       this.form.controls['documentName'],
@@ -111,6 +121,7 @@ export class UpdateDeathRecordDialogComponent implements OnInit {
     const trimmedRegistryNumber = this.form.controls['registryNumber'].value!.trim();
     const trimmedPersonPesel = this.form.controls['personPesel'].value!.trim();
     const trimmedDeathPlace = this.form.controls['deathPlace'].value!.trim();
+    const trimmedCauseOfDeath = this.form.controls['causeOfDeath'].value?.trim() ?? '';
     const trimmedDocumentName = this.form.controls['documentName'].value?.trim() ?? '';
 
     const request: UpdateBirthRecordModel = {};
@@ -123,15 +134,26 @@ export class UpdateDeathRecordDialogComponent implements OnInit {
       request.PersonPesel = trimmedPersonPesel;
     }
 
-    if (this.form.controls['deathDate'].value !== this.data.deathDate) {
-      request.DeathDate = this.form.controls['deathDate'].value;
+    const currentDeathDate = this.form.controls['deathDate'].value;
+    const originalDeathDate = this.data.deathDate;
+
+    if (
+      currentDeathDate &&
+      originalDeathDate &&
+      new Date(currentDeathDate).getTime() !== new Date(originalDeathDate).getTime()
+    ) {
+      request.DeathDate = currentDeathDate;
     }
 
     if (trimmedDeathPlace !== this.data.deathPlace.trim()) {
       request.DeathPlace = trimmedDeathPlace;
     }
 
-    if (trimmedDocumentName !== this.data.documentName.trim()) {
+    if (trimmedCauseOfDeath !== (this.data.causeOfDeath?.trim() ?? '')) {
+      request.CauseOfDeath = trimmedCauseOfDeath;
+    }
+
+    if (trimmedDocumentName !== (this.data.documentName?.trim() ?? '')) {
       request.DocumentName = trimmedDocumentName;
     }
 

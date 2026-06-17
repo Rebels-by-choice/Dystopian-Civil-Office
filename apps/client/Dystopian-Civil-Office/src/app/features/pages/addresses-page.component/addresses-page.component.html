@@ -141,18 +141,10 @@
               <td class="px-4 py-4">{{ address.city }}</td>
               <td class="px-4 py-4">{{ address.street }}</td>
               <td class="px-4 py-4">{{ address.houseNumber }}</td>
-              @if (address.apartmentNumber) {
-                <td class="px-4 py-4">{{ address.apartmentNumber }}</td>
-              } @else {
-                <td class="px-4 py-4">No apartment number</td>
-              }
+              <td class="px-4 py-4">{{ getApartmentNumberDisplayValue(address) }}</td>
               <td class="px-4 py-4">{{ address.postalCode }}</td>
               <td class="px-4 py-4">{{ address.country }}</td>
-              @if (address.documentName) {
-                <td class="px-4 py-4">{{ address.documentName }}</td>
-              } @else {
-                <td class="px-4 py-4">no document provided</td>
-              }
+              <td class="px-4 py-4">{{ getDocumentNameDisplayValue(address) }}</td>
               <td class="bg-transparent px-2 py-4 text-center">
                 <button
                   type="button"

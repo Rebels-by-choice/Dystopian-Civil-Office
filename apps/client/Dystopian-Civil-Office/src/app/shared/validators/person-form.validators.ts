@@ -68,7 +68,7 @@ export class PersonFormValidators {
   }
 
   public static documentNameValidators(): ValidatorFn[] {
-    return [Validators.maxLength(100)];
+    return [Validators.minLength(1), Validators.maxLength(100)];
   }
 
   public static getControlErrorMessage = GlobalFormValidators.getControlErrorMessage;
@@ -84,6 +84,7 @@ export class PersonFormValidators {
     originalBirthDate: Date | string,
     originalBirthPlace: string,
     originalAddressRegistryNumber: string,
+    originalDocumentName: string,
   ): boolean {
     const currentPesel = form.get('pesel')?.value?.trim() ?? '';
     const currentFirstName = form.get('firstName')?.value?.trim() ?? '';
@@ -93,6 +94,7 @@ export class PersonFormValidators {
     const currentBirthDate = form.get('birthDate')?.value ?? '';
     const currentBirthPlace = form.get('birthPlace')?.value?.trim() ?? '';
     const currentAddressRegistryNumber = form.get('addressRegistryNumber')?.value?.trim() ?? '';
+    const currentDocumetName: string = form.get('documentName')?.value?.trim() ?? '';
 
     return (
       currentPesel !== (originalPesel?.toString() ?? '') ||
@@ -102,7 +104,8 @@ export class PersonFormValidators {
       currentGender !== (originalGender ?? '') ||
       (currentBirthDate?.toString() ?? '') !== (originalBirthDate?.toString() ?? '') ||
       currentBirthPlace !== (originalBirthPlace ?? '') ||
-      currentAddressRegistryNumber !== (originalAddressRegistryNumber ?? '')
+      currentAddressRegistryNumber !== (originalAddressRegistryNumber ?? '') ||
+      currentDocumetName !== (originalDocumentName ?? '')
     );
   }
 }

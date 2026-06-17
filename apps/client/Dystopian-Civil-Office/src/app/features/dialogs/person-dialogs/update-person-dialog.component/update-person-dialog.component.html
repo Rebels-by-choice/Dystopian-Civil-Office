@@ -6,90 +6,90 @@
   <div dialog-body>
     <form [formGroup]="form" class="flex flex-col gap-4">
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label class="pl-2">PESEL</mat-label>
-        <input matInput formControlName="pesel" maxlength="11" class="pl-2 text-base" />
+        <mat-label class="!pl-2">PESEL</mat-label>
+        <input matInput formControlName="pesel" maxlength="11" class="!pl-2 !text-base" />
         @if (peselError) {
-          <mat-error class="text-dco-text-error">{{ peselError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ peselError }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label class="pl-2">First name</mat-label>
-        <input matInput formControlName="firstName" maxlength="100" class="pl-2 text-base" />
+        <mat-label class="!pl-2">First name</mat-label>
+        <input matInput formControlName="firstName" maxlength="100" class="!pl-2 !text-base" />
         @if (firstNameError) {
-          <mat-error class="text-dco-text-error">{{ firstNameError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ firstNameError }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label class="pl-2">Middle name</mat-label>
-        <input matInput formControlName="middleName" maxlength="100" class="pl-2 text-base" />
+        <mat-label class="!pl-2">Middle name</mat-label>
+        <input matInput formControlName="middleName" maxlength="100" class="!pl-2 !text-base" />
         @if (middleNameError) {
-          <mat-error class="text-dco-text-error">{{ middleNameError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ middleNameError }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label class="pl-2">Last name</mat-label>
-        <input matInput formControlName="lastName" maxlength="100" class="pl-2 text-base" />
+        <mat-label class="!pl-2">Last name</mat-label>
+        <input matInput formControlName="lastName" maxlength="100" class="!pl-2 !text-base" />
         @if (lastNameError) {
-          <mat-error class="text-dco-text-error">{{ lastNameError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ lastNameError }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label class="pl-2">Gender</mat-label>
-        <mat-select formControlName="gender" class="pl-2 text-base flex items-center h-full">
+        <mat-label class="!pl-2">Gender</mat-label>
+        <mat-select formControlName="gender" class="!pl-2 !text-base flex items-center h-full">
           <mat-option value="Male">Male</mat-option>
           <mat-option value="Female">Female</mat-option>
           <mat-option value="Other">Other</mat-option>
         </mat-select>
         @if (genderError) {
-          <mat-error class="text-dco-text-error">{{ genderError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ genderError }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label class="pl-2">Birth date</mat-label>
+        <mat-label class="!pl-2">Birth date</mat-label>
         <input
           matInput
           [matDatepicker]="birthDatePicker"
           formControlName="birthDate"
-          class="pl-2 text-base"
+          class="!pl-2 !text-base"
         />
         <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #birthDatePicker></mat-datepicker>
         @if (birthDateError) {
-          <mat-error class="text-dco-text-error">{{ birthDateError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ birthDateError }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label class="pl-2">Birth place</mat-label>
-        <input matInput formControlName="birthPlace" maxlength="100" class="pl-2 text-base" />
+        <mat-label class="!pl-2">Birth place</mat-label>
+        <input matInput formControlName="birthPlace" maxlength="100" class="!pl-2 !text-base" />
         @if (birthPlaceError) {
-          <mat-error class="text-dco-text-error">{{ birthPlaceError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ birthPlaceError }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label class="pl-2">Address registry number</mat-label>
+        <mat-label class="!pl-2">Address registry number</mat-label>
         <input
           matInput
           formControlName="addressRegistryNumber"
           maxlength="50"
-          class="pl-2 text-base"
+          class="!pl-2 !text-base"
         />
         @if (addressRegistryNumberError) {
-          <mat-error class="text-dco-text-error">{{ addressRegistryNumberError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ addressRegistryNumberError }}</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-full">
-        <mat-label class="pl-2">Document name</mat-label>
-        <input matInput formControlName="documentName" maxlength="100" class="pl-2 text-base" />
+        <mat-label class="!pl-2">Document name</mat-label>
+        <input matInput formControlName="documentName" maxlength="100" class="!pl-2 !text-base" />
         @if (documentNameError) {
-          <mat-error class="text-dco-text-error">{{ documentNameError }}</mat-error>
+          <mat-error class="!text-dco-text-error">{{ documentNameError }}</mat-error>
         }
       </mat-form-field>
     </form>

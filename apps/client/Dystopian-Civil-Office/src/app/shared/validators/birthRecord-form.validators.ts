@@ -1,10 +1,4 @@
-import {
-  FormGroup,
-  ValidatorFn,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-} from '@angular/forms';
+import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 import { GlobalFormValidators } from './global-form.validators';
 
@@ -32,7 +26,7 @@ export class BirthRecordsFormValidators {
   }
 
   public static documentNameValidators(): ValidatorFn[] {
-    return [Validators.maxLength(100)];
+    return [Validators.minLength(2), Validators.maxLength(100)];
   }
 
   public static getControlErrorMessage = GlobalFormValidators.getControlErrorMessage;

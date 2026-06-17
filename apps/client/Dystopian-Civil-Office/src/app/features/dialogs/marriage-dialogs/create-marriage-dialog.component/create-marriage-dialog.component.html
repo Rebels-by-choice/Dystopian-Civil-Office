@@ -37,7 +37,7 @@
           formControlName="marriageDate"
           class="!pl-2 !text-base"
         />
-        <mat-datepicker-toggle matSuffix [for]="marriageDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker-toggle matIconSuffix [for]="marriageDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #marriageDatePicker></mat-datepicker>
         @if (marriageDateError) {
           <mat-error class="!text-dco-text-error">{{ marriageDateError }}</mat-error>

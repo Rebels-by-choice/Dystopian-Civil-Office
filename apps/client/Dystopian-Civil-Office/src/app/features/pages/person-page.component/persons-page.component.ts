@@ -24,6 +24,7 @@ type SortColumn =
   | 'birthPlace'
   | 'addressRegistryNumber'
   | 'documentName';
+
 type SortDirection = 'asc' | 'desc';
 
 interface SortState {
@@ -48,18 +49,22 @@ export class PersonsPageComponent {
   });
 
   private readonly activeGenderFilter$ = new BehaviorSubject<string | null>(null);
+  private readonly refreshTrigger$ = new BehaviorSubject<number>(0);
 
   protected personsErrorMessage = '';
   protected selectedGender = 'Default';
 
   protected readonly genderOptions: string[] = ['Default', 'Male', 'Female', 'Other'];
 
-  private readonly rawPersons$ = this.activeGenderFilter$.pipe(
-    switchMap((gender) => {
+  private readonly rawPersons$ = combineLatest([
+    this.activeGenderFilter$,
+    this.refreshTrigger$,
+  ]).pipe(
+    switchMap(([gender]) => {
       this.personsErrorMessage = '';
 
       const request$ = gender
-        ? this.personsService.getPersonsByGender(gender)
+        ? this.personsService.refreshPersonsByGender(gender)
         : this.personsService.refreshPersons();
 
       return request$.pipe(
@@ -168,59 +173,85 @@ export class PersonsPageComponent {
     return currentSort.column === column ? currentSort.direction : 'asc';
   }
 
-  private sortPersons(persons: PersonViewModel[], sortState: SortState): PersonViewModel[] {
-    const sorted = [...persons].sort((a, b) => {
-      let aValue: unknown;
-      let bValue: unknown;
+  protected getMiddleNameDisplayValue(person: PersonViewModel): string {
+    return person.middleName?.trim() || 'No middle name';
+  }
 
-      switch (sortState.column) {
-        case 'personPesel':
-          aValue = a.personPesel.toLowerCase();
-          bValue = b.personPesel.toLowerCase();
-          break;
-        case 'firstName':
-          aValue = a.firstName.toLowerCase();
-          bValue = b.firstName.toLowerCase();
-          break;
-        case 'middleName':
-          aValue = a.middleName.toLowerCase();
-          bValue = b.middleName.toLowerCase();
-          break;
-        case 'lastName':
-          aValue = a.lastName.toLowerCase();
-          bValue = b.lastName.toLowerCase();
-          break;
-        case 'gender':
-          aValue = a.gender.toLowerCase();
-          bValue = b.gender.toLowerCase();
-          break;
-        case 'birthDate':
-          aValue = new Date(a.birthDate).getTime();
-          bValue = new Date(b.birthDate).getTime();
-          break;
-        case 'birthPlace':
-          aValue = a.birthPlace.toLowerCase();
-          bValue = b.birthPlace.toLowerCase();
-          break;
-        case 'addressRegistryNumber':
-          aValue = a.addressRegistryNumber.toLowerCase();
-          bValue = b.addressRegistryNumber.toLowerCase();
-          break;
-        case 'documentName':
-          aValue = a.documentName.toLowerCase();
-          bValue = b.documentName.toLowerCase();
-          break;
-      }
+  protected getAddressRegistryNumberDisplayValue(person: PersonViewModel): string {
+    return person.addressRegistryNumber?.trim() || 'No address provided';
+  }
+
+  protected getDocumentNameDisplayValue(person: PersonViewModel): string {
+    return person.documentName?.trim() || 'No document provided';
+  }
+
+  private sortPersons(persons: PersonViewModel[], sortState: SortState): PersonViewModel[] {
+    return [...persons].sort((a, b) => {
+      const aValue = this.getSortablePersonValue(a, sortState.column);
+      const bValue = this.getSortablePersonValue(b, sortState.column);
 
       if (aValue === bValue) {
         return 0;
       }
 
-      const isAsc = sortState.direction === 'asc';
-      return (aValue ?? 0) < (bValue ?? 0) ? (isAsc ? -1 : 1) : isAsc ? 1 : -1;
-    });
+      const comparison =
+        typeof aValue === 'number' && typeof bValue === 'number'
+          ? aValue - bValue
+          : aValue.toString().localeCompare(bValue.toString(), undefined, {
+              numeric: true,
+              sensitivity: 'base',
+            });
 
-    return sorted;
+      return sortState.direction === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  private getSortablePersonValue(person: PersonViewModel, column: SortColumn): string | number {
+    switch (column) {
+      case 'personPesel':
+        return this.normalizeRequiredSortValue(person.personPesel);
+
+      case 'firstName':
+        return this.normalizeRequiredSortValue(person.firstName);
+
+      case 'middleName':
+        return this.normalizeSortValue(person.middleName, this.getMiddleNameDisplayValue(person));
+
+      case 'lastName':
+        return this.normalizeRequiredSortValue(person.lastName);
+
+      case 'gender':
+        return this.normalizeRequiredSortValue(person.gender);
+
+      case 'birthDate':
+        return person.birthDate ? new Date(person.birthDate).getTime() : Number.MIN_SAFE_INTEGER;
+
+      case 'birthPlace':
+        return this.normalizeRequiredSortValue(person.birthPlace);
+
+      case 'addressRegistryNumber':
+        return this.normalizeSortValue(
+          person.addressRegistryNumber,
+          this.getAddressRegistryNumberDisplayValue(person),
+        );
+
+      case 'documentName':
+        return this.normalizeSortValue(
+          person.documentName,
+          this.getDocumentNameDisplayValue(person),
+        );
+
+      default:
+        return '';
+    }
+  }
+
+  private normalizeRequiredSortValue(value: string): string {
+    return value.trim().toLowerCase();
+  }
+
+  private normalizeSortValue(value: string | null | undefined, fallback = ''): string {
+    return (value ?? fallback).toString().trim().toLowerCase();
   }
 
   private resetGenderFilterState(): void {
@@ -229,14 +260,6 @@ export class PersonsPageComponent {
   }
 
   private reloadCurrentPersons(): void {
-    const currentGender = this.activeGenderFilter$.value;
-
-    if (currentGender) {
-      this.personsService.refreshPersonsByGender(currentGender);
-    } else {
-      this.personsService.refreshPersons();
-    }
-
-    this.activeGenderFilter$.next(currentGender);
+    this.refreshTrigger$.next(this.refreshTrigger$.value + 1);
   }
 }

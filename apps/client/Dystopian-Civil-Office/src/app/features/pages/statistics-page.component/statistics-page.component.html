@@ -1,6 +1,16 @@
-<div *ngIf="summary$ | async as summary">
-  <h1 class="text-3xl pb-3">Global temporary statistics solution</h1>
-  <p class="text-base pb-2">New records: <b>{{ summary.newRecords }}</b></p>
-  <p class="text-base pb-2">New edited records: <b>{{ summary.editedRecords }}</b></p>
-  <p class="text-base pb-2">Deleted records: <b>{{ summary.deletedRecords }}</b></p>
-</div>
+@if (summary$ | async; as summary) {
+  <div class>
+    <h1 class="text-3xl pb-3">
+      Global temporary statistics solution contracted from backend memory
+    </h1>
+    <p class="text-base pb-2">
+      New records: <b>{{ summary.newRecords }}</b>
+    </p>
+    <p class="text-base pb-2">
+      New edited records: <b>{{ summary.editedRecords }}</b>
+    </p>
+    <p class="text-base pb-2">
+      Deleted records: <b>{{ summary.deletedRecords }}</b>
+    </p>
+  </div>
+}

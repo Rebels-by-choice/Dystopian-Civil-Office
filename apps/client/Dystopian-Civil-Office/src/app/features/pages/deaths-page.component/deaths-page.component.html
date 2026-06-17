@@ -4,7 +4,7 @@
       <h1 class="text-3xl">Death records</h1>
     </div>
 
-    <app-button label="Add death" (buttonClick)="openCreateDialog()"></app-button>
+    <app-button label="Add death record" (buttonClick)="openCreateDialog()"></app-button>
   </div>
 
   @if (deaths$ | async; as deaths) {
@@ -127,7 +127,7 @@
               <td class="px-4 py-4">{{ death.deathDate | date: 'yyyy-MM-dd' }}</td>
               <td class="px-4 py-4">{{ death.deathPlace }}</td>
               <td class="px-4 py-4">{{ death.causeOfDeath }}</td>
-              <td class="px-4 py-4">{{ death.documentName }}</td>
+              <td class="px-4 py-4">{{ getDocumentNameDisplayValue(death) }}</td>
 
               <td class="bg-transparent px-2 py-4 text-center">
                 <button

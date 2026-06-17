@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { ButtonComponent } from '../../../shared/ui/button.component/button.component';
 import { TableComponent } from '../../../shared/ui/table/table.component';
@@ -20,6 +20,7 @@ type SortColumn =
   | 'marriageDate'
   | 'marriagePlace'
   | 'documentName';
+
 type SortDirection = 'asc' | 'desc';
 
 interface SortState {
@@ -45,15 +46,10 @@ export class MarriagesPageComponent {
 
   protected marriagesErrorMessage = '';
 
-  private readonly rawMarriages$ = this.sortState$.pipe(
-    switchMap(() => {
-      this.marriagesErrorMessage = '';
-      return this.marriagesService.getMarriages().pipe(
-        catchError((error) => {
-          this.marriagesErrorMessage = 'Failed to load marriages.';
-          return of([]);
-        }),
-      );
+  private readonly rawMarriages$ = this.marriagesService.getMarriages().pipe(
+    catchError(() => {
+      this.marriagesErrorMessage = 'Failed to load marriages.';
+      return of([]);
     }),
   );
 
@@ -129,55 +125,95 @@ export class MarriagesPageComponent {
     return currentSort.column === column ? currentSort.direction : 'asc';
   }
 
-  private sortMarriages(marriages: MarriageViewModel[], sortState: SortState): MarriageViewModel[] {
-    const sorted = [...marriages].sort((a, b) => {
-      let aValue: unknown;
-      let bValue: unknown;
+  protected getSpouse1PeselDisplayValue(marriage: MarriageViewModel): string {
+    return marriage.spouse1Pesel?.trim() || 'No spouse 1 PESEL';
+  }
 
-      switch (sortState.column) {
-        case 'registryNumber':
-          aValue = a.registryNumber.toLowerCase();
-          bValue = b.registryNumber.toLowerCase();
-          break;
-        case 'registryDate':
-          aValue = new Date(a.registryDate).getTime();
-          bValue = new Date(b.registryDate).getTime();
-          break;
-        case 'spouse1Pesel':
-          aValue = a.spouse1Pesel.toLowerCase();
-          bValue = b.spouse1Pesel.toLowerCase();
-          break;
-        case 'spouse2Pesel':
-          aValue = a.spouse2Pesel.toLowerCase();
-          bValue = b.spouse2Pesel.toLowerCase();
-          break;
-        case 'marriageDate':
-          aValue = new Date(a.marriageDate).getTime();
-          bValue = new Date(b.marriageDate).getTime();
-          break;
-        case 'marriagePlace':
-          aValue = a.marriagePlace.toLowerCase();
-          bValue = b.marriagePlace.toLowerCase();
-          break;
-        case 'documentName':
-          aValue = a.documentName.toLowerCase();
-          bValue = b.documentName.toLowerCase();
-          break;
-      }
+  protected getSpouse2PeselDisplayValue(marriage: MarriageViewModel): string {
+    return marriage.spouse2Pesel?.trim() || 'No spouse 2 PESEL';
+  }
+
+  protected getDocumentNameDisplayValue(marriage: MarriageViewModel): string {
+    return marriage.documentName?.trim() || 'No document provided';
+  }
+
+  private sortMarriages(marriages: MarriageViewModel[], sortState: SortState): MarriageViewModel[] {
+    return [...marriages].sort((a, b) => {
+      const aValue = this.getSortableMarriageValue(a, sortState.column);
+      const bValue = this.getSortableMarriageValue(b, sortState.column);
 
       if (aValue === bValue) {
         return 0;
       }
 
-      const isAsc = sortState.direction === 'asc';
-      return (aValue ?? 0) < (bValue ?? 0) ? (isAsc ? -1 : 1) : isAsc ? 1 : -1;
-    });
+      const comparison =
+        typeof aValue === 'number' && typeof bValue === 'number'
+          ? aValue - bValue
+          : aValue.toString().localeCompare(bValue.toString(), undefined, {
+              numeric: true,
+              sensitivity: 'base',
+            });
 
-    return sorted;
+      return sortState.direction === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  private getSortableMarriageValue(
+    marriage: MarriageViewModel,
+    column: SortColumn,
+  ): string | number {
+    switch (column) {
+      case 'registryNumber':
+        return this.normalizeSortValue(marriage.registryNumber);
+
+      case 'registryDate':
+        return marriage.registryDate
+          ? new Date(marriage.registryDate).getTime()
+          : Number.MIN_SAFE_INTEGER;
+
+      case 'spouse1Pesel':
+        return this.normalizeSortValue(
+          marriage.spouse1Pesel,
+          this.getSpouse1PeselDisplayValue(marriage),
+        );
+
+      case 'spouse2Pesel':
+        return this.normalizeSortValue(
+          marriage.spouse2Pesel,
+          this.getSpouse2PeselDisplayValue(marriage),
+        );
+
+      case 'marriageDate':
+        return marriage.marriageDate
+          ? new Date(marriage.marriageDate).getTime()
+          : Number.MIN_SAFE_INTEGER;
+
+      case 'marriagePlace':
+        return this.normalizeSortValue(marriage.marriagePlace);
+
+      case 'documentName':
+        return this.normalizeSortValue(
+          marriage.documentName,
+          this.getDocumentNameDisplayValue(marriage),
+        );
+
+      default:
+        return '';
+    }
+  }
+
+  private normalizeSortValue(value: string | null | undefined, fallback = ''): string {
+    return (value ?? fallback).toString().trim().toLowerCase();
   }
 
   private reloadCurrentMarriages(): void {
-    this.marriagesService.refreshMarriages();
-    this.sortState$.next(this.sortState$.value);
+    this.marriagesService.refreshMarriages().subscribe({
+      next: () => {
+        this.marriagesErrorMessage = '';
+      },
+      error: () => {
+        this.marriagesErrorMessage = 'Failed to load marriages.';
+      },
+    });
   }
 }

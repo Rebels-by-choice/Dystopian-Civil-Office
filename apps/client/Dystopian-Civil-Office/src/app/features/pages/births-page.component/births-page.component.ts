@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { ButtonComponent } from '../../../shared/ui/button.component/button.component';
 import { TableComponent } from '../../../shared/ui/table/table.component';
@@ -21,6 +21,7 @@ type SortColumn =
   | 'birthdate'
   | 'birthPlace'
   | 'documentName';
+
 type SortDirection = 'asc' | 'desc';
 
 interface SortState {
@@ -46,15 +47,10 @@ export class BirthsPageComponent {
 
   protected birthsErrorMessage = '';
 
-  private readonly rawBirths$ = this.sortState$.pipe(
-    switchMap(() => {
-      this.birthsErrorMessage = '';
-      return this.birthRecordsService.getBirthRecords().pipe(
-        catchError((error) => {
-          this.birthsErrorMessage = 'Failed to load birth records.';
-          return of([]);
-        }),
-      );
+  private readonly rawBirths$ = this.birthRecordsService.getBirthRecords().pipe(
+    catchError(() => {
+      this.birthsErrorMessage = 'Failed to load birth records.';
+      return of([]);
     }),
   );
 
@@ -130,59 +126,88 @@ export class BirthsPageComponent {
     return currentSort.column === column ? currentSort.direction : 'asc';
   }
 
-  private sortBirths(births: BirthRecordViewModel[], sortState: SortState): BirthRecordViewModel[] {
-    const sorted = [...births].sort((a, b) => {
-      let aValue: unknown;
-      let bValue: unknown;
+  protected getMotherPeselDisplayValue(birth: BirthRecordViewModel): string {
+    return birth.motherPesel?.trim() || 'No mother PESEL';
+  }
 
-      switch (sortState.column) {
-        case 'registryNumber':
-          aValue = a.registryNumber.toLowerCase();
-          bValue = b.registryNumber.toLowerCase();
-          break;
-        case 'registryDate':
-          aValue = new Date(a.registryDate).getTime();
-          bValue = new Date(b.registryDate).getTime();
-          break;
-        case 'bornPersonPesel':
-          aValue = a.bornPersonPesel.toLowerCase();
-          bValue = b.bornPersonPesel.toLowerCase();
-          break;
-        case 'motherPesel':
-          aValue = a.motherPesel.toLowerCase();
-          bValue = b.motherPesel.toLowerCase();
-          break;
-        case 'fatherPesel':
-          aValue = a.fatherPesel.toLowerCase();
-          bValue = b.fatherPesel.toLowerCase();
-          break;
-        case 'birthdate':
-          aValue = new Date(a.birthDate).getTime();
-          bValue = new Date(b.birthDate).getTime();
-          break;
-        case 'birthPlace':
-          aValue = a.birthPlace.toLowerCase();
-          bValue = b.birthPlace.toLowerCase();
-          break;
-        case 'documentName':
-          aValue = a.documentName.toLowerCase();
-          bValue = b.documentName.toLowerCase();
-          break;
-      }
+  protected getFatherPeselDisplayValue(birth: BirthRecordViewModel): string {
+    return birth.fatherPesel?.trim() || 'No father PESEL';
+  }
+
+  protected getDocumentNameDisplayValue(birth: BirthRecordViewModel): string {
+    return birth.documentName?.trim() || 'No document provided';
+  }
+
+  private sortBirths(births: BirthRecordViewModel[], sortState: SortState): BirthRecordViewModel[] {
+    return [...births].sort((a, b) => {
+      const aValue = this.getSortableBirthValue(a, sortState.column);
+      const bValue = this.getSortableBirthValue(b, sortState.column);
 
       if (aValue === bValue) {
         return 0;
       }
 
-      const isAsc = sortState.direction === 'asc';
-      return (aValue ?? 0) < (bValue ?? 0) ? (isAsc ? -1 : 1) : isAsc ? 1 : -1;
-    });
+      const comparison =
+        typeof aValue === 'number' && typeof bValue === 'number'
+          ? aValue - bValue
+          : aValue.toString().localeCompare(bValue.toString(), undefined, {
+              numeric: true,
+              sensitivity: 'base',
+            });
 
-    return sorted;
+      return sortState.direction === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  private getSortableBirthValue(birth: BirthRecordViewModel, column: SortColumn): string | number {
+    switch (column) {
+      case 'registryNumber':
+        return this.normalizeSortValue(birth.registryNumber);
+
+      case 'registryDate':
+        return birth.registryDate
+          ? new Date(birth.registryDate).getTime()
+          : Number.MIN_SAFE_INTEGER;
+
+      case 'bornPersonPesel':
+        return this.normalizeRequiredSortValue(birth.bornPersonPesel);
+
+      case 'motherPesel':
+        return this.normalizeSortValue(birth.motherPesel, this.getMotherPeselDisplayValue(birth));
+
+      case 'fatherPesel':
+        return this.normalizeSortValue(birth.fatherPesel, this.getFatherPeselDisplayValue(birth));
+
+      case 'birthdate':
+        return birth.birthDate ? new Date(birth.birthDate).getTime() : Number.MIN_SAFE_INTEGER;
+
+      case 'birthPlace':
+        return this.normalizeSortValue(birth.birthPlace);
+
+      case 'documentName':
+        return this.normalizeSortValue(birth.documentName, this.getDocumentNameDisplayValue(birth));
+
+      default:
+        return '';
+    }
+  }
+
+  private normalizeRequiredSortValue(value: string): string {
+    return value.trim().toLowerCase();
+  }
+
+  private normalizeSortValue(value: string | null | undefined, fallback = ''): string {
+    return (value ?? fallback).toString().trim().toLowerCase();
   }
 
   private reloadCurrentBirths(): void {
-    this.birthRecordsService.refreshBirthRecords();
-    this.sortState$.next(this.sortState$.value);
+    this.birthRecordsService.refreshBirthRecords().subscribe({
+      next: () => {
+        this.birthsErrorMessage = '';
+      },
+      error: () => {
+        this.birthsErrorMessage = 'Failed to load birth records.';
+      },
+    });
   }
 }
