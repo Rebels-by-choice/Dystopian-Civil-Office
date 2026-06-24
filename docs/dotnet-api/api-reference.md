@@ -27,19 +27,19 @@ Base route:
 /api/ApiStats
 ```
 
-| Method | Route | Description | Response |
-| --- | --- | --- | --- |
-| `GET` | `/api/ApiStats` | Returns in-memory logs for non-GET operations. | `200 OK` with `ApiOperationLog[]` |
+| Method | Route           | Description                                    | Response                          |
+| ------ | --------------- | ---------------------------------------------- | --------------------------------- |
+| `GET`  | `/api/ApiStats` | Returns in-memory logs for non-GET operations. | `200 OK` with `ApiOperationLog[]` |
 
 `ApiOperationLog` contains:
 
-| Field | Type | Meaning |
-| --- | --- | --- |
-| `Id` | `int` | Incrementing in-memory ID. |
-| `Method` | `string` | HTTP method. |
-| `Path` | `string` | Request path. |
-| `StatusCode` | `int` | Final response status code. |
-| `ExecutedAt` | `DateTime` | UTC timestamp. |
+| Field        | Type       | Meaning                     |
+| ------------ | ---------- | --------------------------- |
+| `Id`         | `int`      | Incrementing in-memory ID.  |
+| `Method`     | `string`   | HTTP method.                |
+| `Path`       | `string`   | Request path.               |
+| `StatusCode` | `int`      | Final response status code. |
+| `ExecutedAt` | `DateTime` | UTC timestamp.              |
 
 ## Person
 
@@ -49,55 +49,53 @@ Base route:
 /api/Person
 ```
 
-| Method | Route | Request DTO | Response |
-| --- | --- | --- | --- |
-| `GET` | `/api/Person` | none | `200 OK` with `PersonResponseDto[]` |
-| `POST` | `/api/Person` | `CreatePersonRequestDto` | `201 Created` |
-| `PUT` | `/api/Person/{personId:int}` | `UpdatePersonRequestDto` | `204 No Content` |
-| `DELETE` | `/api/Person/{personId:int}` | none | `204 No Content` |
+| Method   | Route                        | Request DTO              | Response                            |
+| -------- | ---------------------------- | ------------------------ | ----------------------------------- |
+| `GET`    | `/api/Person`                | none                     | `200 OK` with `PersonResponseDto[]` |
+| `POST`   | `/api/Person`                | `CreatePersonRequestDto` | `201 Created`                       |
+| `PUT`    | `/api/Person/{personId:int}` | `UpdatePersonRequestDto` | `204 No Content`                    |
+| `DELETE` | `/api/Person/{personId:int}` | none                     | `204 No Content`                    |
 
 Create fields:
 
-| Field | Type | Required by DTO shape |
-| --- | --- | --- |
-| `Pesel` | `string` | yes |
-| `FirstName` | `string` | yes |
-| `MiddleName` | `string?` | no |
-| `LastName` | `string` | yes |
-| `Gender` | `string` | yes |
-| `BirthDate` | `DateOnly` | yes |
-| `BirthPlace` | `string` | yes |
-| `AddressId` | `int` | yes |
-| `DocumentId` | `int?` | no |
+| Field                   | Type       | Required by DTO shape                       |
+| ----------------------- | ---------- | ------------------------------------------- |
+| `Pesel`                 | `string`   | yes                                         |
+| `FirstName`             | `string`   | yes                                         |
+| `MiddleName`            | `string?`  | no                                          |
+| `LastName`              | `string`   | yes                                         |
+| `Gender`                | `string`   | yes                                         |
+| `BirthDate`             | `DateOnly` | yes                                         |
+| `BirthPlace`            | `string`   | yes                                         |
+| `AddressRegistryNumber` | `string?`  | no (registry number of an existing address) |
+| `DocumentName`          | `string?`  | no                                          |
 
 Response fields:
 
 `PersonPesel`, `FirstName`, `MiddleName`, `LastName`, `Gender`, `BirthDate`, `BirthPlace`, `DocumentName`.
 
-## PersonAddress
+## Address
 
 Base route:
 
 ```text
-/api/PersonAddress
+/api/Address
 ```
 
-| Method | Route | Request DTO | Response |
-| --- | --- | --- | --- |
-| `GET` | `/api/PersonAddress` | none | `200 OK` with `PersonAddressResponseDto[]` |
-| `POST` | `/api/PersonAddress` | `CreatePersonAddressRequestDto` | `201 Created` |
-| `PUT` | `/api/PersonAddress/{addressId:int}` | `UpdatePersonAddressRequestDto` | `204 No Content` |
-| `DELETE` | `/api/PersonAddress/{addressId:int}` | none | `204 No Content` |
+| Method   | Route                          | Request DTO               | Response                             |
+| -------- | ------------------------------ | ------------------------- | ------------------------------------ |
+| `GET`    | `/api/Address`                 | none                      | `200 OK` with `AddressResponseDto[]` |
+| `POST`   | `/api/Address`                 | `CreateAddressRequestDto` | `201 Created`                        |
+| `PUT`    | `/api/Address/{addressId:int}` | `UpdateAddressRequestDto` | `204 No Content`                     |
+| `DELETE` | `/api/Address/{addressId:int}` | none                      | `204 No Content`                     |
 
 Create fields:
 
-`City`, `Street`, `HouseNumber`, `ApartmentNumber`, `PostalCode`, `Country`, `DocumentId`.
+`RegistryNumber`, `City`, `Street`, `HouseNumber`, `ApartmentNumber`, `PostalCode`, `Country`, `DocumentName`.
 
 Response fields:
 
-`PersonPesel`, `City`, `Street`, `HouseNumber`, `ApartmentNumber`, `PostalCode`, `Country`, `DocumentName`.
-
-Note: `GET /api/PersonAddress` projects from persons and their current address. It does not return every address row independently; it returns person-address combinations.
+`AddressId`, `RegistryNumber`, `City`, `Street`, `HouseNumber`, `ApartmentNumber`, `PostalCode`, `Country`, `DocumentName`.
 
 ## Document
 
@@ -107,12 +105,12 @@ Base route:
 /api/Document
 ```
 
-| Method | Route | Request DTO | Response |
-| --- | --- | --- | --- |
-| `GET` | `/api/Document` | none | `200 OK` with `DocumentResponseDto[]` |
-| `POST` | `/api/Document` | `CreateDocumentRequestDto` | `201 Created` |
-| `PUT` | `/api/Document/{documentId:int}` | `UpdateDocumentRequestDto` | `204 No Content` |
-| `DELETE` | `/api/Document/{documentId:int}` | none | `204 No Content` |
+| Method   | Route                            | Request DTO                | Response                              |
+| -------- | -------------------------------- | -------------------------- | ------------------------------------- |
+| `GET`    | `/api/Document`                  | none                       | `200 OK` with `DocumentResponseDto[]` |
+| `POST`   | `/api/Document`                  | `CreateDocumentRequestDto` | `201 Created`                         |
+| `PUT`    | `/api/Document/{documentId:int}` | `UpdateDocumentRequestDto` | `204 No Content`                      |
+| `DELETE` | `/api/Document/{documentId:int}` | none                       | `204 No Content`                      |
 
 Create fields:
 
@@ -130,12 +128,12 @@ Base route:
 /api/BirthRecord
 ```
 
-| Method | Route | Request DTO | Response |
-| --- | --- | --- | --- |
-| `GET` | `/api/BirthRecord` | none | `200 OK` with `BirthRecordResponseDto[]` |
-| `POST` | `/api/BirthRecord` | `CreateBirthRecordRequestDto` | `201 Created` |
-| `PUT` | `/api/BirthRecord/{birthRecordId:int}` | `UpdateBirthRecordRequestDto` | `204 No Content` |
-| `DELETE` | `/api/BirthRecord/{birthRecordId:int}` | none | `204 No Content` |
+| Method   | Route                                  | Request DTO                   | Response                                 |
+| -------- | -------------------------------------- | ----------------------------- | ---------------------------------------- |
+| `GET`    | `/api/BirthRecord`                     | none                          | `200 OK` with `BirthRecordResponseDto[]` |
+| `POST`   | `/api/BirthRecord`                     | `CreateBirthRecordRequestDto` | `201 Created`                            |
+| `PUT`    | `/api/BirthRecord/{birthRecordId:int}` | `UpdateBirthRecordRequestDto` | `204 No Content`                         |
+| `DELETE` | `/api/BirthRecord/{birthRecordId:int}` | none                          | `204 No Content`                         |
 
 Create fields:
 
@@ -153,12 +151,12 @@ Base route:
 /api/DeathRecord
 ```
 
-| Method | Route | Request DTO | Response |
-| --- | --- | --- | --- |
-| `GET` | `/api/DeathRecord` | none | `200 OK` with `DeathRecordResponseDto[]` |
-| `POST` | `/api/DeathRecord` | `CreateDeathRecordRequestDto` | `201 Created` |
-| `PUT` | `/api/DeathRecord/{deathRecordId:int}` | `UpdateDeathRecordRequestDto` | `204 No Content` |
-| `DELETE` | `/api/DeathRecord/{deathRecordId:int}` | none | `204 No Content` |
+| Method   | Route                                  | Request DTO                   | Response                                 |
+| -------- | -------------------------------------- | ----------------------------- | ---------------------------------------- |
+| `GET`    | `/api/DeathRecord`                     | none                          | `200 OK` with `DeathRecordResponseDto[]` |
+| `POST`   | `/api/DeathRecord`                     | `CreateDeathRecordRequestDto` | `201 Created`                            |
+| `PUT`    | `/api/DeathRecord/{deathRecordId:int}` | `UpdateDeathRecordRequestDto` | `204 No Content`                         |
+| `DELETE` | `/api/DeathRecord/{deathRecordId:int}` | none                          | `204 No Content`                         |
 
 Create fields:
 
@@ -176,12 +174,12 @@ Base route:
 /api/Marriage
 ```
 
-| Method | Route | Request DTO | Response |
-| --- | --- | --- | --- |
-| `GET` | `/api/Marriage` | none | `200 OK` with `MarriageResponseDto[]` |
-| `POST` | `/api/Marriage` | `CreateMarriageRequestDto` | `201 Created` |
-| `PUT` | `/api/Marriage/{registryNumber}` | `UpdateMarriageRequestDto` | `204 No Content` |
-| `DELETE` | `/api/Marriage/{registryNumber}` | none | `204 No Content` |
+| Method   | Route                            | Request DTO                | Response                              |
+| -------- | -------------------------------- | -------------------------- | ------------------------------------- |
+| `GET`    | `/api/Marriage`                  | none                       | `200 OK` with `MarriageResponseDto[]` |
+| `POST`   | `/api/Marriage`                  | `CreateMarriageRequestDto` | `201 Created`                         |
+| `PUT`    | `/api/Marriage/{registryNumber}` | `UpdateMarriageRequestDto` | `204 No Content`                      |
+| `DELETE` | `/api/Marriage/{registryNumber}` | none                       | `204 No Content`                      |
 
 Create fields:
 
@@ -197,11 +195,11 @@ Unlike other update/delete endpoints, marriage records are updated and deleted b
 
 `DatabaseExceptionHandlingMiddleware` catches `PostgresException` and returns `ProblemDetails`:
 
-| Condition | HTTP Status | Title |
-| --- | --- | --- |
-| Message contains `not found` | `404 Not Found` | `Resource not found` |
-| PostgreSQL unique violation | `409 Conflict` | `Database conflict` |
-| PostgreSQL foreign key violation | `409 Conflict` | `Database conflict` |
-| Other PostgreSQL exception | `400 Bad Request` | `Invalid database request` |
+| Condition                        | HTTP Status       | Title                      |
+| -------------------------------- | ----------------- | -------------------------- |
+| Message contains `not found`     | `404 Not Found`   | `Resource not found`       |
+| PostgreSQL unique violation      | `409 Conflict`    | `Database conflict`        |
+| PostgreSQL foreign key violation | `409 Conflict`    | `Database conflict`        |
+| Other PostgreSQL exception       | `400 Bad Request` | `Invalid database request` |
 
 The `Detail` field is the PostgreSQL `MessageText`.
