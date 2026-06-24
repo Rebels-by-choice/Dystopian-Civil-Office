@@ -8,12 +8,11 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { ButtonComponent } from '../../../shared/ui/button.component/button.component';
 import { TableComponent } from '../../../shared/ui/table/table.component';
-import { DocumentsService } from '../../services/documents.service';
+import DocumentsService from '../../services/documents.service';
 import { CreateDocumentDialogComponent } from '../../dialogs/document-dialogs/create-document-dialog.component/create-document-dialog.component';
 import { DocumentViewModel } from '../../../shared/api-models/responses/document.viewmodel';
 import { UpdateDocumentDialogComponent } from '../../dialogs/document-dialogs/update-document-dialog.component/update-document-dialog.component';
 import { DeleteDocumentDialogComponent } from '../../dialogs/document-dialogs/delete-document-dialog.component/delete-document-dialog.component';
-
 type SortColumn = 'name' | 'category' | 'importDate';
 type SortDirection = 'asc' | 'desc';
 
@@ -31,7 +30,7 @@ interface SortState {
 })
 export class DocumentsPageComponent {
   private readonly dialog = inject(MatDialog);
-  private readonly documentsService = inject(DocumentsService);
+  private readonly documentService = inject(DocumentsService);
 
   private readonly sortState$ = new BehaviorSubject<SortState>({
     column: 'importDate',
@@ -61,8 +60,8 @@ export class DocumentsPageComponent {
       this.documentsErrorMessage = '';
 
       const request$ = category
-        ? this.documentsService.refreshDocumentsByCategory(category)
-        : this.documentsService.refreshDocuments();
+        ? this.documentService.refreshDocumentsByCategory(category)
+        : this.documentService.refreshDocuments();
 
       return request$.pipe(
         catchError((error: HttpErrorResponse) => {
@@ -223,5 +222,19 @@ export class DocumentsPageComponent {
 
   private reloadCurrentDocuments(): void {
     this.refreshTrigger$.next(this.refreshTrigger$.value + 1);
+  }
+
+  openDocumentPreview(paperlessDocumentId: number) {
+    this.documentService.getDocumentPreview(paperlessDocumentId).subscribe({
+      next: (blob: Blob) => {
+        const objectUrl = window.URL.createObjectURL(blob);
+
+        // Open the preview in a new tab
+        window.open(objectUrl, '_blank');
+
+        // window.URL.revokeObjectURL(objectUrl);
+      },
+      error: (err) => console.error('Failed to load document preview', err),
+    });
   }
 }

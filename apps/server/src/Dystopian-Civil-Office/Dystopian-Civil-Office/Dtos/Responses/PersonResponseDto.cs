@@ -12,4 +12,5 @@ public class PersonResponseDto
     public string BirthPlace { get; set; } = string.Empty;
     public string? AddressRegistryNumber { get; set; }
     public string? DocumentName { get; set; }
+    public bool? IsFunctionary { get; set; }
 }

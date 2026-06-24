@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { DocumentsService } from '../../../services/documents.service';
+import DocumentsService from '../../../services/documents.service';
 import { UpdateDocumentModel } from '../../../../shared/api-models/requests/document.model';
 import { DocumentViewModel } from '../../../../shared/api-models/responses/document.viewmodel';
 import { DocumentFormValidators } from '../../../../shared/validators/document-form.validators';

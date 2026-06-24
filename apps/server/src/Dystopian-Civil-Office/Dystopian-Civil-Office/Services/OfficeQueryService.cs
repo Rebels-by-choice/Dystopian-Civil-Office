@@ -28,7 +28,8 @@ public class OfficeQueryService
                 BirthDate = p.BirthDate,
                 BirthPlace = p.BirthPlace,
                 AddressRegistryNumber = p.Address.RegistryNumber,
-                DocumentName = p.Document != null ? p.Document.Name : null
+                DocumentName = p.Document != null ? p.Document.Name : null,
+                IsFunctionary = p.IsFunctionary
             })
             .ToListAsync();
     }
@@ -49,7 +50,8 @@ public class OfficeQueryService
                 BirthDate = p.BirthDate,
                 BirthPlace = p.BirthPlace,
                 AddressRegistryNumber = p.Address.RegistryNumber,
-                DocumentName = p.Document != null ? p.Document.Name : null
+                DocumentName = p.Document != null ? p.Document.Name : null,
+                IsFunctionary = p.IsFunctionary
             })
             .ToListAsync();
     }
@@ -63,7 +65,10 @@ public class OfficeQueryService
                 DocumentId = d.DocumentId,
                 Name = d.Name,
                 Category = d.Category,
-                ImportDate = d.ImportDate
+                ImportDate = d.ImportDate,
+                CaseId = d.Case.CaseId,
+                PaperlessDocumentId = d.PaperlessDocumentId,
+                DocumentIssuerId = d.DocumentIssuerId
             })
             .ToListAsync();
     }
@@ -78,7 +83,10 @@ public class OfficeQueryService
                 DocumentId = d.DocumentId,
                 Name = d.Name,
                 Category = d.Category,
-                ImportDate = d.ImportDate
+                ImportDate = d.ImportDate,
+                CaseId = d.Case.CaseId,
+                PaperlessDocumentId = d.PaperlessDocumentId,
+                DocumentIssuerId = d.DocumentIssuerId
             })
             .ToListAsync();
     }

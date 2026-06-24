@@ -45,7 +45,7 @@ public class DocumentController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> CreateAsync(
-        [FromBody] CreateDocumentRequestDto request,
+        [FromForm] CreateDocumentRequestDto request,
         CancellationToken cancellationToken)
     {
         await _documentWriteService.CreateDocumentAsync(request, cancellationToken);
@@ -55,7 +55,7 @@ public class DocumentController : ControllerBase
     [HttpPut("{documentId:int}")]
     public async Task<IActionResult> UpdateAsync(
         int documentId,
-        [FromBody] UpdateDocumentRequestDto request,
+        [FromForm] UpdateDocumentRequestDto request,
         CancellationToken cancellationToken)
     {
         await _documentWriteService.UpdateDocumentAsync(documentId, request, cancellationToken);

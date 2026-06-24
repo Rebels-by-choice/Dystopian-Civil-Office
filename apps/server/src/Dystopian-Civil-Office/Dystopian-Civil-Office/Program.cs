@@ -2,12 +2,10 @@ using Dystopian_Civil_Office.DataSource;
 using Dystopian_Civil_Office.Exceptions;
 using Dystopian_Civil_Office.Middleware;
 using Dystopian_Civil_Office.Services;
-using Dystopian_Civil_Office.Services.Read.Interfaces;
-using Dystopian_Civil_Office.Services.Read.Impls;
-using Dystopian_Civil_Office.Services.Validation;
-using Dystopian_Civil_Office.Services.Write.Interfaces;
 using Dystopian_Civil_Office.Services.Write.Impls;
+using Dystopian_Civil_Office.Services.Write.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,25 +29,17 @@ builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<ViewDataExceptionHandler>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options
+        .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .UseSnakeCaseNamingConvention()
+        .ConfigureWarnings(w => w.Log(RelationalEventId.PendingModelChangesWarning))); 
+        // DbSet<Case> is added before its migration, therefore we need to ignore it for now
 
-builder.Services.AddScoped<OfficeQueryService>();
-builder.Services.AddScoped<IQueryValidationService, QueryValidationService>();
-
-builder.Services.AddScoped<IMarriageReadService, MarriageReadService>();
-builder.Services.AddScoped<IPersonReadService, PersonReadService>();
-builder.Services.AddScoped<IDocumentReadService, DocumentReadService>();
-builder.Services.AddScoped<IDeathRecordReadService, DeathRecordReadService>();
-builder.Services.AddScoped<IBirthRecordService, BirthRecordReadService>();
-builder.Services.AddScoped<IAddressReadService, AddressReadService>();
-builder.Services.AddSingleton<IApiStatsService, ApiStatsService>();
-
-builder.Services.AddScoped<IBirthRecordWriteService, BirthRecordWriteService>();
-builder.Services.AddScoped<IDeathRecordWriteService, DeathRecordWriteService>();
-builder.Services.AddScoped<IDocumentWriteService, DocumentWriteService>();
-builder.Services.AddScoped<IMarriageWriteService, MarriageWriteService>();
-builder.Services.AddScoped<IAddressWriteService, AddressWriteService>();
-builder.Services.AddScoped<IPersonWriteService, PersonWriteService>();
+builder.Services.InfrastructureAddQueryServices();
+builder.Services.InfrastructureAddReadServices();
+builder.Services.InfrastructureAddWriteServices();
+builder.Services.InfrastructureAddPaperless();
+builder.Services.AddScoped<ICaseService, CaseService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

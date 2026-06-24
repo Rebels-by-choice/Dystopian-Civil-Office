@@ -1,5 +1,6 @@
 ﻿using System;
 using Dystopian_Civil_Office.DataSource;
+using static Dystopian_Civil_Office.Migrations.MigrationHelpers;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -427,7 +428,6 @@ namespace Dystopian_Civil_Office.Migrations
              * SQL Section
              * Clean, Seed, Functions, Procedures, Triggers
              */
-            ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Seed.seed_mocks.init.sql");
 
             ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Functions.validate_data.defs.sql");
             ExecuteEmbeddedSql(migrationBuilder, "Dystopian_Civil_Office.InitDb.Sql.Functions.archive_data.defs.sql");
@@ -458,21 +458,6 @@ namespace Dystopian_Civil_Office.Migrations
             migrationBuilder.DropTable(name: "death_record_archives");
             migrationBuilder.DropTable(name: "marriage_record_archives");
             migrationBuilder.DropTable(name: "address_archives");
-        }
-        
-        // Method for reading .sql file ad executing it
-        private static void ExecuteEmbeddedSql(MigrationBuilder migrationBuilder, string resourceName)
-        {
-            var assembly = typeof(ApplicationDbContext).Assembly;
-
-            using var stream = assembly.GetManifestResourceStream(resourceName);
-            if (stream is null)
-                throw new InvalidOperationException($"Embedded SQL resource not found: {resourceName}");
-
-            using var reader = new StreamReader(stream);
-            var sql = reader.ReadToEnd();
-
-            migrationBuilder.Sql(sql);
         }
     }
 }

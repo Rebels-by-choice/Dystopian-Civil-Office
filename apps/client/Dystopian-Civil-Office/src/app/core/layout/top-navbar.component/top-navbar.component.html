@@ -1,31 +1,46 @@
-<header class="sticky top-0 z-50 min-w-[1100px] border-b border-stone-400 bg-dco-bg-navbar">
-  <div class="grid grid-cols-[auto_1fr_auto] items-center gap-4 px-5 py-4">
-    <a [routerLink]="homePath" class="shrink-0">
-      <img
-        [src]="logoPath"
-        alt="Dystopian Civil Office logo"
-        class="block h-10 w-auto transition hover:scale-110 hover:cursor-pointer object-contain"
-      />
-    </a>
-
-    <nav aria-label="Main navigation" class="justify-self-center whitespace-nowrap p-3">
-      @for (item of mainNavItems; track item.path) {
-        <a
-          [routerLink]="item.path"
-          routerLinkActive="bg-dco-bg-navbar-active text-dco-text-secondary shadow-sm"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="inline-flex min-h-10 items-center justify-center rounded-lg px-6 text-[11px] font-semibold uppercase tracking-[0.08em] text-dco-text-primary transition hover:bg-dco-bg-navbar-hoover hover:text-dco-text-secondary"
-        >
-          {{ item.label }}
+@if (sessionStorage$ | async; as session) {
+  <header class="sticky top-0 z-50 min-w-[1100px] border-b border-stone-400 bg-dco-bg-navbar">
+    <div class="flex items-center gap-4 px-5 py-4">
+      <div>
+        <a [routerLink]="homePath" class="shrink-0">
+          <img
+            [src]="logoPath"
+            alt="Dystopian Civil Office logo"
+            class="block h-10 w-auto transition hover:scale-110 hover:cursor-pointer object-contain"
+          />
         </a>
+    </div>
+    <div class="flex w-full justify-center items-center gap-4">
+      @if (session.isFunctionary) {
+        <nav aria-label="Main navigation" class="justify-self-center whitespace-nowrap p-3">
+          @for (item of mainNavItems; track item.path) {
+            <a
+              [routerLink]="item.path"
+              routerLinkActive="bg-dco-bg-navbar-active text-dco-text-secondary shadow-sm"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="inline-flex min-h-10 items-center justify-center rounded-lg px-6 text-[11px] font-semibold uppercase tracking-[0.08em] text-dco-text-primary transition hover:bg-dco-bg-navbar-hoover hover:text-dco-text-secondary"
+            >
+              {{ item.label }}
+            </a>
+          }
+        </nav>
       }
-    </nav>
+    </div>
+    <div class="flex justify-end items-center gap-4">
+      @if (session.citizenId != -1) {
+        <a
+          [routerLink]="casesPath"
+          class="shrink-0 inline-flex min-h-11 px-5 items-center justify-center rounded-sm border border-stone-200 bg-dco-bg-navbar-cases text-[13px] font-semibold uppercase tracking-[0.08em] text-dco-text-secondary shadow-sm transition hover:bg-dco-bg-navbar-cases-hover"
+        >
+          Cases
+        </a>
 
-    <a
-      [routerLink]="casesPath"
-      class="shrink-0 inline-flex min-h-11 px-5 items-center justify-center rounded-sm border border-stone-200 bg-dco-bg-navbar-cases text-[13px] font-semibold uppercase tracking-[0.08em] text-dco-text-secondary shadow-sm transition hover:bg-dco-bg-navbar-cases-hover"
-    >
-      Cases
-    </a>
-  </div>
-</header>
+        <button
+          (click)="logout()"
+          class="shrink-0 inline-flex min-h-11 px-5 items-center justify-center rounded-sm border border-stone-200 bg-dco-bg-navbar-cases text-[13px] font-semibold uppercase tracking-[0.08em] text-dco-text-secondary shadow-sm transition hover:bg-dco-bg-navbar-cases-hover"
+          >Logout</button>
+      }
+    </div>
+    </div>
+  </header>
+}

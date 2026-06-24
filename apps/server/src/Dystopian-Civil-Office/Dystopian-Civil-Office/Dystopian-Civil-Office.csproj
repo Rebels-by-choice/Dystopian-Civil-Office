@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,10 +23,8 @@
     <PackageReference Include="Microsoft.NET.Build.Containers" Version="10.0.300" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
+    <PackageReference Include="VMelnalksnis.PaperlessDotNet" Version="2.0.0" />
+    <PackageReference Include="VMelnalksnis.PaperlessDotNet.DependencyInjection" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +48,7 @@
     <EmbeddedResource Include="InitDb\Sql\Procedures\documents.procedures.init.sql" />
     <EmbeddedResource Include="InitDb\Sql\Procedures\marriage_records.procedures.init.sql" />
     <EmbeddedResource Include="InitDb\Sql\Procedures\persons.procedures.init.sql" />
+    <EmbeddedResource Include="InitDb\Sql\Procedures\cases.procedures.init.sql" />
     
     <EmbeddedResource Include="InitDb\Sql\Triggers\archive_data.triggers.sql" />
   </ItemGroup>

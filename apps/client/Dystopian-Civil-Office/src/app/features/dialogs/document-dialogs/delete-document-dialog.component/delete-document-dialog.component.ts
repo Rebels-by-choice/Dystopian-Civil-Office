@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
-import { DocumentsService } from '../../../services/documents.service';
+import DocumentsService from '../../../services/documents.service';
 import { DocumentViewModel } from '../../../../shared/api-models/responses/document.viewmodel';
 import { DocumentFormValidators } from '../../../../shared/validators/document-form.validators';
 import { ButtonComponent } from '../../../../shared/ui/button.component/button.component';

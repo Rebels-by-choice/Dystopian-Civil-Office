@@ -9,12 +9,16 @@ import {
   UpdateDocumentModel,
 } from '../../shared/api-models/requests/document.model';
 
+import {environment} from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
-export class DocumentsService {
+class DocumentsService {
   private readonly http = inject(HttpClient);
   private readonly url = `${apiConfig.baseUrl}/document`;
+  private readonly paperlessUrl = environment.paperlessApiUrl;
+  private readonly paperlessToken = environment.paperlessToken;
 
   private documents$?: Observable<DocumentViewModel[]>;
   private readonly documentsByCategoryCache = new Map<string, Observable<DocumentViewModel[]>>();
@@ -60,6 +64,17 @@ export class DocumentsService {
     return request$;
   }
 
+  public getDocumentPreview(paperlessDocumentId: number): Observable<Blob> {
+    // Note: Paperless-ngx typically uses "Token <your_token>" for auth.
+    // Change to "Bearer ${token}" if you are using an OAuth/JWT proxy.
+    return this.http.get(`${this.paperlessUrl}/api/documents/${paperlessDocumentId}/preview/`, {
+      headers: {
+        Authorization: `Token ${this.paperlessToken}`,
+      },
+      responseType: 'blob',
+    });
+  }
+
   public createDocument(request: CreateDocumentModel): Observable<void> {
     return this.http.post<void>(this.url, request).pipe(
       tap(() => this.clearCache()),
@@ -96,3 +111,5 @@ export class DocumentsService {
     this.documentsByCategoryCache.clear();
   }
 }
+
+export default DocumentsService;
